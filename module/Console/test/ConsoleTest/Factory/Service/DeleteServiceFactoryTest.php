@@ -3,7 +3,6 @@
 namespace ConsoleTest\Factory\Service;
 
 use Console\Factory\Service\DeleteServiceFactory;
-use Console\Service\ConnectionService;
 use Console\Service\DeleteService;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -22,11 +21,6 @@ class DeleteServiceFactoryTest extends \PHPUnit_Framework_TestCase
             '',
             false
         );
-
-        $serviceLocator
-            ->expects(self::once())
-            ->method('get')
-            ->willReturn($this->getMock(ConnectionService::class, [], [], '', false));
 
         self::assertInstanceOf(
             DeleteService::class,

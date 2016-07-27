@@ -2,8 +2,8 @@
 
 namespace Console\Factory\Service;
 
-use Console\Service\ConnectionService;
 use Console\Service\DeleteService;
+use Elasticsearch\ClientBuilder;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -16,9 +16,8 @@ final class DeleteServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /** @var ConnectionService $connectionService */
-        $connectionService = $serviceLocator->get(ConnectionService::class);
+        $elasticSearch = ClientBuilder::create()->build();
 
-        return new DeleteService($connectionService);
+        return new DeleteService($elasticSearch);
     }
 }

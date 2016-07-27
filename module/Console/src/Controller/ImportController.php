@@ -30,7 +30,7 @@ class ImportController extends AbstractActionController
             throw new BadMethodCallException('This is a console tool only');
         }
 
-        $type = $this->params('type', 'bo');
+        $type = $this->params('type', 'all');
 
         if (Helper::checkValidProfileType($type) === false) {
             throw new InvalidArgumentException('The index enter is not valid');
@@ -38,6 +38,6 @@ class ImportController extends AbstractActionController
 
         $this->importService->import($type);
 
-        return ['import' => 'success'];
+        return ['success' => true];
     }
 }

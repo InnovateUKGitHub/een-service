@@ -1,13 +1,14 @@
 <?php
-
-namespace Ingest\V1\Service;
+namespace Console\Service;
 
 use Elasticsearch\Client;
-use Ingest\V1\Rest\Event\EventResource;
-use Ingest\V1\Rest\Opportunity\OpportunityResource;
 
 class IndexService
 {
+    const ES_INDEX_OPPORTUNITY = 'opportunity';
+    const ES_INDEX_EVENT = 'event';
+    const ES_TYPE_OPPORTUNITY = 'opportunity';
+    const ES_TYPE_EVENT = 'event';
     /** @var Client */
     private $elasticSearch;
 
@@ -25,71 +26,86 @@ class IndexService
             return true;
         }
         switch ($index) {
-            case OpportunityResource::ES_INDEX:
+            case self::ES_INDEX_OPPORTUNITY:
                 $this->createOpportunityIndex();
                 break;
-            case EventResource::ES_INDEX:
+            case self::ES_INDEX_EVENT:
                 $this->createEventIndex();
                 break;
         }
+
         return false;
     }
 
     private function createOpportunityIndex()
     {
         $params = [
-            'index' => OpportunityResource::ES_INDEX,
-            'body' => [
+            'index' => self::ES_INDEX_OPPORTUNITY,
+            'body'  => [
                 'mappings' => [
-                    OpportunityResource::ES_TYPE => [
+                    self::ES_TYPE_OPPORTUNITY => [
                         'properties' => [
-                            'id' => [
+                            'id'                 => [
                                 'type' => 'string',
                             ],
-                            'name' => [
+                            'title'              => [
                                 'type' => 'string',
                             ],
-                            'type' => [
+                            'summary'            => [
                                 'type' => 'string',
                             ],
-                            'opportunity_type' => [
+                            'description'        => [
                                 'type' => 'string',
                             ],
-                            'country' => [
+                            'partner_expertise'  => [
                                 'type' => 'string',
                             ],
-                            'date' => [
+                            'stage'              => [
+                                'type' => 'string',
+                            ],
+                            'ipr'                => [
+                                'type' => 'string',
+                            ],
+                            'ipr_comment'        => [
+                                'type' => 'string',
+                            ],
+                            'country_code'       => [
+                                'type' => 'string',
+                            ],
+                            'country'            => [
+                                'type' => 'string',
+                            ],
+                            'date'               => [
                                 'type' => 'date',
-                                'format' => 'strict_date_optional_time||epoch_millis',
                             ],
-                            'types' => [
+                            'deadline'           => [
+                                'type' => 'date',
+                            ],
+                            'partnership_sought' => [
                                 'type' => 'string',
                             ],
-                            'description' => [
+                            'industries'         => [
                                 'type' => 'string',
                             ],
-                            'expertise' => [
+                            'technologies'       => [
                                 'type' => 'string',
                             ],
-                            'advantage' => [
+                            'commercials'        => [
                                 'type' => 'string',
                             ],
-                            'stage' => [
+                            'markets'            => [
                                 'type' => 'string',
                             ],
-                            'stage_reference' => [
+                            'eoi'                => [
+                                'type' => 'boolean',
+                            ],
+                            'advantage'          => [
                                 'type' => 'string',
                             ],
-                            'ipr' => [
-                                'type' => 'string',
-                            ],
-                            'ipr_reference' => [
-                                'type' => 'string',
-                            ],
-                        ]
-                    ]
-                ]
-            ]
+                        ],
+                    ],
+                ],
+            ],
         ];
         $this->elasticSearch->indices()->create($params);
     }
@@ -97,59 +113,59 @@ class IndexService
     private function createEventIndex()
     {
         $params = [
-            'index' => EventResource::ES_INDEX,
-            'body' => [
+            'index' => self::ES_INDEX_EVENT,
+            'body'  => [
                 'mappings' => [
-                    EventResource::ES_TYPE => [
+                    self::ES_TYPE_EVENT => [
                         'properties' => [
-                            'id' => [
+                            'id'          => [
                                 'type' => 'long',
                             ],
-                            'name' => [
+                            'name'        => [
                                 'type' => 'string',
                             ],
-                            'type' => [
+                            'type'        => [
                                 'type' => 'string',
                             ],
-                            'place' => [
+                            'place'       => [
                                 'type' => 'string',
                             ],
-                            'address' => [
+                            'address'     => [
                                 'type' => 'string',
                             ],
-                            'date_from' => [
-                                'type' => 'date',
+                            'date_from'   => [
+                                'type'   => 'date',
                                 'format' => 'strict_date_optional_time||epoch_millis',
                             ],
-                            'date_to' => [
-                                'type' => 'date',
+                            'date_to'     => [
+                                'type'   => 'date',
                                 'format' => 'strict_date_optional_time||epoch_millis',
                             ],
                             'description' => [
                                 'type' => 'string',
                             ],
-                            'attendee' => [
+                            'attendee'    => [
                                 'type' => 'string',
                             ],
-                            'agenda' => [
+                            'agenda'      => [
                                 'type' => 'string',
                             ],
-                            'cost' => [
+                            'cost'        => [
                                 'type' => 'string',
                             ],
-                            'topics' => [
+                            'topics'      => [
                                 'type' => 'string',
                             ],
-                            'latitude' => [
+                            'latitude'    => [
                                 'type' => 'float',
                             ],
-                            'longitude' => [
+                            'longitude'   => [
                                 'type' => 'float',
                             ],
-                        ]
-                    ]
-                ]
-            ]
+                        ],
+                    ],
+                ],
+            ],
         ];
         $this->elasticSearch->indices()->create($params);
     }
@@ -157,10 +173,10 @@ class IndexService
     public function index($values, $id, $index, $type)
     {
         $params = [
-            'body' => $values,
+            'body'  => $values,
             'index' => $index,
-            'type' => $type,
-            'id' => $id
+            'type'  => $type,
+            'id'    => $id,
         ];
 
         return $this->elasticSearch->index($params);

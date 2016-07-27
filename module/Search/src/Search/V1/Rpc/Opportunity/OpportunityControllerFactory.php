@@ -3,6 +3,7 @@
 namespace Search\V1\Rpc\Opportunity;
 
 use Search\V1\ElasticSearch\Service\ElasticSearchService;
+use Search\V1\Merlin\Service\MerlinService;
 use Zend\Mvc\Controller\ControllerManager;
 
 /**
@@ -21,7 +22,8 @@ class OpportunityControllerFactory
     {
         $serviceLocator = $controllers->getServiceLocator();
         $service = $serviceLocator->get(ElasticSearchService::class);
+        $merlin = $serviceLocator->get(MerlinService::class);
 
-        return new OpportunityController($service);
+        return new OpportunityController($service, $merlin);
     }
 }

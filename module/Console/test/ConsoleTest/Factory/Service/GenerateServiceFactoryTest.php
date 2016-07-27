@@ -2,9 +2,9 @@
 
 namespace ConsoleTest\Factory\Service;
 
-use Console\Service\ConnectionService;
 use Console\Service\GenerateService;
 use Console\Factory\Service\GenerateServiceFactory;
+use Console\Service\IndexService;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -26,7 +26,8 @@ class GenerateServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceLocator
             ->expects(self::once())
             ->method('get')
-            ->willReturn($this->getMock(ConnectionService::class, [], [], '', false));
+            ->with(IndexService::class)
+            ->willReturn(self::getMock(IndexService::class, [], [], '', false));
 
         self::assertInstanceOf(
             GenerateService::class,

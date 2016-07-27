@@ -1,9 +1,9 @@
 <?php
 
-namespace Ingest\V1\Factory;
+namespace Console\Factory\Service;
 
 use Elasticsearch\ClientBuilder;
-use Ingest\V1\Service\IndexService;
+use Console\Service\IndexService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
