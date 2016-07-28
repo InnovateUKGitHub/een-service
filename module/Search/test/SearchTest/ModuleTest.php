@@ -7,6 +7,9 @@ use Search\V1\ElasticSearch\Factory\ElasticSearchServiceFactory;
 use Search\V1\ElasticSearch\Factory\QueryServiceFactory;
 use Search\V1\ElasticSearch\Service\ElasticSearchService;
 use Search\V1\ElasticSearch\Service\QueryService;
+use Search\V1\Merlin\Service\MerlinService;
+use Search\V1\Merlin\Factory\MerlinServiceFactory;
+use Search\V1\Rpc\Opportunities\OpportunitiesController;
 
 /**
  * @covers Search\Module
@@ -20,19 +23,35 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         self::assertEquals([
             'service_manager'        => [
                 'factories' => [
+                    MerlinService::class        => MerlinServiceFactory::class,
                     ElasticSearchService::class => ElasticSearchServiceFactory::class,
                     QueryService::class => QueryServiceFactory::class,
                 ],
             ],
             'router'                 => [
                 'routes' => [
-                    'een.rpc.opportunity' => [
+                    'een.rpc.opportunities' => [
                         'type'    => 'Segment',
                         'options' => [
-                            'route'    => '/v1/een/opportunity',
+                            'route'    => '/v1/een/opportunities',
                             'defaults' => [
-                                'controller' => 'Search\\V1\\Rpc\\Opportunity\\Controller',
-                                'action'     => 'opportunity',
+                                'controller' => OpportunitiesController::class,
+                                'action'     => 'opportunities',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes'  => [
+                            'details' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'       => '/details/:id',
+                                    'constraints' => [
+                                        'id' => '[\d\w]+',
+                                    ],
+                                    'defaults'    => [
+                                        'action' => 'detail',
+                                    ],
+                                ],
                             ],
                         ],
                     ],
@@ -50,18 +69,18 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
             ],
             'zf-versioning'          => [
                 'uri' => [
-                    0 => 'een.rpc.opportunity',
+                    0 => 'een.rpc.opportunities',
                     1 => 'een.rpc.event',
                 ],
             ],
             'zf-rest'                => [],
             'zf-content-negotiation' => [
                 'controllers'            => [
-                    'Search\\V1\\Rpc\\Opportunity\\Controller' => 'Json',
+                    OpportunitiesController::class => 'Json',
                     'Search\\V1\\Rpc\\Event\\Controller'       => 'Json',
                 ],
                 'accept_whitelist'       => [
-                    'Search\\V1\\Rpc\\Opportunity\\Controller' => [
+                    OpportunitiesController::class => [
                         0 => 'application/vnd.een.v1+json',
                         1 => 'application/json',
                         2 => 'application/*+json',
@@ -73,7 +92,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
                     ],
                 ],
                 'content_type_whitelist' => [
-                    'Search\\V1\\Rpc\\Opportunity\\Controller' => [
+                    OpportunitiesController::class => [
                         0 => 'application/vnd.een.v1+json',
                         1 => 'application/json',
                     ],
@@ -87,15 +106,15 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
                 'metadata_map' => [],
             ],
             'zf-content-validation'  => [
-                'Search\\V1\\Rpc\\Opportunity\\Controller' => [
-                    'input_filter' => 'Search\\V1\\Rpc\\Opportunity\\Validator',
+                OpportunitiesController::class => [
+                    'input_filter' => 'Search\\V1\\Rpc\\Opportunities\\Validator',
                 ],
                 'Search\\V1\\Rpc\\Event\\Controller' => [
                     'input_filter' => 'Search\\V1\\Rpc\\Event\\Validator',
                 ],
             ],
             'input_filter_specs'     => [
-                'Search\\V1\\Rpc\\Opportunity\\Validator'  => [
+                'Search\\V1\\Rpc\\Opportunities\\Validator'  => [
                     0 => [
                         'required'   => true,
                         'validators' => [],
@@ -162,17 +181,18 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
             ],
             'controllers'            => [
                 'factories' => [
-                    'Search\\V1\\Rpc\\Opportunity\\Controller' => 'Search\\V1\\Rpc\\Opportunity\\OpportunityControllerFactory',
+                    OpportunitiesController::class => 'Search\\V1\\Rpc\\Opportunities\\OpportunitiesControllerFactory',
                     'Search\\V1\\Rpc\\Event\\Controller'       => 'Search\\V1\\Rpc\\Event\\EventControllerFactory',
                 ],
             ],
             'zf-rpc'                 => [
-                'Search\\V1\\Rpc\\Opportunity\\Controller' => [
-                    'service_name' => 'Opportunity',
+                OpportunitiesController::class => [
+                    'service_name' => 'Opportunities',
                     'http_methods' => [
-                        0 => 'POST',
+                        0 => 'GET',
+                        1 => 'POST',
                     ],
-                    'route_name'   => 'een.rpc.opportunity',
+                    'route_name'   => 'een.rpc.opportunities',
                 ],
                 'Search\\V1\\Rpc\\Event\\Controller'       => [
                     'service_name' => 'Event',

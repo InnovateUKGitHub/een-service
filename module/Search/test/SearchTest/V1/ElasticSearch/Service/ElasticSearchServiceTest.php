@@ -10,7 +10,7 @@ use Search\V1\ElasticSearch\Service\QueryService;
  */
 class ElasticSearchServiceTest extends \PHPUnit_Framework_TestCase
 {
-    public function testSearchOpportunity()
+    public function testSearchOpportunities()
     {
         $params = [
             'from' => 0,
@@ -26,7 +26,7 @@ class ElasticSearchServiceTest extends \PHPUnit_Framework_TestCase
 
         $service = new ElasticSearchService($queryServiceMock);
 
-        self::assertEquals(['success' => true], $service->searchOpportunity($params));
+        self::assertEquals(['success' => true], $service->searchOpportunities($params));
     }
 
     public function testSearchEvent()

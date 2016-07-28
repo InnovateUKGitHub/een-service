@@ -20,7 +20,7 @@ class ElasticSearchService
         $this->query = $query;
     }
 
-    public function searchOpportunity($params)
+    public function searchOpportunities($params)
     {
         if ($this->query->exists(self::OPPORTUNITY) === false) {
             return ['error' => 'Index not created'];

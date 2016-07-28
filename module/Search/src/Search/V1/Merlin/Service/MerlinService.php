@@ -18,15 +18,15 @@ class MerlinService
         $this->service = $service;
     }
 
-    public function getOpportunity($id)
+    public function getOpportunities($id)
     {
         // TODO Get the data
         $results = $this->service->getData('all');
         // TODO Search the data
-        return $this->searchOpportunity($results, $id);
+        return $this->searchOpportunities($results, $id);
     }
 
-    public function searchOpportunity($results, $id)
+    public function searchOpportunities($results, $id)
     {
         foreach ($results->profile as $profile) {
             if ((string)$profile->reference->external === $id) {

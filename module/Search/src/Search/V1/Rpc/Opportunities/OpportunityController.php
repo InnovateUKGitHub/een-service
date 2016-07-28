@@ -1,6 +1,6 @@
 <?php
 
-namespace Search\V1\Rpc\Opportunity;
+namespace Search\V1\Rpc\Opportunities;
 
 use Search\V1\ElasticSearch\Service\ElasticSearchService;
 use Search\V1\Merlin\Service\MerlinService;
@@ -8,11 +8,11 @@ use Zend\Mvc\Controller\AbstractActionController;
 use ZF\ContentNegotiation\ViewModel;
 
 /**
- * Class OpportunityController
+ * Class OpportunitiesController
  *
- * @package Search\V1\Rpc\Opportunity
+ * @package Search\V1\Rpc\Opportunities
  */
-class OpportunityController extends AbstractActionController
+class OpportunitiesController extends AbstractActionController
 {
     /** @var ElasticSearchService */
     private $service;
@@ -38,11 +38,11 @@ class OpportunityController extends AbstractActionController
     /**
      * @return ViewModel
      */
-    public function opportunityAction()
+    public function opportunitiesAction()
     {
         $params = $this->getParams();
 
-        return new ViewModel($this->service->searchOpportunity($params));
+        return new ViewModel($this->service->searchOpportunities($params));
     }
 
     /**
@@ -52,6 +52,6 @@ class OpportunityController extends AbstractActionController
     {
         $id = (string)$this->params()->fromRoute('id');
 
-        return new ViewModel($this->merlin->getOpportunity($id));
+        return new ViewModel($this->merlin->getOpportunities($id));
     }
 }

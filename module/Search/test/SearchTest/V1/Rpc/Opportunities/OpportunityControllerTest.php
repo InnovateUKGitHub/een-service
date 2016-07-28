@@ -3,31 +3,33 @@
 namespace ConsoleTest\Controller;
 
 use Search\V1\ElasticSearch\Service\ElasticSearchService;
-use Search\V1\Rpc\Opportunity\OpportunityController;
+use Search\V1\Merlin\Service\MerlinService;
+use Search\V1\Rpc\Opportunities\OpportunitiesController;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use ZF\ContentNegotiation\ViewModel;
 
 /**
- * @covers Search\V1\Rpc\Opportunity\OpportunityController
+ * @covers Search\V1\Rpc\Opportunities\OpportunitiesController
  */
-class OpportunityControllerTest extends \PHPUnit_Framework_TestCase
+class OpportunitiesControllerTest extends \PHPUnit_Framework_TestCase
 {
-    public function testEventAction()
+    public function testOpportunitiesAction()
     {
         $elasticSearchServiceMock = self::getMock(ElasticSearchService::class, [], [], '', false);
+        $merlinServiceMock = self::getMock(MerlinService::class, [], [], '', false);
         $inputFilterMock = self::getMock('ZF\ContentValidation\InputFilter', ['getValues'], [], '', false);
 
         $elasticSearchServiceMock->expects(self::once())
-            ->method('searchOpportunity')
+            ->method('searchOpportunities')
             ->with(['params' => 'myParams']);
 
         $inputFilterMock->expects(self::once())
             ->method('getValues')
             ->willReturn(['params' => 'myParams']);
 
-        $controller = new OpportunityController($elasticSearchServiceMock);
-        $routeMatch = new RouteMatch(['action' => 'opportunity']);
+        $controller = new OpportunitiesController($elasticSearchServiceMock, $merlinServiceMock);
+        $routeMatch = new RouteMatch(['action' => 'opportunities']);
 
         $event = new MvcEvent();
         $event->setRouteMatch($routeMatch);

@@ -3,8 +3,8 @@ use Search\V1\ElasticSearch\Service\ElasticSearchService;
 use Search\V1\ElasticSearch\Factory\ElasticSearchServiceFactory;
 use Search\V1\ElasticSearch\Service\QueryService;
 use Search\V1\ElasticSearch\Factory\QueryServiceFactory;
-use Search\V1\Rpc\Opportunity\OpportunityController;
-use Search\V1\Rpc\Opportunity\OpportunityControllerFactory;
+use Search\V1\Rpc\Opportunities\OpportunitiesController;
+use Search\V1\Rpc\Opportunities\OpportunitiesControllerFactory;
 use Search\V1\Merlin\Service\MerlinService;
 use Search\V1\Merlin\Factory\MerlinServiceFactory;
 
@@ -18,13 +18,13 @@ return [
     ],
     'router'                 => [
         'routes' => [
-            'een.rpc.opportunity' => [
+            'een.rpc.opportunities' => [
                 'type'          => 'Segment',
                 'options'       => [
-                    'route'    => '/v1/een/opportunity',
+                    'route'    => '/v1/een/opportunities',
                     'defaults' => [
-                        'controller' => OpportunityController::class,
-                        'action'     => 'opportunity',
+                        'controller' => OpportunitiesController::class,
+                        'action'     => 'opportunities',
                     ],
                 ],
                 'may_terminate' => true,
@@ -57,18 +57,18 @@ return [
     ],
     'zf-versioning'          => [
         'uri' => [
-            0 => 'een.rpc.opportunity',
+            0 => 'een.rpc.opportunities',
             1 => 'een.rpc.event',
         ],
     ],
     'zf-rest'                => [],
     'zf-content-negotiation' => [
         'controllers'            => [
-            OpportunityController::class         => 'Json',
+            OpportunitiesController::class         => 'Json',
             'Search\\V1\\Rpc\\Event\\Controller' => 'Json',
         ],
         'accept_whitelist'       => [
-            OpportunityController::class         => [
+            OpportunitiesController::class         => [
                 0 => 'application/vnd.een.v1+json',
                 1 => 'application/json',
                 2 => 'application/*+json',
@@ -80,7 +80,7 @@ return [
             ],
         ],
         'content_type_whitelist' => [
-            OpportunityController::class         => [
+            OpportunitiesController::class         => [
                 0 => 'application/vnd.een.v1+json',
                 1 => 'application/json',
             ],
@@ -94,15 +94,15 @@ return [
         'metadata_map' => [],
     ],
     'zf-content-validation'  => [
-        OpportunityController::class         => [
-            'input_filter' => 'Search\\V1\\Rpc\\Opportunity\\Validator',
+        OpportunitiesController::class         => [
+            'input_filter' => 'Search\\V1\\Rpc\\Opportunities\\Validator',
         ],
         'Search\\V1\\Rpc\\Event\\Controller' => [
             'input_filter' => 'Search\\V1\\Rpc\\Event\\Validator',
         ],
     ],
     'input_filter_specs'     => [
-        'Search\\V1\\Rpc\\Opportunity\\Validator' => [
+        'Search\\V1\\Rpc\\Opportunities\\Validator' => [
             0 => [
                 'required'   => true,
                 'validators' => [],
@@ -169,18 +169,18 @@ return [
     ],
     'controllers'            => [
         'factories' => [
-            OpportunityController::class         => OpportunityControllerFactory::class,
+            OpportunitiesController::class         => OpportunitiesControllerFactory::class,
             'Search\\V1\\Rpc\\Event\\Controller' => 'Search\\V1\\Rpc\\Event\\EventControllerFactory',
         ],
     ],
     'zf-rpc'                 => [
-        OpportunityController::class         => [
-            'service_name' => 'Opportunity',
+        OpportunitiesController::class         => [
+            'service_name' => 'Opportunities',
             'http_methods' => [
                 0 => 'GET',
                 1 => 'POST',
             ],
-            'route_name'   => 'een.rpc.opportunity',
+            'route_name'   => 'een.rpc.opportunities',
         ],
         'Search\\V1\\Rpc\\Event\\Controller' => [
             'service_name' => 'Event',
