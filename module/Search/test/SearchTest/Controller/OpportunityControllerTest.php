@@ -2,9 +2,9 @@
 
 namespace ConsoleTest\Controller;
 
-use Search\V1\ElasticSearch\Service\ElasticSearchService;
-use Search\V1\Merlin\Service\MerlinService;
-use Search\V1\Rpc\Opportunities\OpportunitiesController;
+use Search\Service\ElasticSearchService;
+use Search\Service\MerlinService;
+use Search\Controller\OpportunitiesController;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use ZF\ContentNegotiation\ViewModel;
@@ -16,7 +16,9 @@ class OpportunitiesControllerTest extends \PHPUnit_Framework_TestCase
 {
     public function testOpportunitiesAction()
     {
+        /** @var \PHPUnit_Framework_MockObject_MockObject|ElasticSearchService $elasticSearchServiceMock */
         $elasticSearchServiceMock = self::getMock(ElasticSearchService::class, [], [], '', false);
+        /** @var \PHPUnit_Framework_MockObject_MockObject|MerlinService $merlinServiceMock */
         $merlinServiceMock = self::getMock(MerlinService::class, [], [], '', false);
         $inputFilterMock = self::getMock('ZF\ContentValidation\InputFilter', ['getValues'], [], '', false);
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace SearchTest\V1\Rpc\Event;
+namespace SearchTest\Factory\Service;
 
-use Search\V1\ElasticSearch\Factory\QueryServiceFactory;
-use Search\V1\ElasticSearch\Service\QueryService;
+use Search\Factory\Service\QueryServiceFactory;
+use Search\Service\QueryService;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -13,6 +13,7 @@ class QueryServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
+        /** @var \PHPUnit_Framework_MockObject_MockObject|ServiceLocatorInterface $serviceLocatorMock */
         $serviceLocatorMock = self::getMock(ServiceLocatorInterface::class, [], [], '', false);
         $factory = new QueryServiceFactory();
         $service = $factory->createService($serviceLocatorMock);

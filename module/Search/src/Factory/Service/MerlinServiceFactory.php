@@ -1,9 +1,9 @@
 <?php
 
-namespace Search\V1\Merlin\Factory;
+namespace Search\Factory\Service;
 
 use Console\Service\ImportService;
-use Search\V1\Merlin\Service\MerlinService;
+use Search\Service\MerlinService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

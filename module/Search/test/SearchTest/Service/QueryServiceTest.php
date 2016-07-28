@@ -1,9 +1,9 @@
 <?php
 
-namespace ConsoleTest\Controller;
+namespace ConsoleTest\Service;
 
 use Elasticsearch\Client;
-use Search\V1\ElasticSearch\Service\QueryService;
+use Search\Service\QueryService;
 
 /**
  * @covers Search\V1\ElasticSearch\Service\QueryService
@@ -25,6 +25,7 @@ class QueryServiceTest extends \PHPUnit_Framework_TestCase
             'source' => ['name', 'description']
         ];
 
+        /** @var \PHPUnit_Framework_MockObject_MockObject|Client $elasticSearchMock */
         $elasticSearchMock = self::getMock(Client::class, [], [], '', false);
         $elasticSearchMock->expects(self::once())
             ->method('search')

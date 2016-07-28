@@ -1,16 +1,12 @@
 <?php
 
-namespace Search\V1\Rpc\Opportunities;
+namespace Search\Factory\Controller;
 
-use Search\V1\ElasticSearch\Service\ElasticSearchService;
-use Search\V1\Merlin\Service\MerlinService;
+use Search\Controller\OpportunitiesController;
+use Search\Service\ElasticSearchService;
+use Search\Service\MerlinService;
 use Zend\Mvc\Controller\ControllerManager;
 
-/**
- * Class OpportunitiesControllerFactory
- *
- * @package Search\V1\Rpc\Opportunities
- */
 class OpportunitiesControllerFactory
 {
     /**
@@ -21,7 +17,9 @@ class OpportunitiesControllerFactory
     public function __invoke(ControllerManager $controllers)
     {
         $serviceLocator = $controllers->getServiceLocator();
+        /** @var ElasticSearchService $service */
         $service = $serviceLocator->get(ElasticSearchService::class);
+        /** @var MerlinService $merlin */
         $merlin = $serviceLocator->get(MerlinService::class);
 
         return new OpportunitiesController($service, $merlin);

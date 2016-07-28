@@ -1,10 +1,10 @@
 <?php
 
-namespace SearchTest\V1\Rpc\Event;
+namespace SearchTest\Factory\Service;
 
-use Search\V1\ElasticSearch\Factory\ElasticSearchServiceFactory;
-use Search\V1\ElasticSearch\Service\ElasticSearchService;
-use Search\V1\ElasticSearch\Service\QueryService;
+use Search\Factory\Service\ElasticSearchServiceFactory;
+use Search\Service\ElasticSearchService;
+use Search\Service\QueryService;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -16,6 +16,7 @@ class ElasticSearchServiceFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $queryServiceMock = self::getMock(QueryService::class, [], [], '', false);
 
+        /** @var \PHPUnit_Framework_MockObject_MockObject|ServiceLocatorInterface $serviceLocatorMock */
         $serviceLocatorMock = self::getMock(ServiceLocatorInterface::class, [], [], '', false);
         $serviceLocatorMock->expects(self::once())
             ->method('get')

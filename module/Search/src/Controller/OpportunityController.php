@@ -1,16 +1,16 @@
 <?php
 
-namespace Search\V1\Rpc\Opportunities;
+namespace Search\Controller;
 
-use Search\V1\ElasticSearch\Service\ElasticSearchService;
-use Search\V1\Merlin\Service\MerlinService;
+use Search\Service\ElasticSearchService;
+use Search\Service\MerlinService;
 use Zend\Mvc\Controller\AbstractActionController;
 use ZF\ContentNegotiation\ViewModel;
 
 /**
  * Class OpportunitiesController
  *
- * @package Search\V1\Rpc\Opportunities
+ * @package Search\Controller\Opportunities
  */
 class OpportunitiesController extends AbstractActionController
 {

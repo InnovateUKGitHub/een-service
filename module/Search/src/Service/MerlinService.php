@@ -1,6 +1,6 @@
 <?php
 
-namespace Search\V1\Merlin\Service;
+namespace Search\Service;
 
 use Console\Service\ImportService;
 use JsonSchema\Exception\ResourceNotFoundException;
@@ -22,6 +22,7 @@ class MerlinService
     {
         // TODO Get the data
         $results = $this->service->getData('all');
+
         // TODO Search the data
         return $this->searchOpportunities($results, $id);
     }

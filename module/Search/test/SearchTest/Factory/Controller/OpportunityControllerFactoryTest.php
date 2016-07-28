@@ -1,11 +1,11 @@
 <?php
 
-namespace SearchTest\V1\Rpc\Event;
+namespace SearchTest\Factory\Controller;
 
-use Search\V1\ElasticSearch\Service\ElasticSearchService;
-use Search\V1\Merlin\Service\MerlinService;
-use Search\V1\Rpc\Opportunities\OpportunitiesController;
-use Search\V1\Rpc\Opportunities\OpportunitiesControllerFactory;
+use Search\Service\ElasticSearchService;
+use Search\Service\MerlinService;
+use Search\Controller\OpportunitiesController;
+use Search\Factory\Controller\OpportunitiesControllerFactory;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -29,6 +29,7 @@ class OpportunitiesControllerFactoryTest extends \PHPUnit_Framework_TestCase
             ->with(MerlinService::class)
             ->willReturn($merlinMock);
 
+        /** @var \PHPUnit_Framework_MockObject_MockObject|ControllerManager $controllersMock */
         $controllersMock = self::getMock(ControllerManager::class, [], [], '', false);
         $controllersMock->expects(self::once())
             ->method('getServiceLocator')

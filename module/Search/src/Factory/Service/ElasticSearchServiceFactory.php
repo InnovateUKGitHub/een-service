@@ -1,9 +1,9 @@
 <?php
 
-namespace Search\V1\ElasticSearch\Factory;
+namespace Search\Factory\Service;
 
-use Search\V1\ElasticSearch\Service\ElasticSearchService;
-use Search\V1\ElasticSearch\Service\QueryService;
+use Search\Service\ElasticSearchService;
+use Search\Service\QueryService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

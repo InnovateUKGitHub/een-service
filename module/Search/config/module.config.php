@@ -1,12 +1,12 @@
 <?php
-use Search\V1\ElasticSearch\Service\ElasticSearchService;
-use Search\V1\ElasticSearch\Factory\ElasticSearchServiceFactory;
-use Search\V1\ElasticSearch\Service\QueryService;
-use Search\V1\ElasticSearch\Factory\QueryServiceFactory;
-use Search\V1\Rpc\Opportunities\OpportunitiesController;
-use Search\V1\Rpc\Opportunities\OpportunitiesControllerFactory;
-use Search\V1\Merlin\Service\MerlinService;
-use Search\V1\Merlin\Factory\MerlinServiceFactory;
+use Search\Controller\OpportunitiesController;
+use Search\Factory\Controller\OpportunitiesControllerFactory;
+use Search\Factory\Service\ElasticSearchServiceFactory;
+use Search\Factory\Service\QueryServiceFactory;
+use Search\Factory\Service\MerlinServiceFactory;
+use Search\Service\ElasticSearchService;
+use Search\Service\QueryService;
+use Search\Service\MerlinService;
 
 return [
     'service_manager'        => [
@@ -18,7 +18,7 @@ return [
     ],
     'router'                 => [
         'routes' => [
-            'een.rpc.opportunities' => [
+            'een.opportunities' => [
                 'type'          => 'Segment',
                 'options'       => [
                     'route'    => '/v1/een/opportunities',
@@ -43,48 +43,27 @@ return [
                     ],
                 ],
             ],
-            'een.rpc.event'       => [
-                'type'    => 'Segment',
-                'options' => [
-                    'route'    => '/v1/een/event',
-                    'defaults' => [
-                        'controller' => 'Search\\V1\\Rpc\\Event\\Controller',
-                        'action'     => 'event',
-                    ],
-                ],
-            ],
         ],
     ],
     'zf-versioning'          => [
         'uri' => [
-            0 => 'een.rpc.opportunities',
-            1 => 'een.rpc.event',
+            0 => 'een.opportunities',
         ],
     ],
     'zf-rest'                => [],
     'zf-content-negotiation' => [
         'controllers'            => [
-            OpportunitiesController::class         => 'Json',
-            'Search\\V1\\Rpc\\Event\\Controller' => 'Json',
+            OpportunitiesController::class => 'Json',
         ],
         'accept_whitelist'       => [
-            OpportunitiesController::class         => [
-                0 => 'application/vnd.een.v1+json',
-                1 => 'application/json',
-                2 => 'application/*+json',
-            ],
-            'Search\\V1\\Rpc\\Event\\Controller' => [
+            OpportunitiesController::class => [
                 0 => 'application/vnd.een.v1+json',
                 1 => 'application/json',
                 2 => 'application/*+json',
             ],
         ],
         'content_type_whitelist' => [
-            OpportunitiesController::class         => [
-                0 => 'application/vnd.een.v1+json',
-                1 => 'application/json',
-            ],
-            'Search\\V1\\Rpc\\Event\\Controller' => [
+            OpportunitiesController::class => [
                 0 => 'application/vnd.een.v1+json',
                 1 => 'application/json',
             ],
@@ -94,47 +73,12 @@ return [
         'metadata_map' => [],
     ],
     'zf-content-validation'  => [
-        OpportunitiesController::class         => [
-            'input_filter' => 'Search\\V1\\Rpc\\Opportunities\\Validator',
-        ],
-        'Search\\V1\\Rpc\\Event\\Controller' => [
-            'input_filter' => 'Search\\V1\\Rpc\\Event\\Validator',
+        OpportunitiesController::class => [
+            'input_filter' => 'Search\\Opportunities\\Validator',
         ],
     ],
     'input_filter_specs'     => [
-        'Search\\V1\\Rpc\\Opportunities\\Validator' => [
-            0 => [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'from',
-            ],
-            1 => [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'size',
-            ],
-            2 => [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'search',
-            ],
-            3 => [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'sort',
-            ],
-            4 => [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'source',
-            ],
-        ],
-        'Search\\V1\\Rpc\\Event\\Validator'       => [
+        'Search\\Opportunities\\Validator' => [
             0 => [
                 'required'   => true,
                 'validators' => [],
@@ -169,25 +113,17 @@ return [
     ],
     'controllers'            => [
         'factories' => [
-            OpportunitiesController::class         => OpportunitiesControllerFactory::class,
-            'Search\\V1\\Rpc\\Event\\Controller' => 'Search\\V1\\Rpc\\Event\\EventControllerFactory',
+            OpportunitiesController::class => OpportunitiesControllerFactory::class,
         ],
     ],
     'zf-rpc'                 => [
-        OpportunitiesController::class         => [
+        OpportunitiesController::class => [
             'service_name' => 'Opportunities',
             'http_methods' => [
                 0 => 'GET',
                 1 => 'POST',
             ],
-            'route_name'   => 'een.rpc.opportunities',
-        ],
-        'Search\\V1\\Rpc\\Event\\Controller' => [
-            'service_name' => 'Event',
-            'http_methods' => [
-                0 => 'POST',
-            ],
-            'route_name'   => 'een.rpc.event',
+            'route_name'   => 'een.opportunities',
         ],
     ],
 ];
