@@ -9,11 +9,21 @@ class DeleteService
     /** @var Client */
     private $elasticSearch;
 
+    /**
+     * DeleteService constructor.
+     *
+     * @param Client $elasticSearch
+     */
     public function __construct(Client $elasticSearch)
     {
         $this->elasticSearch = $elasticSearch;
     }
 
+    /**
+     * @param $index
+     *
+     * @return array
+     */
     public function delete($index)
     {
         $params = [

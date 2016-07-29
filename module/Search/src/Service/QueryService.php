@@ -10,7 +10,7 @@ class QueryService
     const DESC = 'desc';
     /** @var Client */
     private $elasticSearch;
-    
+
     /**
      * ElasticSearchService constructor.
      */
@@ -18,12 +18,12 @@ class QueryService
     {
         $this->elasticSearch = $elasticSearch;
     }
-    
+
     public function exists($index)
     {
         return $this->elasticSearch->indices()->exists(['index' => $index]);
     }
-    
+
     public function search($params, $index, $type)
     {
         $query = [
@@ -46,10 +46,10 @@ class QueryService
                 '_source' => $params['source'],
             ],
         ];
-        
+
         return $this->convertResult($this->elasticSearch->search($query));
     }
-    
+
     public function convertResult($results)
     {
         return [

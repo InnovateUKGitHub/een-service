@@ -4,12 +4,12 @@ namespace Console\Controller;
 
 use Console\Helper\Helper;
 use Console\Service\ImportService;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Console\Request;
 use Zend\Console\Exception\BadMethodCallException;
 use Zend\Console\Exception\InvalidArgumentException;
+use Zend\Console\Request;
+use Zend\Mvc\Controller\AbstractActionController;
 
-class ImportController extends AbstractActionController
+final class ImportController extends AbstractActionController
 {
     /** @var ImportService */
     private $importService;
@@ -24,6 +24,9 @@ class ImportController extends AbstractActionController
         $this->importService = $importService;
     }
 
+    /**
+     * @return array
+     */
     public function importAction()
     {
         if (!($this->getRequest() instanceof Request)) {

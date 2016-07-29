@@ -41,6 +41,27 @@ class GenerateControllerTest extends \PHPUnit_Framework_TestCase
         $controller->dispatch($controller->getRequest());
     }
 
+    private function buildController($routMatch)
+    {
+        $controller = new GenerateController($this->generateServiceMock, $this->deleteServiceMock);
+
+        $serviceManager = Bootstrap::getServiceManager();
+        /** @var RouteStackInterface $router */
+        $router = $serviceManager->get('HttpRouter');
+        $routeMatch = new RouteMatch($routMatch);
+
+        $event = new MvcEvent();
+        $event->setRouter($router);
+        $event->setRouteMatch($routeMatch);
+
+        $pluginManager = new PluginManager();
+        $controller->setEvent($event);
+        $controller->setPluginManager($pluginManager);
+        $controller->setServiceLocator($serviceManager);
+
+        return $controller;
+    }
+
     /**
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage The index enter is not valid
@@ -102,26 +123,5 @@ class GenerateControllerTest extends \PHPUnit_Framework_TestCase
 
         $request = new Request();
         self::assertEquals(['delete' => 'success'], $controller->dispatch($request));
-    }
-
-    private function buildController($routMatch)
-    {
-        $controller = new GenerateController($this->generateServiceMock, $this->deleteServiceMock);
-
-        $serviceManager = Bootstrap::getServiceManager();
-        /** @var RouteStackInterface $router */
-        $router = $serviceManager->get('HttpRouter');
-        $routeMatch = new RouteMatch($routMatch);
-
-        $event = new MvcEvent();
-        $event->setRouter($router);
-        $event->setRouteMatch($routeMatch);
-
-        $pluginManager = new PluginManager();
-        $controller->setEvent($event);
-        $controller->setPluginManager($pluginManager);
-        $controller->setServiceLocator($serviceManager);
-
-        return $controller;
     }
 }

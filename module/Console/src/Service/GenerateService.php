@@ -15,6 +15,12 @@ class GenerateService
     /** @var Generator */
     private $faker;
 
+    /**
+     * GenerateService constructor.
+     *
+     * @param IndexService $indexService
+     * @param Generator    $faker
+     */
     public function __construct(IndexService $indexService, Generator $faker)
     {
         $this->indexService = $indexService;
@@ -41,22 +47,9 @@ class GenerateService
         }
     }
 
-    private function generateRandomArray()
-    {
-        $number = $this->faker->numberBetween(1, 5);
-        $types = [];
-        for ($i = 0; $i < $number; $i++) {
-            $types[] = $this->faker->sentence($this->faker->numberBetween(1, 5));
-        }
-
-        return $types;
-    }
-
-    private function generateDate(\DateTime $date)
-    {
-        return $date->format(\DateTime::W3C);
-    }
-
+    /**
+     * @param int $number
+     */
     private function generateOpportunities($number)
     {
         $this->indexService->createIndex(IndexService::ES_INDEX_OPPORTUNITY);
@@ -88,6 +81,33 @@ class GenerateService
         }
     }
 
+    /**
+     * @param \DateTime $date
+     *
+     * @return string
+     */
+    private function generateDate(\DateTime $date)
+    {
+        return $date->format(\DateTime::W3C);
+    }
+
+    /**
+     * @return array
+     */
+    private function generateRandomArray()
+    {
+        $number = $this->faker->numberBetween(1, 5);
+        $types = [];
+        for ($i = 0; $i < $number; $i++) {
+            $types[] = $this->faker->sentence($this->faker->numberBetween(1, 5));
+        }
+
+        return $types;
+    }
+
+    /**
+     * @param int $number
+     */
     private function generateEvents($number)
     {
         $this->indexService->createIndex(IndexService::ES_INDEX_EVENT);

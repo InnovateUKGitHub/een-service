@@ -2,15 +2,15 @@
 
 namespace SearchTest;
 
-use Search\Module;
-use Search\Factory\Service\ElasticSearchServiceFactory;
-use Search\Factory\Controller\OpportunitiesControllerFactory;
-use Search\Factory\Service\QueryServiceFactory;
-use Search\Service\ElasticSearchService;
-use Search\Service\QueryService;
-use Search\Service\MerlinService;
-use Search\Factory\Service\MerlinServiceFactory;
 use Search\Controller\OpportunitiesController;
+use Search\Factory\Controller\OpportunitiesControllerFactory;
+use Search\Factory\Service\ElasticSearchServiceFactory;
+use Search\Factory\Service\MerlinServiceFactory;
+use Search\Factory\Service\QueryServiceFactory;
+use Search\Module;
+use Search\Service\ElasticSearchService;
+use Search\Service\MerlinService;
+use Search\Service\QueryService;
 
 /**
  * @covers Search\Module

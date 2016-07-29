@@ -2,8 +2,8 @@
 
 namespace Console\Factory\Service;
 
-use Elasticsearch\ClientBuilder;
 use Console\Service\IndexService;
+use Elasticsearch\ClientBuilder;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

@@ -2,8 +2,8 @@
 namespace Console\Service;
 
 use Zend\Http\Client;
-use Zend\Http\Request;
 use Zend\Http\Exception\InvalidArgumentException;
+use Zend\Http\Request;
 use Zend\Json\Server\Exception\HttpException;
 
 class HttpService
@@ -38,6 +38,14 @@ class HttpService
     }
 
     /**
+     * @return string
+     */
+    public function getHttpMethod()
+    {
+        return $this->httpMethod;
+    }
+
+    /**
      * @param string $httpMethod
      *
      * @return $this
@@ -68,9 +76,9 @@ class HttpService
     /**
      * @return string
      */
-    public function getHttpMethod()
+    public function getPathToService()
     {
-        return $this->httpMethod;
+        return $this->pathToService;
     }
 
     /**
@@ -85,14 +93,6 @@ class HttpService
         $this->pathToService = $pathToService;
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPathToService()
-    {
-        return $this->pathToService;
     }
 
     /**
@@ -179,6 +179,9 @@ class HttpService
         return $this;
     }
 
+    /**
+     * @param $params
+     */
     public function setQueryParams($params)
     {
         $this->client->setParameterGet($params);

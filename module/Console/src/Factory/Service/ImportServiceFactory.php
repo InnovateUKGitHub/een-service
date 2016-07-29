@@ -2,12 +2,12 @@
 
 namespace Console\Factory\Service;
 
-use Console\Service\ImportService;
 use Console\Service\HttpService;
+use Console\Service\ImportService;
 use Console\Service\IndexService;
+use Zend\Http\Exception\InvalidArgumentException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Http\Exception\InvalidArgumentException;
 
 final class ImportServiceFactory implements FactoryInterface
 {
@@ -55,7 +55,7 @@ final class ImportServiceFactory implements FactoryInterface
         $httpService->setServer($config[self::CONFIG_MERLIN][self::SERVER]);
         $httpService->setPort($config[self::CONFIG_MERLIN][self::PORT]);
         $httpService->setHeaders([
-            'Content-type' => 'application/xml'
+            'Content-type' => 'application/xml',
         ]);
 
         return new ImportService($httpService, $indexService, $config[self::CONFIG_MERLIN]);

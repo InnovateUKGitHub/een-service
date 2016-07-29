@@ -1,22 +1,22 @@
 <?php
 namespace ConsoleTest;
 
-use Console\Factory\Service\IndexServiceFactory;
-use Console\Module;
-use Console\Service\IndexService;
-use Zend\Console\Adapter\AdapterInterface;
+use Console\Controller\GenerateController;
+use Console\Controller\ImportController;
 use Console\Factory\Controller\GenerateControllerFactory;
 use Console\Factory\Controller\ImportControllerFactory;
 use Console\Factory\Service\DeleteServiceFactory;
 use Console\Factory\Service\GenerateServiceFactory;
 use Console\Factory\Service\HttpServiceFactory;
 use Console\Factory\Service\ImportServiceFactory;
-use Console\Controller\GenerateController;
-use Console\Controller\ImportController;
+use Console\Factory\Service\IndexServiceFactory;
+use Console\Module;
 use Console\Service\DeleteService;
 use Console\Service\GenerateService;
 use Console\Service\HttpService;
 use Console\Service\ImportService;
+use Console\Service\IndexService;
+use Zend\Console\Adapter\AdapterInterface;
 
 /**
  * @covers Console\Module

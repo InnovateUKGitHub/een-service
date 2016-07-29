@@ -2,10 +2,10 @@
 
 namespace SearchTest\Factory\Controller;
 
-use Search\Service\ElasticSearchService;
-use Search\Service\MerlinService;
 use Search\Controller\OpportunitiesController;
 use Search\Factory\Controller\OpportunitiesControllerFactory;
+use Search\Service\ElasticSearchService;
+use Search\Service\MerlinService;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

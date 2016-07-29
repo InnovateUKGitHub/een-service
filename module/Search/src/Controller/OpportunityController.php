@@ -4,16 +4,11 @@ namespace Search\Controller;
 
 use Search\Service\ElasticSearchService;
 use Search\Service\MerlinService;
+use Zend\InputFilter\InputFilter;
 use Zend\Mvc\Controller\AbstractActionController;
 use ZF\ContentNegotiation\ViewModel;
-use Zend\InputFilter\InputFilter;
 
-/**
- * Class OpportunitiesController
- *
- * @package Search\Controller\Opportunities
- */
-class OpportunitiesController extends AbstractActionController
+final class OpportunitiesController extends AbstractActionController
 {
     /** @var ElasticSearchService */
     private $service;
@@ -27,16 +22,6 @@ class OpportunitiesController extends AbstractActionController
     }
 
     /**
-     * @return mixed
-     */
-    public function getParams()
-    {
-        $inputFilter = $this->getEvent()->getParam(InputFilter::class);
-
-        return $inputFilter->getValues();
-    }
-
-    /**
      * @return ViewModel
      */
     public function opportunitiesAction()
@@ -44,6 +29,16 @@ class OpportunitiesController extends AbstractActionController
         $params = $this->getParams();
 
         return new ViewModel($this->service->searchOpportunities($params));
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParams()
+    {
+        $inputFilter = $this->getEvent()->getParam(InputFilter::class);
+
+        return $inputFilter->getValues();
     }
 
     /**

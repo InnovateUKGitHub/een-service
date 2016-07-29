@@ -3,8 +3,8 @@
 namespace Console\Factory\Controller;
 
 use Console\Controller\GenerateController;
-use Console\Service\GenerateService;
 use Console\Service\DeleteService;
+use Console\Service\GenerateService;
 use Zend\Di\ServiceLocator;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;

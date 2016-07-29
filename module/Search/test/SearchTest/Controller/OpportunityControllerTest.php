@@ -2,13 +2,13 @@
 
 namespace ConsoleTest\Controller;
 
+use Search\Controller\OpportunitiesController;
 use Search\Service\ElasticSearchService;
 use Search\Service\MerlinService;
-use Search\Controller\OpportunitiesController;
+use Zend\InputFilter\InputFilter;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use ZF\ContentNegotiation\ViewModel;
-use Zend\InputFilter\InputFilter;
 
 /**
  * @covers Search\Controller\OpportunitiesController

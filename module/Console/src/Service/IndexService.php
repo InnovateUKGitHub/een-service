@@ -20,6 +20,11 @@ class IndexService
         $this->elasticSearch = $elasticSearch;
     }
 
+    /**
+     * @param string $index
+     *
+     * @return bool
+     */
     public function createIndex($index)
     {
         if ($this->elasticSearch->indices()->exists(['index' => $index]) === true) {
@@ -37,6 +42,9 @@ class IndexService
         return false;
     }
 
+    /**
+     * Function to create the mapping of the opportunity index
+     */
     private function createOpportunityIndex()
     {
         $params = [
@@ -110,6 +118,9 @@ class IndexService
         $this->elasticSearch->indices()->create($params);
     }
 
+    /**
+     * Function to create the mapping of the event index
+     */
     private function createEventIndex()
     {
         $params = [
@@ -170,6 +181,14 @@ class IndexService
         $this->elasticSearch->indices()->create($params);
     }
 
+    /**
+     * @param $values
+     * @param $id
+     * @param $index
+     * @param $type
+     *
+     * @return array
+     */
     public function index($values, $id, $index, $type)
     {
         $params = [

@@ -16,13 +16,13 @@ class QueryServiceTest extends \PHPUnit_Framework_TestCase
     public function testSearch()
     {
         $params = [
-            'from' => 0,
-            'size' => 10,
+            'from'   => 0,
+            'size'   => 10,
             'search' => 'Some Search',
-            'sort' => [
-                ['date.timestamp' => 'desc']
+            'sort'   => [
+                ['date.timestamp' => 'desc'],
             ],
-            'source' => ['name', 'description']
+            'source' => ['name', 'description'],
         ];
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|Client $elasticSearchMock */
@@ -52,16 +52,16 @@ class QueryServiceTest extends \PHPUnit_Framework_TestCase
             ->willReturn([
                 'hits' => [
                     'total' => 100,
-                    'hits' => [
+                    'hits'  => [
                         [
-                            'index' => self::INDEX,
-                            'type' => self::TYPE,
+                            'index'   => self::INDEX,
+                            'type'    => self::TYPE,
                             '_source' => [
-                                'name' => 'Name',
+                                'name'        => 'Name',
                                 'description' => 'Description',
-                            ]
-                        ]
-                    ]
+                            ],
+                        ],
+                    ],
                 ],
             ]);
 
@@ -69,17 +69,17 @@ class QueryServiceTest extends \PHPUnit_Framework_TestCase
 
         self::assertEquals(
             [
-                'total' => 100,
+                'total'   => 100,
                 'results' => [
                     [
-                        'index' => self::INDEX,
-                        'type' => self::TYPE,
+                        'index'   => self::INDEX,
+                        'type'    => self::TYPE,
                         '_source' => [
-                            'name' => 'Name',
+                            'name'        => 'Name',
                             'description' => 'Description',
-                        ]
-                    ]
-                ]
+                        ],
+                    ],
+                ],
             ],
             $service->search($params, self::INDEX, self::TYPE)
         );

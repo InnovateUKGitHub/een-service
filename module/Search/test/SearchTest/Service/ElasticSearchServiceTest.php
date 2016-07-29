@@ -13,9 +13,9 @@ class ElasticSearchServiceTest extends \PHPUnit_Framework_TestCase
     public function testSearchOpportunities()
     {
         $params = [
-            'from' => 0,
-            'size' => 10,
-            'search' => 'Some Search'
+            'from'   => 0,
+            'size'   => 10,
+            'search' => 'Some Search',
         ];
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|QueryService $queryServiceMock */
@@ -33,9 +33,9 @@ class ElasticSearchServiceTest extends \PHPUnit_Framework_TestCase
     public function testSearchEvent()
     {
         $params = [
-            'from' => 0,
-            'size' => 10,
-            'search' => 'Some Search'
+            'from'   => 0,
+            'size'   => 10,
+            'search' => 'Some Search',
         ];
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|QueryService $queryServiceMock */

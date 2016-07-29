@@ -3,10 +3,10 @@
 namespace Console\Factory\Service;
 
 use Console\Service\HttpService;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Http\Client;
 use Zend\Http\Client\Adapter\Curl;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 final class HttpServiceFactory implements FactoryInterface
 {

@@ -2,8 +2,8 @@
 
 namespace ConsoleTest\Factory\Service;
 
-use Console\Service\GenerateService;
 use Console\Factory\Service\GenerateServiceFactory;
+use Console\Service\GenerateService;
 use Console\Service\IndexService;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
