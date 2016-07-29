@@ -6,7 +6,7 @@ use Search\Service\ElasticSearchService;
 use Search\Service\QueryService;
 
 /**
- * @covers Search\V1\ElasticSearch\Service\ElasticSearchService
+ * @covers Search\Service\ElasticSearchService
  */
 class ElasticSearchServiceTest extends \PHPUnit_Framework_TestCase
 {

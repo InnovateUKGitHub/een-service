@@ -6,7 +6,7 @@ use Elasticsearch\Client;
 use Search\Service\QueryService;
 
 /**
- * @covers Search\V1\ElasticSearch\Service\QueryService
+ * @covers Search\Service\QueryService
  */
 class QueryServiceTest extends \PHPUnit_Framework_TestCase
 {

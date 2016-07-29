@@ -10,7 +10,7 @@ use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * @covers Search\V1\Rpc\Opportunities\OpportunitiesControllerFactory
+ * @covers Search\Factory\Controller\OpportunitiesControllerFactory
  */
 class OpportunitiesControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {

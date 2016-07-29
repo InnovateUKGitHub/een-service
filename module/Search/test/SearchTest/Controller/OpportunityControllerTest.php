@@ -11,7 +11,7 @@ use ZF\ContentNegotiation\ViewModel;
 use Zend\InputFilter\InputFilter;
 
 /**
- * @covers Search\V1\Rpc\Opportunities\OpportunitiesController
+ * @covers Search\Controller\OpportunitiesController
  */
 class OpportunitiesControllerTest extends \PHPUnit_Framework_TestCase
 {
