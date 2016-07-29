@@ -2,22 +2,22 @@
 
 namespace Console\Factory\Service;
 
-use Console\Service\DeleteService;
+use Console\Service\IndexService;
 use Elasticsearch\ClientBuilder;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-final class DeleteServiceFactory implements FactoryInterface
+final class IndexServiceFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
      *
-     * @return DeleteService
+     * @return IndexService
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $elasticSearch = ClientBuilder::create()->build();
 
-        return new DeleteService($elasticSearch);
+        return new IndexService($elasticSearch);
     }
 }

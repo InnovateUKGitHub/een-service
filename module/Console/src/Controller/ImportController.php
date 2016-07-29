@@ -4,12 +4,12 @@ namespace Console\Controller;
 
 use Console\Helper\Helper;
 use Console\Service\ImportService;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Console\Request;
 use Zend\Console\Exception\BadMethodCallException;
 use Zend\Console\Exception\InvalidArgumentException;
+use Zend\Console\Request;
+use Zend\Mvc\Controller\AbstractActionController;
 
-class ImportController extends AbstractActionController
+final class ImportController extends AbstractActionController
 {
     /** @var ImportService */
     private $importService;
@@ -24,13 +24,16 @@ class ImportController extends AbstractActionController
         $this->importService = $importService;
     }
 
+    /**
+     * @return array
+     */
     public function importAction()
     {
         if (!($this->getRequest() instanceof Request)) {
             throw new BadMethodCallException('This is a console tool only');
         }
 
-        $type = $this->params('type', 'bo');
+        $type = $this->params('type', 'all');
 
         if (Helper::checkValidProfileType($type) === false) {
             throw new InvalidArgumentException('The index enter is not valid');
@@ -38,6 +41,6 @@ class ImportController extends AbstractActionController
 
         $this->importService->import($type);
 
-        return ['import' => 'success'];
+        return ['success' => true];
     }
 }

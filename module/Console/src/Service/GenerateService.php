@@ -3,7 +3,6 @@
 namespace Console\Service;
 
 use Faker\Generator;
-use Zend\Http\Request;
 
 class GenerateService
 {
@@ -11,14 +10,20 @@ class GenerateService
     const EVENT = 'event';
     const ALL = 'all';
 
-    /** @var ConnectionService */
-    private $connection;
+    /** @var IndexService */
+    private $indexService;
     /** @var Generator */
     private $faker;
 
-    public function __construct(ConnectionService $connection, Generator $faker)
+    /**
+     * GenerateService constructor.
+     *
+     * @param IndexService $indexService
+     * @param Generator    $faker
+     */
+    public function __construct(IndexService $indexService, Generator $faker)
     {
-        $this->connection = $connection;
+        $this->indexService = $indexService;
         $this->faker = $faker;
     }
 
@@ -42,24 +47,13 @@ class GenerateService
         }
     }
 
-    private function generateRandomArray()
-    {
-        $number = $this->faker->numberBetween(1, 5);
-        $types = [];
-        for ($i = 0; $i < $number; $i++) {
-            $types[] = $this->faker->sentence($this->faker->numberBetween(1, 5));
-        }
-
-        return $types;
-    }
-
-    private function generateDate(\DateTime $date)
-    {
-        return $date->format(\DateTime::W3C);
-    }
-
+    /**
+     * @param int $number
+     */
     private function generateOpportunities($number)
     {
+        $this->indexService->createIndex(IndexService::ES_INDEX_OPPORTUNITY);
+
         for ($i = 0; $i < $number; $i++) {
             $params = [
                 'id'               => $this->faker->bothify('???##########'),
@@ -77,12 +71,47 @@ class GenerateService
                 'ipr'              => $this->faker->sentence($this->faker->numberBetween(1, 5)),
                 'ipr_reference'    => $this->faker->sentence($this->faker->numberBetween(1, 5)),
             ];
-            $this->connection->execute(Request::METHOD_POST, self::OPPORTUNITY, $params);
+
+            $this->indexService->index(
+                $params,
+                IndexService::ES_INDEX_OPPORTUNITY,
+                IndexService::ES_TYPE_OPPORTUNITY,
+                $params['id']
+            );
         }
     }
 
+    /**
+     * @param \DateTime $date
+     *
+     * @return string
+     */
+    private function generateDate(\DateTime $date)
+    {
+        return $date->format(\DateTime::W3C);
+    }
+
+    /**
+     * @return array
+     */
+    private function generateRandomArray()
+    {
+        $number = $this->faker->numberBetween(1, 5);
+        $types = [];
+        for ($i = 0; $i < $number; $i++) {
+            $types[] = $this->faker->sentence($this->faker->numberBetween(1, 5));
+        }
+
+        return $types;
+    }
+
+    /**
+     * @param int $number
+     */
     private function generateEvents($number)
     {
+        $this->indexService->createIndex(IndexService::ES_INDEX_EVENT);
+
         for ($i = 0; $i < $number; $i++) {
             $params = [
                 'id'          => $i + 1,
@@ -100,7 +129,13 @@ class GenerateService
                 'cost'        => $this->faker->sentence,
                 'topics'      => $this->generateRandomArray(),
             ];
-            $this->connection->execute(Request::METHOD_POST, self::EVENT, $params);
+
+            $this->indexService->index(
+                $params,
+                IndexService::ES_INDEX_EVENT,
+                IndexService::ES_TYPE_EVENT,
+                $params['id']
+            );
         }
     }
 }

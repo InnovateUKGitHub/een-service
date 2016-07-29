@@ -18,6 +18,5 @@ return [
     'ZF\\Rpc',
     'ZF\\Versioning',
     'Console',
-    'Ingest',
     'Search',
 ];

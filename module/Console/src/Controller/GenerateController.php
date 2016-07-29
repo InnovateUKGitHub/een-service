@@ -3,14 +3,14 @@
 namespace Console\Controller;
 
 use Console\Helper\Helper;
-use Console\Service\GenerateService;
 use Console\Service\DeleteService;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Console\Request;
+use Console\Service\GenerateService;
 use Zend\Console\Exception\BadMethodCallException;
 use Zend\Console\Exception\InvalidArgumentException;
+use Zend\Console\Request;
+use Zend\Mvc\Controller\AbstractActionController;
 
-class GenerateController extends AbstractActionController
+final class GenerateController extends AbstractActionController
 {
     /** @var GenerateService */
     private $generateService;
@@ -21,7 +21,7 @@ class GenerateController extends AbstractActionController
      * GenerateController constructor.
      *
      * @param GenerateService $generateService
-     * @param DeleteService $deleteService
+     * @param DeleteService   $deleteService
      */
     public function __construct(GenerateService $generateService, DeleteService $deleteService)
     {
@@ -29,6 +29,9 @@ class GenerateController extends AbstractActionController
         $this->deleteService = $deleteService;
     }
 
+    /**
+     * @return array
+     */
     public function generateAction()
     {
         if (!($this->getRequest() instanceof Request)) {
@@ -49,6 +52,9 @@ class GenerateController extends AbstractActionController
         return ['generate' => 'success'];
     }
 
+    /**
+     * @return array
+     */
     public function deleteAction()
     {
         if (!($this->getRequest() instanceof Request)) {

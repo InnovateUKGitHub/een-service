@@ -2,9 +2,8 @@
 
 namespace ConsoleTest\Service;
 
-use Console\Service\ConnectionService;
 use Console\Service\GenerateService;
-use Zend\Http\Request;
+use Console\Service\IndexService;
 
 /**
  * @covers Console\Service\GenerateService
@@ -13,22 +12,20 @@ class GenerateServiceTest extends \PHPUnit_Framework_TestCase
 {
     public function testGenerateAll()
     {
-        /** @var \PHPUnit_Framework_MockObject_MockObject|ConnectionService $connectionServiceMock */
-        $connectionServiceMock = self::getMock(ConnectionService::class, [], [], '', false);
+        /** @var \PHPUnit_Framework_MockObject_MockObject|IndexService $serviceMock */
+        $serviceMock = $this->createMock(IndexService::class);
 
         $faker = \Faker\Factory::create();
 
-        $service = new GenerateService($connectionServiceMock, $faker);
+        $service = new GenerateService($serviceMock, $faker);
 
-        $connectionServiceMock
+        $serviceMock
             ->expects(self::at(0))
-            ->method('execute')
-            ->with(Request::METHOD_POST, GenerateService::OPPORTUNITY)
+            ->method('index')
             ->willReturn([]);
-        $connectionServiceMock
+        $serviceMock
             ->expects(self::at(1))
-            ->method('execute')
-            ->with(Request::METHOD_POST, GenerateService::EVENT)
+            ->method('index')
             ->willReturn([]);
 
         $service->generate(GenerateService::ALL, 1);
@@ -36,17 +33,16 @@ class GenerateServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testGenerateOpportunity()
     {
-        /** @var \PHPUnit_Framework_MockObject_MockObject|ConnectionService $connectionServiceMock */
-        $connectionServiceMock = self::getMock(ConnectionService::class, [], [], '', false);
+        /** @var \PHPUnit_Framework_MockObject_MockObject|IndexService $service */
+        $serviceMock = $this->createMock(IndexService::class);
 
         $faker = \Faker\Factory::create();
 
-        $service = new GenerateService($connectionServiceMock, $faker);
+        $service = new GenerateService($serviceMock, $faker);
 
-        $connectionServiceMock
+        $serviceMock
             ->expects(self::exactly(1))
-            ->method('execute')
-            ->with(Request::METHOD_POST, GenerateService::OPPORTUNITY)
+            ->method('index')
             ->willReturn([]);
 
         $service->generate(GenerateService::OPPORTUNITY, 1);
@@ -54,17 +50,16 @@ class GenerateServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testGenerateEvent()
     {
-        /** @var \PHPUnit_Framework_MockObject_MockObject|ConnectionService $connectionServiceMock */
-        $connectionServiceMock = self::getMock(ConnectionService::class, [], [], '', false);
+        /** @var \PHPUnit_Framework_MockObject_MockObject|IndexService $serviceMock */
+        $serviceMock = $this->createMock(IndexService::class);
 
         $faker = \Faker\Factory::create();
 
-        $service = new GenerateService($connectionServiceMock, $faker);
+        $service = new GenerateService($serviceMock, $faker);
 
-        $connectionServiceMock
+        $serviceMock
             ->expects(self::exactly(1))
-            ->method('execute')
-            ->with(Request::METHOD_POST, GenerateService::EVENT)
+            ->method('index')
             ->willReturn([]);
 
         $service->generate(GenerateService::EVENT, 1);
@@ -72,22 +67,20 @@ class GenerateServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testGenerateNoIndexSpecified()
     {
-        /** @var \PHPUnit_Framework_MockObject_MockObject|ConnectionService $connectionServiceMock */
-        $connectionServiceMock = self::getMock(ConnectionService::class, [], [], '', false);
+        /** @var \PHPUnit_Framework_MockObject_MockObject|IndexService $serviceMock */
+        $serviceMock = $this->createMock(IndexService::class);
 
         $faker = \Faker\Factory::create();
 
-        $service = new GenerateService($connectionServiceMock, $faker);
+        $service = new GenerateService($serviceMock, $faker);
 
-        $connectionServiceMock
+        $serviceMock
             ->expects(self::at(0))
-            ->method('execute')
-            ->with(Request::METHOD_POST, GenerateService::OPPORTUNITY)
+            ->method('index')
             ->willReturn([]);
-        $connectionServiceMock
+        $serviceMock
             ->expects(self::at(1))
-            ->method('execute')
-            ->with(Request::METHOD_POST, GenerateService::EVENT)
+            ->method('index')
             ->willReturn([]);
 
         $service->generate(null, 1);
@@ -95,22 +88,20 @@ class GenerateServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testGenerateInvalidIndexSpecified()
     {
-        /** @var \PHPUnit_Framework_MockObject_MockObject|ConnectionService $connectionServiceMock */
-        $connectionServiceMock = self::getMock(ConnectionService::class, [], [], '', false);
+        /** @var \PHPUnit_Framework_MockObject_MockObject|IndexService $serviceMock */
+        $serviceMock = $this->createMock(IndexService::class);
 
         $faker = \Faker\Factory::create();
 
-        $service = new GenerateService($connectionServiceMock, $faker);
+        $service = new GenerateService($serviceMock, $faker);
 
-        $connectionServiceMock
+        $serviceMock
             ->expects(self::at(0))
-            ->method('execute')
-            ->with(Request::METHOD_POST, GenerateService::OPPORTUNITY)
+            ->method('index')
             ->willReturn([]);
-        $connectionServiceMock
+        $serviceMock
             ->expects(self::at(1))
-            ->method('execute')
-            ->with(Request::METHOD_POST, GenerateService::EVENT)
+            ->method('index')
             ->willReturn([]);
 
         $service->generate('InvalidIndex', 1);

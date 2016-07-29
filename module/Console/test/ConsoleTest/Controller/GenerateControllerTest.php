@@ -26,8 +26,8 @@ class GenerateControllerTest extends \PHPUnit_Framework_TestCase
 
     public function Setup()
     {
-        $this->generateServiceMock = self::getMock(GenerateService::class, [], [], '', false);
-        $this->deleteServiceMock = self::getMock(DeleteService::class, [], [], '', false);
+        $this->generateServiceMock = $this->createMock(GenerateService::class);
+        $this->deleteServiceMock = $this->createMock(DeleteService::class);
     }
 
     /**
@@ -39,6 +39,27 @@ class GenerateControllerTest extends \PHPUnit_Framework_TestCase
         $controller = $this->buildController(['action' => 'generate']);
 
         $controller->dispatch($controller->getRequest());
+    }
+
+    private function buildController($routMatch)
+    {
+        $controller = new GenerateController($this->generateServiceMock, $this->deleteServiceMock);
+
+        $serviceManager = Bootstrap::getServiceManager();
+        /** @var RouteStackInterface $router */
+        $router = $serviceManager->get('HttpRouter');
+        $routeMatch = new RouteMatch($routMatch);
+
+        $event = new MvcEvent();
+        $event->setRouter($router);
+        $event->setRouteMatch($routeMatch);
+
+        $pluginManager = new PluginManager();
+        $controller->setEvent($event);
+        $controller->setPluginManager($pluginManager);
+        $controller->setServiceLocator($serviceManager);
+
+        return $controller;
     }
 
     /**
@@ -102,26 +123,5 @@ class GenerateControllerTest extends \PHPUnit_Framework_TestCase
 
         $request = new Request();
         self::assertEquals(['delete' => 'success'], $controller->dispatch($request));
-    }
-
-    private function buildController($routMatch)
-    {
-        $controller = new GenerateController($this->generateServiceMock, $this->deleteServiceMock);
-
-        $serviceManager = Bootstrap::getServiceManager();
-        /** @var RouteStackInterface $router */
-        $router = $serviceManager->get('HttpRouter');
-        $routeMatch = new RouteMatch($routMatch);
-
-        $event = new MvcEvent();
-        $event->setRouter($router);
-        $event->setRouteMatch($routeMatch);
-
-        $pluginManager = new PluginManager();
-        $controller->setEvent($event);
-        $controller->setPluginManager($pluginManager);
-        $controller->setServiceLocator($serviceManager);
-
-        return $controller;
     }
 }

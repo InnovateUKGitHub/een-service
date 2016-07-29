@@ -2,23 +2,34 @@
 
 namespace Console\Service;
 
-use Zend\Http\Request;
+use Elasticsearch\Client;
 
 class DeleteService
 {
-    /** @var ConnectionService */
-    private $connection;
+    /** @var Client */
+    private $elasticSearch;
 
-    public function __construct(ConnectionService $connection)
+    /**
+     * DeleteService constructor.
+     *
+     * @param Client $elasticSearch
+     */
+    public function __construct(Client $elasticSearch)
     {
-        $this->connection = $connection;
+        $this->elasticSearch = $elasticSearch;
     }
 
     /**
-     * @param string $index
+     * @param $index
+     *
+     * @return array
      */
     public function delete($index)
     {
-        $this->connection->execute(Request::METHOD_DELETE, 'delete/' . $index);
+        $params = [
+            'index' => $index === 'all' ? '*' : $index,
+        ];
+
+        return $this->elasticSearch->indices()->delete($params);
     }
 }

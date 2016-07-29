@@ -1,23 +1,22 @@
 <?php
-
 namespace ConsoleTest;
 
-use Console\Module;
-use Zend\Console\Adapter\AdapterInterface;
+use Console\Controller\GenerateController;
+use Console\Controller\ImportController;
 use Console\Factory\Controller\GenerateControllerFactory;
 use Console\Factory\Controller\ImportControllerFactory;
-use Console\Factory\Service\ConnectionServiceFactory;
 use Console\Factory\Service\DeleteServiceFactory;
 use Console\Factory\Service\GenerateServiceFactory;
 use Console\Factory\Service\HttpServiceFactory;
 use Console\Factory\Service\ImportServiceFactory;
-use Console\Controller\GenerateController;
-use Console\Controller\ImportController;
-use Console\Service\ConnectionService;
+use Console\Factory\Service\IndexServiceFactory;
+use Console\Module;
 use Console\Service\DeleteService;
 use Console\Service\GenerateService;
 use Console\Service\HttpService;
 use Console\Service\ImportService;
+use Console\Service\IndexService;
+use Zend\Console\Adapter\AdapterInterface;
 
 /**
  * @covers Console\Module
@@ -36,17 +35,17 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
             ],
             'service_manager' => [
                 'factories' => [
-                    ConnectionService::class => ConnectionServiceFactory::class,
-                    DeleteService::class     => DeleteServiceFactory::class,
-                    GenerateService::class   => GenerateServiceFactory::class,
-                    HttpService::class       => HttpServiceFactory::class,
-                    ImportService::class     => ImportServiceFactory::class,
+                    DeleteService::class   => DeleteServiceFactory::class,
+                    GenerateService::class => GenerateServiceFactory::class,
+                    HttpService::class     => HttpServiceFactory::class,
+                    ImportService::class   => ImportServiceFactory::class,
+                    IndexService::class    => IndexServiceFactory::class,
                 ],
             ],
             'console'         => [
                 'router' => [
                     'routes' => [
-                        'import-data' => [
+                        'import-data'   => [
                             'options' => [
                                 'route'       => 'import [--type=<type>]',
                                 'constraints' => [
@@ -92,9 +91,9 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     {
         $module = new Module();
         /** @var \PHPUnit_Framework_MockObject_MockObject|AdapterInterface $console */
-        $console = self::getMock(AdapterInterface::class, [], [], '', false);
+        $console = $this->createMock(AdapterInterface::class);
         self::assertEquals([
-            'import [--type=<type>]' => 'import date from merlin into elasticSearch',
+            'import [--type=<type>]'                         => 'import date from merlin into elasticSearch',
             ['--type', 'Type of data to be imported. [bo|all] (default: all)'],
             'generate [--index=<index>] [--number=<number>]' => 'Generate random data into elasticSearch for test purpose',
             ['--index', 'Index to generate. [opportunity|event|all] (default: all)'],

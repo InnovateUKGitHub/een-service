@@ -7,12 +7,12 @@ class Helper
     const VALID_TYPE = [
         'event',
         'opportunity',
-        'all'
+        'all',
     ];
 
     const VALID_MERLIN_TYPE = [
         'bo',
-        'all'
+        'all',
     ];
 
     /**

@@ -28,7 +28,7 @@ class HttpServiceTest extends \PHPUnit_Framework_TestCase
 
     public function Setup()
     {
-        $this->clientMock = self::getMock(Client::class, [], [], '', false);
+        $this->clientMock = $this->createMock(Client::class);
     }
 
     public function testGetterSetter()
@@ -87,7 +87,7 @@ class HttpServiceTest extends \PHPUnit_Framework_TestCase
             ->expects(self::once())
             ->method('setRawBody')
             ->with(self::REQUEST_BODY);
-        $responseMock = self::getMock(Response::class, [], [], '', false);
+        $responseMock = $this->createMock(Response::class);
         $responseMock->expects(self::once())
             ->method('getBody')
             ->willReturn('{"success": 1}');
@@ -124,7 +124,7 @@ class HttpServiceTest extends \PHPUnit_Framework_TestCase
             ->expects(self::once())
             ->method('setRawBody')
             ->with(self::REQUEST_BODY);
-        $responseMock = self::getMock(Response::class, [], [], '', false);
+        $responseMock = $this->createMock(Response::class);
         $responseMock->expects(self::once())
             ->method('getBody')
             ->willReturn('{"success" => 1}');
