@@ -7,7 +7,7 @@ use Search\Service\QueryService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class ElasticSearchServiceFactory implements FactoryInterface
+final class ElasticSearchServiceFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $sm

@@ -18,6 +18,11 @@ class MerlinService
         $this->service = $service;
     }
 
+    /**
+     * @param string $id
+     *
+     * @return array
+     */
     public function getOpportunities($id = null)
     {
         $results = $this->service->getData('all');
@@ -29,7 +34,12 @@ class MerlinService
         return $this->searchOpportunities($results, $id);
     }
 
-    public function getFirst10Opportunities($results)
+    /**
+     * @param \SimpleXMLElement $results
+     *
+     * @return array
+     */
+    public function getFirst10Opportunities(\SimpleXMLElement $results)
     {
         $opportunities = [];
         $i = 0;
@@ -57,14 +67,104 @@ class MerlinService
             ];
             $i++;
 
-            if ($i > 10){
+            if ($i > 10) {
                 return $opportunities;
             }
         }
+
         return $opportunities;
     }
 
-    public function searchOpportunities($results, $id)
+    /**
+     * @param \SimpleXMLElement $partnerships
+     *
+     * @return array
+     */
+    private function extractPartnerships(\SimpleXMLElement $partnerships)
+    {
+        $result = [];
+        foreach ($partnerships->string as $partnership) {
+            $result[] = (string)$partnership;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param \SimpleXMLElement $industries
+     *
+     * @return array
+     */
+    private function extractIndustries(\SimpleXMLElement $industries)
+    {
+        $result = [];
+        foreach ($industries->exploitation as $industry) {
+            if ((string)$industry->label) {
+                $result[] = (string)$industry->label;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param \SimpleXMLElement $technologies
+     *
+     * @return array
+     */
+    private function extractTechnologies(\SimpleXMLElement $technologies)
+    {
+        $result = [];
+        foreach ($technologies->technologies as $technology) {
+            if ((string)$technology->label) {
+                $result[] = (string)$technology->label;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param \SimpleXMLElement $commercials
+     *
+     * @return array
+     */
+    private function extractCommercials(\SimpleXMLElement $commercials)
+    {
+        $result = [];
+        foreach ($commercials->nace as $commercial) {
+            if ((string)$commercial->label) {
+                $result[] = (string)$commercial->label;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param \SimpleXMLElement $markets
+     *
+     * @return array
+     */
+    private function extractMarkets(\SimpleXMLElement $markets)
+    {
+        $result = [];
+        foreach ($markets->market as $market) {
+            if ((string)$market->label) {
+                $result[] = (string)$market->label;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param \SimpleXMLElement $results
+     * @param int $id
+     *
+     * @return array
+     */
+    public function searchOpportunities(\SimpleXMLElement $results, $id)
     {
         foreach ($results->profile as $profile) {
             if ((string)$profile->reference->external === $id) {
@@ -92,63 +192,5 @@ class MerlinService
             }
         }
         throw new ResourceNotFoundException('The opportunity does not exists', 404);
-    }
-
-    private function extractPartnerships($partnerships)
-    {
-        $result = [];
-        foreach ($partnerships->string as $partnership) {
-            $result[] = (string)$partnership;
-        }
-
-        return $result;
-    }
-
-    private function extractIndustries($industries)
-    {
-        $result = [];
-        foreach ($industries->exploitation as $industry) {
-            if ((string)$industry->label) {
-                $result[] = (string)$industry->label;
-            }
-        }
-
-        return $result;
-    }
-
-    private function extractTechnologies($technologies)
-    {
-        $result = [];
-        foreach ($technologies->technologies as $technology) {
-            if ((string)$technology->label) {
-                $result[] = (string)$technology->label;
-            }
-        }
-
-        return $result;
-    }
-
-    private function extractCommercials($commercials)
-    {
-        $result = [];
-        foreach ($commercials->nace as $commercial) {
-            if ((string)$commercial->label) {
-                $result[] = (string)$commercial->label;
-            }
-        }
-
-        return $result;
-    }
-
-    private function extractMarkets($markets)
-    {
-        $result = [];
-        foreach ($markets->market as $market) {
-            if ((string)$market->label) {
-                $result[] = (string)$market->label;
-            }
-        }
-
-        return $result;
     }
 }

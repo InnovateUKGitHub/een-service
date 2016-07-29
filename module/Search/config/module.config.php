@@ -41,11 +41,11 @@ return [
                             ],
                         ],
                     ],
-                    'list' => [
+                    'list'    => [
                         'type'    => 'Literal',
                         'options' => [
-                            'route'       => '/list',
-                            'defaults'    => [
+                            'route'    => '/list',
+                            'defaults' => [
                                 'action' => 'list',
                             ],
                         ],

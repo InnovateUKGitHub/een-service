@@ -7,7 +7,7 @@ use Search\Service\ElasticSearchService;
 use Search\Service\MerlinService;
 use Zend\Mvc\Controller\ControllerManager;
 
-class OpportunitiesControllerFactory
+final class OpportunitiesControllerFactory
 {
     /**
      * @param ControllerManager $controllers
