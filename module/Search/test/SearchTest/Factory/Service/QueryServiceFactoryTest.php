@@ -14,7 +14,7 @@ class QueryServiceFactoryTest extends \PHPUnit_Framework_TestCase
     public function testFactory()
     {
         /** @var \PHPUnit_Framework_MockObject_MockObject|ServiceLocatorInterface $serviceLocatorMock */
-        $serviceLocatorMock = self::getMock(ServiceLocatorInterface::class, [], [], '', false);
+        $serviceLocatorMock = $this->createMock(ServiceLocatorInterface::class);
         $factory = new QueryServiceFactory();
         $service = $factory->createService($serviceLocatorMock);
 

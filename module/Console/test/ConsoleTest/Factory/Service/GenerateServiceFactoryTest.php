@@ -15,19 +15,13 @@ class GenerateServiceFactoryTest extends \PHPUnit_Framework_TestCase
     public function testFactory()
     {
         /* @var $serviceLocator ServiceLocatorInterface|\PHPUnit_Framework_MockObject_MockObject */
-        $serviceLocator = self::getMock(
-            ServiceLocatorInterface::class,
-            ['get', 'has'],
-            [],
-            '',
-            false
-        );
+        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
 
         $serviceLocator
             ->expects(self::once())
             ->method('get')
             ->with(IndexService::class)
-            ->willReturn(self::getMock(IndexService::class, [], [], '', false));
+            ->willReturn($this->createMock(IndexService::class));
 
         self::assertInstanceOf(
             GenerateService::class,

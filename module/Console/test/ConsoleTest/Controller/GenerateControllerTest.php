@@ -26,8 +26,8 @@ class GenerateControllerTest extends \PHPUnit_Framework_TestCase
 
     public function Setup()
     {
-        $this->generateServiceMock = self::getMock(GenerateService::class, [], [], '', false);
-        $this->deleteServiceMock = self::getMock(DeleteService::class, [], [], '', false);
+        $this->generateServiceMock = $this->createMock(GenerateService::class);
+        $this->deleteServiceMock = $this->createMock(DeleteService::class);
     }
 
     /**

@@ -19,7 +19,7 @@ class ElasticSearchServiceTest extends \PHPUnit_Framework_TestCase
         ];
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|QueryService $queryServiceMock */
-        $queryServiceMock = self::getMock(QueryService::class, [], [], '', false);
+        $queryServiceMock = $this->createMock(QueryService::class);
         $queryServiceMock->expects(self::once())
             ->method('search')
             ->with($params, ElasticSearchService::OPPORTUNITY, ElasticSearchService::OPPORTUNITY)
@@ -39,7 +39,7 @@ class ElasticSearchServiceTest extends \PHPUnit_Framework_TestCase
         ];
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|QueryService $queryServiceMock */
-        $queryServiceMock = self::getMock(QueryService::class, [], [], '', false);
+        $queryServiceMock = $this->createMock(QueryService::class);
         $queryServiceMock->expects(self::once())
             ->method('search')
             ->with($params, ElasticSearchService::EVENT, ElasticSearchService::EVENT)

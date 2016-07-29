@@ -26,7 +26,7 @@ class QueryServiceTest extends \PHPUnit_Framework_TestCase
         ];
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|Client $elasticSearchMock */
-        $elasticSearchMock = self::getMock(Client::class, [], [], '', false);
+        $elasticSearchMock = $this->createMock(Client::class);
         $elasticSearchMock->expects(self::once())
             ->method('search')
             ->with([

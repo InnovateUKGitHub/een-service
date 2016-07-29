@@ -14,10 +14,10 @@ class ElasticSearchServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
-        $queryServiceMock = self::getMock(QueryService::class, [], [], '', false);
+        $queryServiceMock = $this->createMock(QueryService::class);
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|ServiceLocatorInterface $serviceLocatorMock */
-        $serviceLocatorMock = self::getMock(ServiceLocatorInterface::class, [], [], '', false);
+        $serviceLocatorMock = $this->createMock(ServiceLocatorInterface::class);
         $serviceLocatorMock->expects(self::once())
             ->method('get')
             ->with(QueryService::class)

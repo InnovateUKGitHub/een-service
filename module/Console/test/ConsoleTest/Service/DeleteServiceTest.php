@@ -14,9 +14,9 @@ class DeleteServiceTest extends \PHPUnit_Framework_TestCase
     public function testDelete()
     {
         /** @var \PHPUnit_Framework_MockObject_MockObject|Client $serviceMock */
-        $serviceMock = self::getMock(Client::class, [], [], '', false);
+        $serviceMock = $this->createMock(Client::class);
         /** @var \PHPUnit_Framework_MockObject_MockObject|IndicesNamespace $indicesMock */
-        $indicesMock = self::getMock(IndicesNamespace::class, [], [], '', false);
+        $indicesMock = $this->createMock(IndicesNamespace::class);
 
         $service = new DeleteService($serviceMock);
 

@@ -16,10 +16,10 @@ class OpportunitiesControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
-        $elasticSearchMock = self::getMock(ElasticSearchService::class, [], [], '', false);
-        $merlinMock = self::getMock(MerlinService::class, [], [], '', false);
+        $elasticSearchMock = $this->createMock(ElasticSearchService::class);
+        $merlinMock = $this->createMock(MerlinService::class);
 
-        $serviceLocatorMock = self::getMock(ServiceLocatorInterface::class, [], [], '', false);
+        $serviceLocatorMock = $this->createMock(ServiceLocatorInterface::class);
         $serviceLocatorMock->expects(self::at(0))
             ->method('get')
             ->with(ElasticSearchService::class)
@@ -30,7 +30,7 @@ class OpportunitiesControllerFactoryTest extends \PHPUnit_Framework_TestCase
             ->willReturn($merlinMock);
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|ControllerManager $controllersMock */
-        $controllersMock = self::getMock(ControllerManager::class, [], [], '', false);
+        $controllersMock = $this->createMock(ControllerManager::class);
         $controllersMock->expects(self::once())
             ->method('getServiceLocator')
             ->willReturn($serviceLocatorMock);

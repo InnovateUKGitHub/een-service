@@ -13,7 +13,7 @@ class GenerateServiceTest extends \PHPUnit_Framework_TestCase
     public function testGenerateAll()
     {
         /** @var \PHPUnit_Framework_MockObject_MockObject|IndexService $serviceMock */
-        $serviceMock = self::getMock(IndexService::class, [], [], '', false);
+        $serviceMock = $this->createMock(IndexService::class);
 
         $faker = \Faker\Factory::create();
 
@@ -34,7 +34,7 @@ class GenerateServiceTest extends \PHPUnit_Framework_TestCase
     public function testGenerateOpportunity()
     {
         /** @var \PHPUnit_Framework_MockObject_MockObject|IndexService $service */
-        $serviceMock = self::getMock(IndexService::class, [], [], '', false);
+        $serviceMock = $this->createMock(IndexService::class);
 
         $faker = \Faker\Factory::create();
 
@@ -51,7 +51,7 @@ class GenerateServiceTest extends \PHPUnit_Framework_TestCase
     public function testGenerateEvent()
     {
         /** @var \PHPUnit_Framework_MockObject_MockObject|IndexService $serviceMock */
-        $serviceMock = self::getMock(IndexService::class, [], [], '', false);
+        $serviceMock = $this->createMock(IndexService::class);
 
         $faker = \Faker\Factory::create();
 
@@ -68,7 +68,7 @@ class GenerateServiceTest extends \PHPUnit_Framework_TestCase
     public function testGenerateNoIndexSpecified()
     {
         /** @var \PHPUnit_Framework_MockObject_MockObject|IndexService $serviceMock */
-        $serviceMock = self::getMock(IndexService::class, [], [], '', false);
+        $serviceMock = $this->createMock(IndexService::class);
 
         $faker = \Faker\Factory::create();
 
@@ -89,7 +89,7 @@ class GenerateServiceTest extends \PHPUnit_Framework_TestCase
     public function testGenerateInvalidIndexSpecified()
     {
         /** @var \PHPUnit_Framework_MockObject_MockObject|IndexService $serviceMock */
-        $serviceMock = self::getMock(IndexService::class, [], [], '', false);
+        $serviceMock = $this->createMock(IndexService::class);
 
         $faker = \Faker\Factory::create();
 

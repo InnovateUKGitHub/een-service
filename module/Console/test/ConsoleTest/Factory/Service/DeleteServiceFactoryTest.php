@@ -14,13 +14,7 @@ class DeleteServiceFactoryTest extends \PHPUnit_Framework_TestCase
     public function testFactory()
     {
         /* @var $serviceLocator ServiceLocatorInterface|\PHPUnit_Framework_MockObject_MockObject */
-        $serviceLocator = self::getMock(
-            ServiceLocatorInterface::class,
-            ['get', 'has'],
-            [],
-            '',
-            false
-        );
+        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
 
         self::assertInstanceOf(
             DeleteService::class,

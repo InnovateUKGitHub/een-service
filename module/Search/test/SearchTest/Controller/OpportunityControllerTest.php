@@ -8,6 +8,7 @@ use Search\Controller\OpportunitiesController;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use ZF\ContentNegotiation\ViewModel;
+use Zend\InputFilter\InputFilter;
 
 /**
  * @covers Search\V1\Rpc\Opportunities\OpportunitiesController
@@ -17,10 +18,10 @@ class OpportunitiesControllerTest extends \PHPUnit_Framework_TestCase
     public function testOpportunitiesAction()
     {
         /** @var \PHPUnit_Framework_MockObject_MockObject|ElasticSearchService $elasticSearchServiceMock */
-        $elasticSearchServiceMock = self::getMock(ElasticSearchService::class, [], [], '', false);
+        $elasticSearchServiceMock = $this->createMock(ElasticSearchService::class);
         /** @var \PHPUnit_Framework_MockObject_MockObject|MerlinService $merlinServiceMock */
-        $merlinServiceMock = self::getMock(MerlinService::class, [], [], '', false);
-        $inputFilterMock = self::getMock('ZF\ContentValidation\InputFilter', ['getValues'], [], '', false);
+        $merlinServiceMock = $this->createMock(MerlinService::class);
+        $inputFilterMock = $this->createMock(InputFilter::class);
 
         $elasticSearchServiceMock->expects(self::once())
             ->method('searchOpportunities')
@@ -35,7 +36,7 @@ class OpportunitiesControllerTest extends \PHPUnit_Framework_TestCase
 
         $event = new MvcEvent();
         $event->setRouteMatch($routeMatch);
-        $event->setParam('ZF\ContentValidation\InputFilter', $inputFilterMock);
+        $event->setParam(InputFilter::class, $inputFilterMock);
 
         $controller->setEvent($event);
         self::assertInstanceOf(ViewModel::class, $controller->dispatch($controller->getRequest()));

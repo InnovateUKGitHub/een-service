@@ -91,7 +91,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     {
         $module = new Module();
         /** @var \PHPUnit_Framework_MockObject_MockObject|AdapterInterface $console */
-        $console = self::getMock(AdapterInterface::class, [], [], '', false);
+        $console = $this->createMock(AdapterInterface::class);
         self::assertEquals([
             'import [--type=<type>]'                         => 'import date from merlin into elasticSearch',
             ['--type', 'Type of data to be imported. [bo|all] (default: all)'],

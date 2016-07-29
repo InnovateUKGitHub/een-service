@@ -6,6 +6,7 @@ use Search\Service\ElasticSearchService;
 use Search\Service\MerlinService;
 use Zend\Mvc\Controller\AbstractActionController;
 use ZF\ContentNegotiation\ViewModel;
+use Zend\InputFilter\InputFilter;
 
 /**
  * Class OpportunitiesController
@@ -30,7 +31,7 @@ class OpportunitiesController extends AbstractActionController
      */
     public function getParams()
     {
-        $inputFilter = $this->getEvent()->getParam('ZF\ContentValidation\InputFilter');
+        $inputFilter = $this->getEvent()->getParam(InputFilter::class);
 
         return $inputFilter->getValues();
     }
