@@ -41,6 +41,15 @@ return [
                             ],
                         ],
                     ],
+                    'list'    => [
+                        'type'    => 'Literal',
+                        'options' => [
+                            'route'    => '/list',
+                            'defaults' => [
+                                'action' => 'list',
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],

@@ -15,6 +15,12 @@ final class OpportunitiesController extends AbstractActionController
     /** @var MerlinService */
     private $merlin;
 
+    /**
+     * OpportunitiesController constructor.
+     *
+     * @param ElasticSearchService $service
+     * @param MerlinService        $merlin
+     */
     public function __construct(ElasticSearchService $service, MerlinService $merlin)
     {
         $this->service = $service;
@@ -32,13 +38,21 @@ final class OpportunitiesController extends AbstractActionController
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getParams()
     {
         $inputFilter = $this->getEvent()->getParam(InputFilter::class);
 
         return $inputFilter->getValues();
+    }
+
+    /**
+     * @return ViewModel
+     */
+    public function listAction()
+    {
+        return new ViewModel($this->merlin->getOpportunities());
     }
 
     /**

@@ -21,6 +21,11 @@ class ElasticSearchService
         $this->query = $query;
     }
 
+    /**
+     * @param array $params
+     *
+     * @return array
+     */
     public function searchOpportunities($params)
     {
         if ($this->query->exists(self::OPPORTUNITY) === false) {
@@ -30,6 +35,11 @@ class ElasticSearchService
         return $this->query->search($params, self::OPPORTUNITY, self::OPPORTUNITY);
     }
 
+    /**
+     * @param array $params
+     *
+     * @return array
+     */
     public function searchEvent($params)
     {
         if ($this->query->exists(self::EVENT) === false) {

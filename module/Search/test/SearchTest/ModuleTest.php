@@ -54,6 +54,15 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
                                     ],
                                 ],
                             ],
+                            'list'    => [
+                                'type'    => 'Literal',
+                                'options' => [
+                                    'route'    => '/list',
+                                    'defaults' => [
+                                        'action' => 'list',
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                 ],

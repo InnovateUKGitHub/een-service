@@ -7,7 +7,7 @@ use Search\Service\MerlinService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class MerlinServiceFactory implements FactoryInterface
+final class MerlinServiceFactory implements FactoryInterface
 {
     /**
      * @param ServiceLocatorInterface $sm
