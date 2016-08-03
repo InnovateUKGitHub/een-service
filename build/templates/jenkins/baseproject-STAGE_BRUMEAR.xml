@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <logRotator class="hudson.tasks.LogRotator">
+    <daysToKeep>-1</daysToKeep>
+    <numToKeep>5</numToKeep>
+    <artifactDaysToKeep>-1</artifactDaysToKeep>
+    <artifactNumToKeep>-1</artifactNumToKeep>
+  </logRotator>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>tagbuild</name>
+          <description>Should a tag be created for this build if it succeeds? (true/false)</description>
+          <defaultValue>false</defaultValue>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+    <hudson.plugins.sidebar__link.ProjectLinks plugin="sidebar-link@1.6">
+      <links>
+        <hudson.plugins.sidebar__link.LinkAction>
+          <url>http://baseproject.stage.aerian.com/</url>
+          <text>Test URL (STAGE_BRUMEAR)</text>
+          <icon>redo.png</icon>
+        </hudson.plugins.sidebar__link.LinkAction>
+        <hudson.plugins.sidebar__link.LinkAction>
+          <url>/job/baseproject-STAGE_BRUMEAR/lastBuild/consoleFull</url>
+          <text>Last Build Console</text>
+          <icon>terminal.png</icon>
+        </hudson.plugins.sidebar__link.LinkAction>
+      </links>
+    </hudson.plugins.sidebar__link.ProjectLinks>
+  </properties>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@2.2.2">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>git@bitbucket.org:aerian/baseproject.git</url>
+        <credentialsId>7b2c3b81-6ef7-4562-b5b9-51b27f7e3c10</credentialsId>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>master</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <browser class="hudson.plugins.git.browser.BitbucketWeb">
+      <url>https://bitbucket.org/aerian/TEMPLATE/</url>
+    </browser>
+    <submoduleCfg class="list"/>
+    <extensions>
+      <hudson.plugins.git.extensions.impl.SubmoduleOption>
+        <disableSubmodules>false</disableSubmodules>
+        <recursiveSubmodules>true</recursiveSubmodules>
+        <trackingSubmodules>false</trackingSubmodules>
+      </hudson.plugins.git.extensions.impl.SubmoduleOption>
+      <hudson.plugins.git.extensions.impl.PerBuildTag/>
+    </extensions>
+  </scm>
+  <assignedNode>STAGE_BRUMEAR</assignedNode>
+  <canRoam>false</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers>
+    <hudson.triggers.SCMTrigger>
+      <spec>* * * * *</spec>
+      <ignorePostCommitHooks>false</ignorePostCommitHooks>
+    </hudson.triggers.SCMTrigger>
+  </triggers>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <EnvInjectBuilder plugin="envinject@1.89">
+      <info>
+        <propertiesFilePath>$WORKSPACE/build/properties/$APPLICATION_ENV.properties</propertiesFilePath>
+      </info>
+    </EnvInjectBuilder>
+    <hudson.tasks.Shell>
+      <command>$WORKSPACE/build/1-compile.sh
+$WORKSPACE/build/2-deploy.sh
+$WORKSPACE/build/3-test.sh</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <org.jenkins__ci.plugins.flexible__publish.FlexiblePublisher plugin="flexible-publish@0.12">
+      <publishers>
+        <org.jenkins__ci.plugins.flexible__publish.ConditionalPublisher>
+          <condition class="org.jenkins_ci.plugins.run_condition.core.StringsMatchCondition" plugin="run-condition@1.0">
+            <arg1>$tagbuild</arg1>
+            <arg2>true</arg2>
+            <ignoreCase>false</ignoreCase>
+          </condition>
+          <publisher class="hudson.plugins.git.GitPublisher" plugin="git@2.2.2">
+            <configVersion>2</configVersion>
+            <pushMerge>false</pushMerge>
+            <pushOnlyIfSuccess>true</pushOnlyIfSuccess>
+            <tagsToPush>
+              <hudson.plugins.git.GitPublisher_-TagToPush>
+                <targetRepoName>origin</targetRepoName>
+                <tagName>production</tagName>
+                <tagMessage>Updating production tag.
+Version $appversion of $appid
+Jenkins build number $BUILD_NUMBER at $BUILD_ID</tagMessage>
+                <createTag>true</createTag>
+                <updateTag>true</updateTag>
+              </hudson.plugins.git.GitPublisher_-TagToPush>
+            </tagsToPush>
+          </publisher>
+          <runner class="org.jenkins_ci.plugins.run_condition.BuildStepRunner$DontRun" plugin="run-condition@1.0"/>
+        </org.jenkins__ci.plugins.flexible__publish.ConditionalPublisher>
+      </publishers>
+    </org.jenkins__ci.plugins.flexible__publish.FlexiblePublisher>
+    <hudson.tasks.Mailer plugin="mailer@1.11">
+      <recipients>devs@aerian.com</recipients>
+      <dontNotifyEveryUnstableBuild>false</dontNotifyEveryUnstableBuild>
+      <sendToIndividuals>false</sendToIndividuals>
+    </hudson.tasks.Mailer>
+  </publishers>
+  <buildWrappers>
+    <EnvInjectBuildWrapper plugin="envinject@1.89">
+      <info>
+        <propertiesFilePath>$WORKSPACE/build/properties/base.properties</propertiesFilePath>
+        <loadFilesFromMaster>false</loadFilesFromMaster>
+      </info>
+    </EnvInjectBuildWrapper>
+  </buildWrappers>
+</project>

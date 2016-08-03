@@ -21,16 +21,17 @@ install:
 	@make -s clear-cache
 
 install-dependencies:
-	@echo "Installing elasticsearch dependencies..."
-	@sh -c "composer install --optimize-autoloader"
+	@sh -c "./build/1-compile.sh"
+	@sh -c "./build/2-deploy.sh"
 
 clear-cache:
 	@echo "Clearing elasticsearch cache..."
 	@sh -c "rm -rf data/cache/module*"
+	@sh -c "rm -rf cache/*"
 
 test:
 	@echo "Running elasticsearch unit test..."
-	@sh -c "vendor/bin/phpunit"
+	@sh -c "./build/3-test.sh"
 
 test-coverage:
 	@echo "Running elasticsearch unit test with coverage..."

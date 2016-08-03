@@ -17,3 +17,5 @@ data/cache/*
 .vagrant
 html-coverage
 composer.lock
+cache/
+logs/
