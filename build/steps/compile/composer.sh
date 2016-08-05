@@ -17,19 +17,20 @@ if [ ! -z "$composerChanges" ] || [ ! -z "$forceCompile" ];then
     echo "composer.lock has changed:"
     echo $composerChanges
 
-    php $htdocs/bin/composer self-update
+    php ./bin/composer self-update
 
     if [ "$phpdox" = "true" ] || [ "$testcucumber" = "true" ] || [ "$testphpunit" = "true" ]; then
         echo "running composer (with dev packages)"
-        php $htdocs/bin/composer install --optimize-autoloader
+        php ./bin/composer install --optimize-autoloader
     else
         echo "running composer (no dev packages)"
-        php $htdocs/bin/composer install --no-dev --optimize-autoloader
+        php ./bin/composer install --no-dev --optimize-autoloader
     fi
 
 else
     echo "drupal/composer.lock has not changed, only running autoload"
 
-    php $htdocs/bin/composer dump-autoload
+    php ./bin/composer self-update
+    php ./bin/composer dump-autoload
 fi
 

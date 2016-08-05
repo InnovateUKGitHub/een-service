@@ -8,17 +8,11 @@ node {
     def projectName = sho('basename `git config --get remote.origin.url | grep -o "devops.innovateuk.org.*"` | tee .out')
     projectName = projectName.substring(0, projectName.lastIndexOf('.'))
     
-    stage 'Npm'
-    sh "./build/steps/compile/npm.sh"
-    
-    stage 'Gulp'
-    sh "./build/steps/compile/gulp.sh"
-    
     stage 'Composer'
     sh "./build/steps/compile/composer.sh"
     
     stage 'Unit Tests'
-    //sh "export APPLICATION_ENV=development && ./build/steps/test/phpunit.sh"
+    sh "./build/steps/test/phpunit.sh"
     
     stage 'Package'
     sh "./build/steps/compile/package.sh"
