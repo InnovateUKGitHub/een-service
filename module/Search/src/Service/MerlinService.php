@@ -3,7 +3,7 @@
 namespace Search\Service;
 
 use Console\Service\ImportService;
-use JsonSchema\Exception\ResourceNotFoundException;
+use Zend\Json\Server\Exception\HttpException;
 
 class MerlinService
 {
@@ -191,6 +191,6 @@ class MerlinService
                 ];
             }
         }
-        throw new ResourceNotFoundException('The opportunity does not exists', 404);
+        throw new HttpException('The opportunity does not exists', 404);
     }
 }
