@@ -33,10 +33,6 @@ test:
 	@echo "Running elasticsearch unit test..."
 	@sh -c "./build/3-test.sh"
 
-test-coverage:
-	@echo "Running elasticsearch unit test with coverage..."
-	@sh -c "vendor/bin/phpunit  --coverage-html "`pwd`/html-coverage""
-
 generate:
 	@sh -c "php public/index.php generate"
 

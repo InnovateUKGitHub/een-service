@@ -6,4 +6,4 @@
 ####################################
 
 #rm -rf $workspace/test/PHPUnit/reports
-./vendor/bin/phpunit -d zend.enable_gc=0
+./vendor/bin/phpunit -d zend.enable_gc=0  --coverage-html "`pwd`/html-coverage"
