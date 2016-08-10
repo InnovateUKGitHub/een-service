@@ -3,6 +3,7 @@ namespace Console\Service;
 
 use Zend\Http\Client;
 use Zend\Http\Exception\InvalidArgumentException;
+use Zend\Http\Exception\RuntimeException;
 use Zend\Http\Request;
 use Zend\Json\Server\Exception\HttpException;
 
@@ -197,7 +198,11 @@ class HttpService
         $uri = $this->buildUri();
         $this->client->setUri($uri);
 
-        $response = $this->client->send();
+        try {
+            $response = $this->client->send();
+        } catch (RuntimeException $e) {
+            throw new HttpException($e->getMessage());
+        }
 
         if ($json === false) {
             return $response->getContent();

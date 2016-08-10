@@ -6,8 +6,6 @@ use Elasticsearch\Client;
 
 class QueryService
 {
-    const ASC = 'asc';
-    const DESC = 'desc';
     /** @var Client */
     private $elasticSearch;
 
@@ -36,7 +34,7 @@ class QueryService
                     'bool' => [
                         'must' => [
                             'query_string' => [
-                                'default_field' => 'name',
+                                'default_field' => 'title',
                                 'query'         => '*' . $params['search'] . '*',
                             ],
                         ],
@@ -48,6 +46,17 @@ class QueryService
         ];
 
         return $this->convertResult($this->elasticSearch->search($query));
+    }
+
+    public function getDocument($id, $index, $type)
+    {
+        $params = [
+            'index' => $index,
+            'type'  => $type,
+            'id'  => $id
+        ];
+
+        return $this->elasticSearch->get($params);
     }
 
     public function convertResult($results)

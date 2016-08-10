@@ -35,6 +35,15 @@ class ElasticSearchService
         return $this->query->search($params, self::OPPORTUNITY, self::OPPORTUNITY);
     }
 
+    public function searchOpportunity($id)
+    {
+        if ($this->query->exists(self::OPPORTUNITY) === false) {
+            return ['error' => 'Index not created'];
+        }
+
+        return $this->query->getDocument($id, self::OPPORTUNITY, self::OPPORTUNITY);
+    }
+
     /**
      * @param array $params
      *

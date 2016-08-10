@@ -8,6 +8,9 @@ use Zend\InputFilter\InputFilter;
 use Zend\Mvc\Controller\AbstractActionController;
 use ZF\ContentNegotiation\ViewModel;
 
+/**
+ * @method InputFilter getInputFilter()
+ */
 final class OpportunitiesController extends AbstractActionController
 {
     /** @var ElasticSearchService */
@@ -32,19 +35,9 @@ final class OpportunitiesController extends AbstractActionController
      */
     public function opportunitiesAction()
     {
-        $params = $this->getParams();
+        $params = $this->getInputFilter()->getValues();
 
         return new ViewModel($this->service->searchOpportunities($params));
-    }
-
-    /**
-     * @return array
-     */
-    public function getParams()
-    {
-        $inputFilter = $this->getEvent()->getParam(InputFilter::class);
-
-        return $inputFilter->getValues();
     }
 
     /**
@@ -62,6 +55,7 @@ final class OpportunitiesController extends AbstractActionController
     {
         $id = (string)$this->params()->fromRoute('id');
 
-        return new ViewModel($this->merlin->getOpportunities($id));
+        return new ViewModel($this->service->searchOpportunity($id));
+//        return new ViewModel($this->merlin->getOpportunities($id));
     }
 }

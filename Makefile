@@ -36,6 +36,32 @@ test:
 generate:
 	@sh -c "php public/index.php generate"
 
+import:
+	@echo "Importing Month 1..."
+	@sh -c "php public/index.php import --month=1"
+	@echo "Importing Month 2..."
+	@sh -c "php public/index.php import --month=2"
+	@echo "Importing Month 3..."
+	@sh -c "php public/index.php import --month=3"
+	@echo "Importing Month 4..."
+	@sh -c "php public/index.php import --month=4"
+	@echo "Importing Month 5..."
+	@sh -c "php public/index.php import --month=5"
+	@echo "Importing Month 6..."
+	@sh -c "php public/index.php import --month=6"
+	@echo "Importing Month 7..."
+	@sh -c "php public/index.php import --month=7"
+	@echo "Importing Month 8..."
+	@sh -c "php public/index.php import --month=8"
+	@echo "Importing Month 9..."
+	@sh -c "php public/index.php import --month=9"
+	@echo "Importing Month 10..."
+	@sh -c "php public/index.php import --month=10"
+	@echo "Importing Month 11..."
+	@sh -c "php public/index.php import --month=11"
+	@echo "Importing Month 12..."
+	@sh -c "php public/index.php import --month=12"
+
 delete:
 	@sh -c "php public/index.php delete"
 

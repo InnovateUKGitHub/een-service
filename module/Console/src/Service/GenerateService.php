@@ -56,27 +56,32 @@ class GenerateService
 
         for ($i = 0; $i < $number; $i++) {
             $params = [
-                'id'               => $this->faker->bothify('???##########'),
-                'name'             => $this->faker->name,
-                'type'             => $this->faker->randomElement(['Request', 'Offering']),
-                'opportunity_type' => $this->faker->randomElement(['Technology', 'Commercial', 'Research']),
-                'country'          => $this->faker->countryCode,
-                'date'             => $this->generateDate($this->faker->dateTimeBetween('-12 months', 'now')),
-                'types'            => $this->generateRandomArray(),
-                'description'      => $this->faker->paragraph($this->faker->numberBetween(1, 15)),
-                'expertise'        => $this->faker->paragraph($this->faker->numberBetween(1, 15)),
-                'advantage'        => $this->faker->paragraph($this->faker->numberBetween(1, 15)),
-                'stage'            => $this->faker->sentence($this->faker->numberBetween(1, 5)),
-                'stage_reference'  => $this->faker->sentence,
-                'ipr'              => $this->faker->sentence($this->faker->numberBetween(1, 5)),
-                'ipr_reference'    => $this->faker->sentence($this->faker->numberBetween(1, 5)),
+                'id'                 => $this->faker->bothify('???##########'),
+                'title'              => $this->faker->sentence($this->faker->numberBetween(5, 15)),
+                'summary'            => $this->faker->paragraph($this->faker->numberBetween(1, 15)),
+                'description'        => $this->faker->paragraph($this->faker->numberBetween(1, 15)),
+                'partner_expertise'  => $this->faker->paragraph($this->faker->numberBetween(1, 15)),
+                'stage'              => $this->faker->sentence($this->faker->numberBetween(1, 5)),
+                'ipr'                => $this->faker->sentence($this->faker->numberBetween(1, 5)),
+                'ipr_comment'        => $this->faker->sentence($this->faker->numberBetween(1, 5)),
+                'country_code'       => $this->faker->countryCode,
+                'country'            => $this->faker->country,
+                'date'               => $this->generateDate($this->faker->dateTimeBetween('-12 months', 'now')),
+                'deadline'           => $this->generateDate($this->faker->dateTimeBetween('-12 months', 'now')),
+                'partnership_sought' => $this->faker->paragraph($this->faker->numberBetween(1, 15)),
+                'industries'         => $this->generateRandomArray(),
+                'technologies'       => $this->generateRandomArray(),
+                'commercials'        => $this->generateRandomArray(),
+                'markets'            => $this->generateRandomArray(),
+                'eoi'                => $this->faker->boolean(),
+                'advantage'          => $this->faker->paragraph($this->faker->numberBetween(1, 15)),
             ];
 
             $this->indexService->index(
                 $params,
+                $params['id'],
                 IndexService::ES_INDEX_OPPORTUNITY,
-                IndexService::ES_TYPE_OPPORTUNITY,
-                $params['id']
+                IndexService::ES_TYPE_OPPORTUNITY
             );
         }
     }
@@ -132,9 +137,9 @@ class GenerateService
 
             $this->indexService->index(
                 $params,
+                $params['id'],
                 IndexService::ES_INDEX_EVENT,
-                IndexService::ES_TYPE_EVENT,
-                $params['id']
+                IndexService::ES_TYPE_EVENT
             );
         }
     }

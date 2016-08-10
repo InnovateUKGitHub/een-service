@@ -38,11 +38,11 @@ class ImportService
     }
 
     /**
-     * @param string $type
+     * @param string $month
      */
-    public function import($type)
+    public function import($month)
     {
-        $this->importOpportunities($this->getData($type));
+        $this->importOpportunities($this->getData($month));
     }
 
     /**
@@ -75,12 +75,18 @@ class ImportService
                 'advantage'          => (string)$profile->cooperation->plusvalue,
             ];
 
-            $this->indexService->index(
-                $params,
-                IndexService::ES_INDEX_OPPORTUNITY,
-                IndexService::ES_TYPE_OPPORTUNITY,
-                (string)$profile->reference->external
-            );
+            try {
+                $this->indexService->index(
+                    $params,
+                    IndexService::ES_INDEX_OPPORTUNITY,
+                    IndexService::ES_TYPE_OPPORTUNITY,
+                    (string)$profile->reference->external
+                );
+            } catch (\Exception $e) {
+                var_dump($profile->datum->deadline->count());
+                echo 'An error occurred during the import of a document';
+                echo $e->getMessage();
+            }
         }
     }
 
@@ -168,27 +174,26 @@ class ImportService
     }
 
     /**
-     * @param string $type
+     * @param string $month
      *
      * @return \SimpleXMLElement
      */
-    public function getData($type)
+    public function getData($month)
     {
-        if ($type !== 'all') {
-            $this->type = $type;
-        }
         $this->client->setHttpMethod(Request::METHOD_GET);
         $this->client->setPathToService($this->path);
-        $this->client->setQueryParams($this->buildQuery());
-        $result = simplexml_load_string($this->client->execute(false));
+        $this->client->setQueryParams($this->buildQuery($month));
 
+        $result = simplexml_load_string($this->client->execute(false));
         return $result;
     }
 
     /**
+     * @param string $month
+     *
      * @return array
      */
-    private function buildQuery()
+    private function buildQuery($month)
     {
         $return = [];
         if (empty($this->type) === false) {
@@ -200,7 +205,8 @@ class ImportService
         if (empty($this->password) === false) {
             $return['p'] = $this->password;
         }
-        $return['sa'] = (new \DateTime())->sub(new \DateInterval('P1M'))->format('Ymd');
+        $return['sb'] = (new \DateTime())->sub(new \DateInterval('P' . ($month - 1) . 'M'))->format('Ymd');
+        $return['sa'] = (new \DateTime())->sub(new \DateInterval('P' . ($month) . 'M'))->format('Ymd');
 
         return $return;
     }
