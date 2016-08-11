@@ -16,3 +16,7 @@ touch $htdocs/logs/error.log
 # change directory permissions
 chmod 777 $htdocs/cache -R
 chmod 777 $htdocs/logs -R
+
+# Delete cache
+rm -rf $htdocs/data/cache/module*
+rm -rf $htdocs/cache/*
