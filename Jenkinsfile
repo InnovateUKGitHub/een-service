@@ -13,6 +13,7 @@ node {
     
     stage 'Unit Tests'
     sh "./build/steps/test/phpunit.sh"
+    //publishHTML([reportDir: 'html-coverage', reportFiles: 'index.html', reportName: 'HTML Coverage Report'])
     
     stage 'Package'
     sh "./build/steps/compile/package.sh"
