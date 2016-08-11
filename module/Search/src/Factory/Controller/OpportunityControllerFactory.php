@@ -4,7 +4,6 @@ namespace Search\Factory\Controller;
 
 use Search\Controller\OpportunitiesController;
 use Search\Service\ElasticSearchService;
-use Search\Service\MerlinService;
 use Zend\Mvc\Controller\ControllerManager;
 
 final class OpportunitiesControllerFactory
@@ -19,9 +18,7 @@ final class OpportunitiesControllerFactory
         $serviceLocator = $controllers->getServiceLocator();
         /** @var ElasticSearchService $service */
         $service = $serviceLocator->get(ElasticSearchService::class);
-        /** @var MerlinService $merlin */
-        $merlin = $serviceLocator->get(MerlinService::class);
 
-        return new OpportunitiesController($service, $merlin);
+        return new OpportunitiesController($service);
     }
 }

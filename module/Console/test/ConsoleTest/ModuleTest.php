@@ -61,7 +61,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
                             'options' => [
                                 'route'       => 'delete [--since=<since>]',
                                 'constraints' => [
-                                    'since' => '(\d)',
+                                    'since' => '[\d]+',
                                 ],
                                 'defaults'    => [
                                     'controller' => ImportController::class,

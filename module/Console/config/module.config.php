@@ -50,7 +50,7 @@ return [
                     'options' => [
                         'route'       => 'delete [--since=<since>]',
                         'constraints' => [
-                            'since' => '(\d)',
+                            'since' => '[\d]+',
                         ],
                         'defaults'    => [
                             'controller' => ImportController::class,
