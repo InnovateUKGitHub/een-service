@@ -30,6 +30,11 @@ class DeleteService
             'index' => $index === 'all' ? '*' : $index,
         ];
 
-        return $this->elasticSearch->indices()->delete($params);
+        try {
+            return $this->elasticSearch->indices()->delete($params);
+        } catch (\Exception $e) {
+            var_dump($e->getMessage());
+        }
+        return null;
     }
 }

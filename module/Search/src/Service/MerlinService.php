@@ -25,10 +25,10 @@ class MerlinService
      */
     public function getOpportunities($id = null)
     {
-        $results = $this->service->getData('all');
+        $results = $this->service->getData(1);
 
         if ($id === null) {
-            return $this->getFirst10Opportunities($results);
+            return $this->getFirstTenOpportunities($results);
         }
 
         return $this->searchOpportunities($results, $id);
@@ -39,7 +39,7 @@ class MerlinService
      *
      * @return array
      */
-    public function getFirst10Opportunities(\SimpleXMLElement $results)
+    public function getFirstTenOpportunities(\SimpleXMLElement $results)
     {
         $opportunities = [];
         $i = 0;

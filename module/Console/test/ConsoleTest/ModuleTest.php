@@ -47,13 +47,25 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
                     'routes' => [
                         'import-data'   => [
                             'options' => [
-                                'route'       => 'import [--type=<type>]',
+                                'route'       => 'import [--month=<month>]',
                                 'constraints' => [
-                                    'type' => '[bo|all]',
+                                    'month' => '[1|2|3|4|5|6|7|8|9|10|11|12]',
                                 ],
                                 'defaults'    => [
                                     'controller' => ImportController::class,
                                     'action'     => 'import',
+                                ],
+                            ],
+                        ],
+                        'delete-data'   => [
+                            'options' => [
+                                'route'       => 'delete [--since=<since>]',
+                                'constraints' => [
+                                    'since' => '(\d)',
+                                ],
+                                'defaults'    => [
+                                    'controller' => ImportController::class,
+                                    'action'     => 'delete',
                                 ],
                             ],
                         ],
@@ -69,9 +81,9 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
                                 ],
                             ],
                         ],
-                        'delete-data'   => [
+                        'delete-all'   => [
                             'options' => [
-                                'route'       => 'delete [--index=<index>]',
+                                'route'       => 'delete-all [--index=<index>]',
                                 'constraints' => [
                                     'index' => '[opportunity|event|all]',
                                 ],
@@ -93,12 +105,14 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         /** @var \PHPUnit_Framework_MockObject_MockObject|AdapterInterface $console */
         $console = $this->createMock(AdapterInterface::class);
         self::assertEquals([
-            'import [--type=<type>]'                         => 'import date from merlin into elasticSearch',
-            ['--type', 'Type of data to be imported. [bo|all] (default: all)'],
+            'import [--month=<month>]'                       => 'import date from merlin into elasticSearch',
+            ['--month', 'The number amount of month to go back. [1|2|3|4|5|6|7|8|9|10|11|12] (default: 1)'],
+            'delete [--since=<since>]'                       => 'import date from merlin into elasticSearch',
+            ['--since', 'The number amount of month out of date (default: 12)'],
             'generate [--index=<index>] [--number=<number>]' => 'Generate random data into elasticSearch for test purpose',
             ['--index', 'Index to generate. [opportunity|event|all] (default: all)'],
             ['--number', 'Number of documents to generate. (default: 10)'],
-            'delete [--index=<index>]'                       => 'Delete elasticSearch index type',
+            'delete-all [--index=<index>]'                   => 'Delete elasticSearch index type',
             ['--index', 'Index to delete. [opportunity|event|all] (default: all)'],
         ], $module->getConsoleUsage($console));
     }

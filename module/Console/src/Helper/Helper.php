@@ -10,11 +10,6 @@ class Helper
         'all',
     ];
 
-    const VALID_MERLIN_TYPE = [
-        'bo',
-        'all',
-    ];
-
     /**
      * @param string $type
      *
@@ -30,13 +25,13 @@ class Helper
     }
 
     /**
-     * @param string $type
+     * @param int $month
      *
      * @return bool
      */
-    public static function checkValidProfileType($type)
+    public static function checkValidMonth($month)
     {
-        if (in_array($type, self::VALID_MERLIN_TYPE, true) === false) {
+        if ($month <=0 && $month > 12) {
             return false;
         }
 
