@@ -45,21 +45,12 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
                             'details' => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'       => '/details/:id',
+                                    'route'       => '/:id',
                                     'constraints' => [
                                         'id' => '[\d\w]+',
                                     ],
                                     'defaults'    => [
                                         'action' => 'detail',
-                                    ],
-                                ],
-                            ],
-                            'list'    => [
-                                'type'    => 'Literal',
-                                'options' => [
-                                    'route'    => '/list',
-                                    'defaults' => [
-                                        'action' => 'list',
                                     ],
                                 ],
                             ],
@@ -114,7 +105,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
                         'name'       => 'size',
                     ],
                     2 => [
-                        'required'   => true,
+                        'required'   => false,
                         'validators' => [],
                         'filters'    => [],
                         'name'       => 'search',
