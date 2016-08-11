@@ -55,7 +55,6 @@ final class OpportunitiesController extends AbstractActionController
     {
         $id = (string)$this->params()->fromRoute('id');
 
-        return new ViewModel($this->service->searchOpportunity($id));
-//        return new ViewModel($this->merlin->getOpportunities($id));
+        return new ViewModel($this->merlin->getOpportunities($id));
     }
 }

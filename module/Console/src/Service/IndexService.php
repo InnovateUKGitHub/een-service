@@ -56,6 +56,9 @@ class IndexService
                             'id'                 => [
                                 'type' => 'string',
                             ],
+                            'type'               => [
+                                'type' => 'string',
+                            ],
                             'title'              => [
                                 'type' => 'string',
                             ],
@@ -109,6 +112,9 @@ class IndexService
                             ],
                             'advantage'          => [
                                 'type' => 'string',
+                            ],
+                            'date_import'        => [
+                                'type' => 'date',
                             ],
                         ],
                     ],
@@ -199,5 +205,56 @@ class IndexService
         ];
 
         return $this->elasticSearch->index($params);
+    }
+
+    /**
+     * @param array $results
+     * @param int   $from
+     * @param int   $size
+     *
+     * @return array|null
+     */
+    public function getAll($results = [], $from = 0, $size = 100)
+    {
+        $query = [
+            'index'   => self::ES_INDEX_OPPORTUNITY,
+            'type'    => self::ES_TYPE_OPPORTUNITY,
+            'from'    => $from,
+            'size'    => $size,
+            '_source' => ['id', 'date', 'deadline', 'date_import'],
+        ];
+
+        try {
+            $tmp = $this->elasticSearch->search($query);
+            if (empty($results)) {
+                $results = $tmp;
+            } else {
+                $results['hits']['hits'] = array_merge($results['hits']['hits'], $tmp['hits']['hits']);
+            }
+
+            if (count($tmp['hits']['hits']) > 0) {
+                return $this->getAll($results, $from + $size);
+            }
+
+            return $results;
+        } catch (\Exception $e) {
+            echo "An error occurred during the removal of old documents\n";
+            echo $e->getMessage() . "\n";
+        }
+
+        return null;
+    }
+
+    /**
+     * @param array $params
+     */
+    public function delete($params)
+    {
+        try {
+            $this->elasticSearch->bulk($params);
+        } catch (\Exception $e) {
+            echo "An error occurred during the removal of the documents\n";
+            echo $e->getMessage() . "\n";
+        }
     }
 }

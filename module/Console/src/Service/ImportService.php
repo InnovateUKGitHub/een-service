@@ -2,6 +2,7 @@
 namespace Console\Service;
 
 use Zend\Http\Request;
+use Zend\Json\Server\Exception\HttpException;
 
 class ImportService
 {
@@ -38,11 +39,42 @@ class ImportService
     }
 
     /**
+     * @param string $since
+     */
+    public function delete($since)
+    {
+        $results = $this->indexService->getAll();
+
+        $dateImport = (new \Datetime())->format('Y-m-d');
+        $dateSince = (new \Datetime())->sub(new \DateInterval('P' . $since . 'M'))->format('Y-m-d');
+        $body = [];
+        foreach ($results['hits']['hits'] as $document) {
+            if ($document['_source']['date_import'] < $dateImport ||
+                $document['_source']['date'] < $dateSince
+            ) {
+                $body['body'][] = [
+                    'delete' => [
+                        '_index' => IndexService::ES_INDEX_OPPORTUNITY,
+                        '_type'  => IndexService::ES_TYPE_OPPORTUNITY,
+                        '_id'    => $document['_source']['id'],
+                    ],
+                ];
+            }
+        }
+        if (empty($body) === false) {
+            $this->indexService->delete($body);
+        }
+    }
+
+    /**
      * @param string $month
      */
     public function import($month)
     {
-        $this->importOpportunities($this->getData($month));
+        if (($data = $this->getData($month)) === null) {
+            return;
+        }
+        $this->importOpportunities($data);
     }
 
     /**
@@ -52,40 +84,52 @@ class ImportService
     {
         $this->indexService->createIndex(IndexService::ES_INDEX_OPPORTUNITY);
 
-        foreach ($results->profile as $profile) {
+        $dateImport = (new \DateTime())->format('Y-m-d');
+        foreach ($results->{'profile'} as $profile) {
+
+            $reference = $profile->{'reference'};
+            $content = $profile->{'content'};
+            $cooperation = $profile->{'cooperation'};
+            $company = $profile->{'company'};
+            $datum = $profile->{'datum'};
+            $keyword = $profile->{'keyword'};
+
+            $id = (string)$reference->{'external'}->__toString();
+
             $params = [
-                'id'                 => (string)$profile->reference->external,
-                'title'              => (string)$profile->content->title,
-                'summary'            => (string)$profile->content->summary,
-                'description'        => (string)$profile->content->description,
-                'partner_expertise'  => (string)$profile->cooperation->partner->area,
-                'stage'              => (string)$profile->cooperation->stagedev->stage,
-                'ipr'                => (string)$profile->cooperation->ipr->status,
-                'ipr_comment'        => (string)$profile->cooperation->title->comment,
-                'country_code'       => (string)$profile->company->country->key,
-                'country'            => (string)$profile->company->country->label,
-                'date'               => (string)$profile->datum->update,
-                'deadline'           => (string)$profile->datum->deadline,
-                'partnership_sought' => $this->extractPartnerships($profile->partnerships),
-                'industries'         => $this->extractIndustries($profile->cooperation->exploitations),
-                'technologies'       => $this->extractTechnologies($profile->keyword->technologies),
-                'commercials'        => $this->extractCommercials($profile->keyword->naces),
-                'markets'            => $this->extractMarkets($profile->keyword->markets),
-                'eoi'                => (bool)$profile->eoi->status,
-                'advantage'          => (string)$profile->cooperation->plusvalue,
+                'id'                 => $id,
+                'type'               => (string)$reference->{'type'}->__toString(),
+                'title'              => (string)$content->{'title'}->__toString(),
+                'summary'            => (string)$content->{'summary'}->__toString(),
+                'description'        => (string)$content->{'description'}->__toString(),
+                'partner_expertise'  => (string)$cooperation->{'partner'}->{'area'}->__toString(),
+                'stage'              => (string)$cooperation->{'stagedev'}->{'stage'}->__toString(),
+                'ipr'                => (string)$cooperation->{'ipr'}->{'status'}->__toString(),
+                'ipr_comment'        => (string)$cooperation->{'ipr'}->{'comment'}->__toString(),
+                'country_code'       => (string)$company->{'country'}->{'key'}->__toString(),
+                'country'            => (string)$company->{'country'}->{'label'}->__toString(),
+                'date'               => $datum->{'update'}->__toString() ?: null,
+                'deadline'           => $datum->{'deadline'}->__toString() ?: null,
+                'partnership_sought' => $this->extractPartnerships($profile->{'partnerships'}),
+                'industries'         => $this->extractIndustries($cooperation->{'exploitations'}),
+                'technologies'       => $this->extractTechnologies($keyword->{'technologies'}),
+                'commercials'        => $this->extractCommercials($keyword->{'naces'}),
+                'markets'            => $this->extractMarkets($keyword->{'markets'}),
+                'eoi'                => (bool)$profile->{'eoi'}->{'status'}->__toString(),
+                'advantage'          => (string)$cooperation->{'plusvalue'}->__toString(),
+                'date_import'        => $dateImport,
             ];
 
             try {
                 $this->indexService->index(
                     $params,
+                    $id,
                     IndexService::ES_INDEX_OPPORTUNITY,
-                    IndexService::ES_TYPE_OPPORTUNITY,
-                    (string)$profile->reference->external
+                    IndexService::ES_TYPE_OPPORTUNITY
                 );
             } catch (\Exception $e) {
-                var_dump($profile->datum->deadline->count());
-                echo 'An error occurred during the import of a document';
-                echo $e->getMessage();
+                echo "An error occurred during the import of a document\n";
+                echo $e->getMessage() . "\n";
             }
         }
     }
@@ -98,7 +142,7 @@ class ImportService
     private function extractPartnerships(\SimpleXMLElement $partnerships)
     {
         $result = [];
-        foreach ($partnerships->string as $partnership) {
+        foreach ($partnerships->{'string'} as $partnership) {
             $result[] = (string)$partnership;
         }
 
@@ -113,9 +157,9 @@ class ImportService
     private function extractIndustries(\SimpleXMLElement $industries)
     {
         $result = [];
-        foreach ($industries->exploitation as $industry) {
-            if ((string)$industry->label) {
-                $result[] = (string)$industry->label;
+        foreach ($industries->{'exploitation'} as $industry) {
+            if ((string)$industry->{'label'}) {
+                $result[] = (string)$industry->{'label'};
             }
         }
 
@@ -130,9 +174,9 @@ class ImportService
     private function extractTechnologies(\SimpleXMLElement $technologies)
     {
         $result = [];
-        foreach ($technologies->technologies as $technology) {
-            if ((string)$technology->label) {
-                $result[] = (string)$technology->label;
+        foreach ($technologies->{'technologies'} as $technology) {
+            if ((string)$technology->{'label'}) {
+                $result[] = (string)$technology->{'label'};
             }
         }
 
@@ -147,9 +191,9 @@ class ImportService
     private function extractCommercials(\SimpleXMLElement $commercials)
     {
         $result = [];
-        foreach ($commercials->nace as $commercial) {
-            if ((string)$commercial->label) {
-                $result[] = (string)$commercial->label;
+        foreach ($commercials->{'nace'} as $commercial) {
+            if ((string)$commercial->{'label'}) {
+                $result[] = (string)$commercial->{'label'};
             }
         }
 
@@ -164,9 +208,9 @@ class ImportService
     private function extractMarkets(\SimpleXMLElement $markets)
     {
         $result = [];
-        foreach ($markets->market as $market) {
-            if ((string)$market->label) {
-                $result[] = (string)$market->label;
+        foreach ($markets->{'market'} as $market) {
+            if ((string)$market->{'label'}) {
+                $result[] = (string)$market->{'label'};
             }
         }
 
@@ -176,7 +220,7 @@ class ImportService
     /**
      * @param string $month
      *
-     * @return \SimpleXMLElement
+     * @return \SimpleXMLElement|null
      */
     public function getData($month)
     {
@@ -184,7 +228,20 @@ class ImportService
         $this->client->setPathToService($this->path);
         $this->client->setQueryParams($this->buildQuery($month));
 
-        $result = simplexml_load_string($this->client->execute(false));
+        try {
+            $result = simplexml_load_string($this->client->execute(false));
+        } catch (HttpException $e) {
+            echo "An error occurred during the retrieve of the $month month\n";
+            echo $e->getMessage() . "\n";
+
+            return null;
+        } catch (\Exception $e) {
+            echo "An error occurred during the retrieve of the $month month\n";
+            echo $e->getMessage() . "\n";
+
+            return null;
+        }
+
         return $result;
     }
 
@@ -205,6 +262,7 @@ class ImportService
         if (empty($this->password) === false) {
             $return['p'] = $this->password;
         }
+
         $return['sb'] = (new \DateTime())->sub(new \DateInterval('P' . ($month - 1) . 'M'))->format('Ymd');
         $return['sa'] = (new \DateTime())->sub(new \DateInterval('P' . ($month) . 'M'))->format('Ymd');
 

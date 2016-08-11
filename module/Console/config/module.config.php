@@ -46,6 +46,18 @@ return [
                         ],
                     ],
                 ],
+                'delete-data'   => [
+                    'options' => [
+                        'route'       => 'delete [--since=<since>]',
+                        'constraints' => [
+                            'since' => '(\d)',
+                        ],
+                        'defaults'    => [
+                            'controller' => ImportController::class,
+                            'action'     => 'delete',
+                        ],
+                    ],
+                ],
                 'generate-data' => [
                     'options' => [
                         'route'       => 'generate [--index=<index>] [--number=<number>]',
@@ -58,9 +70,9 @@ return [
                         ],
                     ],
                 ],
-                'delete-data'   => [
+                'delete-all'   => [
                     'options' => [
-                        'route'       => 'delete [--index=<index>]',
+                        'route'       => 'delete-all [--index=<index>]',
                         'constraints' => [
                             'index' => '[opportunity|event|all]',
                         ],
