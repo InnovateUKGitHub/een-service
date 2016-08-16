@@ -24,6 +24,8 @@ class QueryService
 
     public function search($params, $index, $type)
     {
+        $searches = explode(' ', trim($params['search']));
+
         $query = [
             'index' => $index,
             'type'  => $type,
@@ -32,10 +34,10 @@ class QueryService
             'body'  => [
                 'query'   => [
                     'bool' => [
-                        'must' => [
+                        'should' => [
                             'query_string' => [
-                                'default_field' => 'title',
-                                'query'         => '*' . $params['search'] . '*',
+                                'fields' => ['title', 'summary', 'description'],
+                                'query'  => '*' . implode('* AND *', $searches) . '*',
                             ],
                         ],
                     ],
@@ -53,7 +55,7 @@ class QueryService
         $params = [
             'index' => $index,
             'type'  => $type,
-            'id'  => $id
+            'id'    => $id,
         ];
 
         return $this->elasticSearch->get($params);
