@@ -37,10 +37,10 @@ class QueryServiceTest extends \PHPUnit_Framework_TestCase
                 'body'  => [
                     'query'   => [
                         'bool' => [
-                            'must' => [
+                            'should' => [
                                 'query_string' => [
-                                    'default_field' => 'title',
-                                    'query'         => '*' . $params['search'] . '*',
+                                    'fields' => ['title', 'summary', 'description'],
+                                    'query'  => '*Some* AND *Search*',
                                 ],
                             ],
                         ],
