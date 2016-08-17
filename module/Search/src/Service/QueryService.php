@@ -52,7 +52,7 @@ class QueryService
             $query['body']['query']['bool']['must'][] = [
                 'query_string' => [
                     'default_field' => 'type',
-                    'query'         => implode(' OR ', $types),
+                    'query'  => '*' . implode('* OR *', $types) . '*',
                 ],
             ];
         }
