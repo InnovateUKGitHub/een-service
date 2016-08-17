@@ -25,27 +25,37 @@ class QueryService
     public function search($params, $index, $type)
     {
         $searches = explode(' ', trim($params['search']));
-
+        $types = $params['opportunity_type'];
         $query = [
-            'index' => $index,
-            'type'  => $type,
-            'from'  => $params['from'],
-            'size'  => $params['size'],
-            'body'  => [
-                'query'   => [
+            'index'   => $index,
+            'type'    => $type,
+            'from'    => $params['from'],
+            'size'    => $params['size'],
+            'body'    => [
+                'query' => [
                     'bool' => [
-                        'should' => [
-                            'query_string' => [
-                                'fields' => ['title', 'summary', 'description'],
-                                'query'  => '*' . implode('* AND *', $searches) . '*',
+                        'must' => [
+                            [
+                                'query_string' => [
+                                    'fields' => ['title', 'summary', 'description'],
+                                    'query'  => '*' . implode('* AND *', $searches) . '*',
+                                ],
                             ],
                         ],
                     ],
                 ],
-                'sort'    => $params['sort'],
-                '_source' => $params['source'],
             ],
+            'sort'    => $params['sort'],
+            '_source' => $params['source'],
         ];
+        if ($types) {
+            $query['body']['query']['bool']['must'][] = [
+                'query_string' => [
+                    'default_field' => 'type',
+                    'query'         => implode(' OR ', $types),
+                ],
+            ];
+        }
 
         return $this->convertResult($this->elasticSearch->search($query));
     }

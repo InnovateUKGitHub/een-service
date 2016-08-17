@@ -92,18 +92,24 @@ return [
                 'name'       => 'size',
             ],
             2 => [
-                'required'   => false,
+                'required'   => true,
                 'validators' => [],
                 'filters'    => [],
                 'name'       => 'search',
             ],
             3 => [
+                'required'   => false,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'opportunity_type',
+            ],
+            4 => [
                 'required'   => true,
                 'validators' => [],
                 'filters'    => [],
                 'name'       => 'sort',
             ],
-            4 => [
+            5 => [
                 'required'   => true,
                 'validators' => [],
                 'filters'    => [],
