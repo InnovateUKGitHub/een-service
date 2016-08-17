@@ -11,18 +11,20 @@ use Search\Service\QueryService;
 class QueryServiceTest extends \PHPUnit_Framework_TestCase
 {
     const INDEX = 'index';
+
     const TYPE = 'type';
 
     public function testSearch()
     {
         $params = [
-            'from'   => 0,
-            'size'   => 10,
-            'search' => 'Some Search',
-            'sort'   => [
+            'from'             => 0,
+            'size'             => 10,
+            'search'           => 'Some Search',
+            'opportunity_type' => [],
+            'sort'             => [
                 ['date.timestamp' => 'desc'],
             ],
-            'source' => ['name', 'description'],
+            'source'           => ['name', 'description'],
         ];
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|Client $elasticSearchMock */
@@ -37,17 +39,19 @@ class QueryServiceTest extends \PHPUnit_Framework_TestCase
                 'body'  => [
                     'query'   => [
                         'bool' => [
-                            'should' => [
-                                'query_string' => [
-                                    'fields' => ['title', 'summary', 'description'],
-                                    'query'  => '*Some* AND *Search*',
+                            'must' => [
+                                [
+                                    'query_string' => [
+                                        'fields' => ['title', 'summary', 'description'],
+                                        'query'  => '*Some* AND *Search*',
+                                    ],
                                 ],
                             ],
                         ],
                     ],
-                    'sort'    => $params['sort'],
-                    '_source' => $params['source'],
                 ],
+                'sort'    => $params['sort'],
+                '_source' => $params['source'],
             ])
             ->willReturn([
                 'hits' => [
