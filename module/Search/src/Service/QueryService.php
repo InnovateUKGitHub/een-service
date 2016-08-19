@@ -10,18 +10,32 @@ class QueryService
     private $elasticSearch;
 
     /**
-     * ElasticSearchService constructor.
+     * QueryService constructor.
+     *
+     * @param Client $elasticSearch
      */
     public function __construct(Client $elasticSearch)
     {
         $this->elasticSearch = $elasticSearch;
     }
 
+    /**
+     * @param string $index
+     *
+     * @return bool
+     */
     public function exists($index)
     {
         return $this->elasticSearch->indices()->exists(['index' => $index]);
     }
 
+    /**
+     * @param array  $params
+     * @param string $index
+     * @param string $type
+     *
+     * @return array
+     */
     public function search($params, $index, $type)
     {
         $searches = explode(' ', trim($params['search']));
@@ -52,7 +66,7 @@ class QueryService
             $query['body']['query']['bool']['must'][] = [
                 'query_string' => [
                     'default_field' => 'type',
-                    'query'  => '*' . implode('* OR *', $types) . '*',
+                    'query'         => '*' . implode('* OR *', $types) . '*',
                 ],
             ];
         }
@@ -60,6 +74,13 @@ class QueryService
         return $this->convertResult($this->elasticSearch->search($query));
     }
 
+    /**
+     * @param string $id
+     * @param string $index
+     * @param string $type
+     *
+     * @return array
+     */
     public function getDocument($id, $index, $type)
     {
         $params = [
@@ -71,7 +92,12 @@ class QueryService
         return $this->elasticSearch->get($params);
     }
 
-    public function convertResult($results)
+    /**
+     * @param array $results
+     *
+     * @return array
+     */
+    private function convertResult($results)
     {
         return [
             'total'   => $results['hits']['total'],

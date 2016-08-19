@@ -11,7 +11,6 @@ use Search\Service\QueryService;
 return [
     'service_manager'        => [
         'factories' => [
-            MerlinService::class        => MerlinServiceFactory::class,
             ElasticSearchService::class => ElasticSearchServiceFactory::class,
             QueryService::class         => QueryServiceFactory::class,
         ],

@@ -17,11 +17,7 @@ class Helper
      */
     public static function checkValidType($type)
     {
-        if (in_array($type, self::VALID_TYPE, true) === false) {
-            return false;
-        }
-
-        return true;
+        return in_array($type, self::VALID_TYPE, true);
     }
 
     /**
@@ -31,10 +27,6 @@ class Helper
      */
     public static function checkValidMonth($month)
     {
-        if ($month <=0 && $month > 12) {
-            return false;
-        }
-
-        return true;
+        return $month > 0 && $month < 13;
     }
 }

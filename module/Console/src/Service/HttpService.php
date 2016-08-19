@@ -182,10 +182,14 @@ class HttpService
 
     /**
      * @param $params
+     *
+     * @return $this
      */
     public function setQueryParams($params)
     {
         $this->client->setParameterGet($params);
+
+        return $this;
     }
 
     /**

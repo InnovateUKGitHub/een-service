@@ -61,9 +61,12 @@ class ImportService
                 ];
             }
         }
-        if (empty($body) === false) {
-            $this->indexService->delete($body);
+
+        if (empty($body)) {
+            return;
         }
+
+        $this->indexService->delete($body);
     }
 
     /**
