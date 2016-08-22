@@ -39,14 +39,15 @@ class ImportService
     }
 
     /**
-     * @param string $since
+     * @param string    $since
+     * @param \DateTime $now
      */
-    public function delete($since)
+    public function delete($since, \DateTime $now)
     {
         $results = $this->indexService->getAll();
 
-        $dateImport = (new \Datetime())->format('Y-m-d');
-        $dateSince = (new \Datetime())->sub(new \DateInterval('P' . $since . 'M'))->format('Y-m-d');
+        $dateImport = $now->format('Ymd');
+        $dateSince = $now->sub(new \DateInterval('P' . $since . 'M'))->format('Ymd');
         $body = [];
         foreach ($results['hits']['hits'] as $document) {
             if ($document['_source']['date_import'] < $dateImport ||
@@ -71,11 +72,13 @@ class ImportService
 
     /**
      * @param string $month
+     *
+     * @return null
      */
     public function import($month)
     {
         if (($data = $this->getData($month)) === null) {
-            return;
+            return null;
         }
         $this->importOpportunities($data);
     }
@@ -83,11 +86,11 @@ class ImportService
     /**
      * @param \SimpleXMLElement $results
      */
-    public function importOpportunities(\SimpleXMLElement $results)
+    private function importOpportunities(\SimpleXMLElement $results)
     {
         $this->indexService->createIndex(IndexService::ES_INDEX_OPPORTUNITY);
 
-        $dateImport = (new \DateTime())->format('Y-m-d');
+        $dateImport = (new \DateTime())->format('Ymd');
         foreach ($results->{'profile'} as $profile) {
 
             $reference = $profile->{'reference'};
@@ -131,8 +134,9 @@ class ImportService
                     IndexService::ES_TYPE_OPPORTUNITY
                 );
             } catch (\Exception $e) {
-                echo "An error occurred during the import of a document\n";
-                echo $e->getMessage() . "\n";
+                //TODO Add a logger to deal with errors
+//                echo "An error occurred during the import of a document\n";
+//                echo $e->getMessage() . "\n";
             }
         }
     }
@@ -161,8 +165,8 @@ class ImportService
     {
         $result = [];
         foreach ($industries->{'exploitation'} as $industry) {
-            if ((string)$industry->{'label'}) {
-                $result[] = (string)$industry->{'label'};
+            if ((string)$industry->{'other'}) {
+                $result[] = (string)$industry->{'other'};
             }
         }
 
@@ -177,7 +181,7 @@ class ImportService
     private function extractTechnologies(\SimpleXMLElement $technologies)
     {
         $result = [];
-        foreach ($technologies->{'technologies'} as $technology) {
+        foreach ($technologies->{'technology'} as $technology) {
             if ((string)$technology->{'label'}) {
                 $result[] = (string)$technology->{'label'};
             }
@@ -225,7 +229,7 @@ class ImportService
      *
      * @return \SimpleXMLElement|null
      */
-    public function getData($month)
+    private function getData($month)
     {
         $this->client->setHttpMethod(Request::METHOD_GET);
         $this->client->setPathToService($this->path);
@@ -234,13 +238,15 @@ class ImportService
         try {
             $result = simplexml_load_string($this->client->execute(false));
         } catch (HttpException $e) {
-            echo "An error occurred during the retrieve of the $month month\n";
-            echo $e->getMessage() . "\n";
+            //TODO Add a logger to deal with errors
+//            echo "An error occurred during the retrieve of the $month month\n";
+//            echo $e->getMessage() . "\n";
 
             return null;
         } catch (\Exception $e) {
-            echo "An error occurred during the retrieve of the $month month\n";
-            echo $e->getMessage() . "\n";
+            //TODO Add a logger to deal with errors
+//            echo "An error occurred during the retrieve of the $month month\n";
+//            echo $e->getMessage() . "\n";
 
             return null;
         }
@@ -256,9 +262,6 @@ class ImportService
     private function buildQuery($month)
     {
         $return = [];
-        if (empty($this->type) === false) {
-            $return['pt'] = $this->type;
-        }
         if (empty($this->username) === false) {
             $return['u'] = $this->username;
         }

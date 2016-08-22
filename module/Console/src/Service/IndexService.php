@@ -6,9 +6,8 @@ use Elasticsearch\Client;
 class IndexService
 {
     const ES_INDEX_OPPORTUNITY = 'opportunity';
-    const ES_INDEX_EVENT = 'event';
     const ES_TYPE_OPPORTUNITY = 'opportunity';
-    const ES_TYPE_EVENT = 'event';
+
     /** @var Client */
     private $elasticSearch;
 
@@ -33,9 +32,6 @@ class IndexService
         switch ($index) {
             case self::ES_INDEX_OPPORTUNITY:
                 $this->createOpportunityIndex();
-                break;
-            case self::ES_INDEX_EVENT:
-                $this->createEventIndex();
                 break;
         }
 
@@ -125,69 +121,6 @@ class IndexService
     }
 
     /**
-     * Function to create the mapping of the event index
-     */
-    private function createEventIndex()
-    {
-        $params = [
-            'index' => self::ES_INDEX_EVENT,
-            'body'  => [
-                'mappings' => [
-                    self::ES_TYPE_EVENT => [
-                        'properties' => [
-                            'id'          => [
-                                'type' => 'long',
-                            ],
-                            'name'        => [
-                                'type' => 'string',
-                            ],
-                            'type'        => [
-                                'type' => 'string',
-                            ],
-                            'place'       => [
-                                'type' => 'string',
-                            ],
-                            'address'     => [
-                                'type' => 'string',
-                            ],
-                            'date_from'   => [
-                                'type'   => 'date',
-                                'format' => 'strict_date_optional_time||epoch_millis',
-                            ],
-                            'date_to'     => [
-                                'type'   => 'date',
-                                'format' => 'strict_date_optional_time||epoch_millis',
-                            ],
-                            'description' => [
-                                'type' => 'string',
-                            ],
-                            'attendee'    => [
-                                'type' => 'string',
-                            ],
-                            'agenda'      => [
-                                'type' => 'string',
-                            ],
-                            'cost'        => [
-                                'type' => 'string',
-                            ],
-                            'topics'      => [
-                                'type' => 'string',
-                            ],
-                            'latitude'    => [
-                                'type' => 'float',
-                            ],
-                            'longitude'   => [
-                                'type' => 'float',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ];
-        $this->elasticSearch->indices()->create($params);
-    }
-
-    /**
      * @param $values
      * @param $id
      * @param $index
@@ -238,8 +171,9 @@ class IndexService
 
             return $results;
         } catch (\Exception $e) {
-            echo "An error occurred during the removal of old documents\n";
-            echo $e->getMessage() . "\n";
+            //TODO Add a logger to deal with errors
+//            echo "An error occurred during the removal of old documents\n";
+//            echo $e->getMessage() . "\n";
         }
 
         return null;
@@ -247,14 +181,21 @@ class IndexService
 
     /**
      * @param array $params
+     *
+     * @return bool
      */
     public function delete($params)
     {
         try {
             $this->elasticSearch->bulk($params);
+
+            return true;
         } catch (\Exception $e) {
-            echo "An error occurred during the removal of the documents\n";
-            echo $e->getMessage() . "\n";
+            //TODO Add a logger to deal with errors
+//            echo "An error occurred during the removal of the documents\n";
+//            echo $e->getMessage() . "\n";
         }
+
+        return false;
     }
 }
