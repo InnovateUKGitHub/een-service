@@ -59,7 +59,7 @@ final class ImportController extends AbstractActionController
             throw new InvalidArgumentException('The month enter is not valid');
         }
 
-        $this->importService->delete($since);
+        $this->importService->delete($since, new \DateTime());
 
         return ['success' => true];
     }

@@ -1,0 +1,123 @@
+<pod>
+    <profile xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <reference>
+        <type>BO</type>
+        <internal />
+        <external>BOCN20160720001</external>
+    </reference>
+    <datum>
+        <submit>2016-07-20T00:00:00</submit>
+        <update>2016-08-09T00:00:00</update>
+        <deadline>2017-08-09T00:00:00</deadline>
+    </datum>
+    <content>
+        <title>Chinese company offering aluminum sheet</title>
+        <summary>The Summary</summary>
+        <description>The Description</description>
+    </content>
+    <company>
+        <kind>Industry &gt;500 MNE</kind>
+        <since>1999</since>
+        <turnover>&gt;500M</turnover>
+        <transnational>false</transnational>
+        <experience />
+        <certifications />
+        <country>
+            <key>CN</key>
+            <label>China</label>
+        </country>
+        <languages>
+            <language>
+                <key />
+                <label>English</label>
+            </language>
+        </languages>
+    </company>
+    <eoi>
+        <status>True</status>
+    </eoi>
+    <keyword>
+        <technologies>
+            <technology>
+                <key>02007011</key>
+                <label>Non-ferrous Metals</label>
+            </technology>
+        </technologies>
+        <markets>
+            <market>
+                <key>08005</key>
+                <label>Other Industrial Products (not elsewhere classified)</label>
+            </market>
+        </markets>
+        <naces>
+            <nace>
+                <key>B.07.2.9</key>
+                <label>Mining of other non-ferrous metal ores</label>
+            </nace>
+        </naces>
+    </keyword>
+    <dissemination>
+        <preferred />
+        <publish>
+            <sectorgroup>
+                <string />
+            </sectorgroup>
+        </publish>
+        <export />
+    </dissemination>
+    <partnerships>
+        <string>Commercial agency agreement</string>
+    </partnerships>
+    <contact>
+        <organization>China Council for the Promotion of International Trade Henan Provincial Committee</organization>
+        <organizationcountry>
+            <key />
+            <label />
+        </organizationcountry>
+        <partnerid>CN00838</partnerid>
+        <consortium>EEN Central China</consortium>
+        <consortiumcountry>
+            <key>CN</key>
+            <label>China</label>
+        </consortiumcountry>
+        <fullname>Xie, Zengfu</fullname>
+        <phone>86-371-63835890</phone>
+        <email>ccpithnild@163.com</email>
+    </contact>
+    <cooperation>
+        <stagedev>
+            <stage />
+            <comment />
+        </stagedev>
+        <ipr>
+            <status />
+            <comment />
+        </ipr>
+        <partner>
+            <sought />
+            <area>Partner Expertise</area>
+            <task />
+        </partner>
+        <plusvalue>Advantage</plusvalue>
+        <exploitations>
+            <exploitation>
+                <key />
+                <other>National or Regional R&amp;D programme</other>
+            </exploitation>
+        </exploitations>
+    </cooperation>
+    <program>
+        <acronym />
+        <funding />
+        <evaluation />
+        <duration>0</duration>
+        <prebudget />
+        <coordinator>false</coordinator>
+        <url />
+        <call>
+            <deadline xsi:nil="true" />
+            <website />
+        </call>
+    </program>
+</profile>
+</pod>

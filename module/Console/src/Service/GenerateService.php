@@ -115,7 +115,7 @@ class GenerateService
      */
     private function generateEvents($number)
     {
-        $this->indexService->createIndex(IndexService::ES_INDEX_EVENT);
+        $this->indexService->createIndex(self::EVENT);
 
         for ($i = 0; $i < $number; $i++) {
             $params = [
@@ -138,8 +138,8 @@ class GenerateService
             $this->indexService->index(
                 $params,
                 $params['id'],
-                IndexService::ES_INDEX_EVENT,
-                IndexService::ES_TYPE_EVENT
+                self::EVENT,
+                self::EVENT
             );
         }
     }
