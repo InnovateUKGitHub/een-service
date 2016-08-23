@@ -2,20 +2,20 @@
 
 namespace ConsoleTest\Factory\Service;
 
-use Console\Factory\Service\IndexServiceFactory;
-use Console\Service\IndexService;
+use Console\Factory\Validator\MerlinValidatorFactory;
+use Console\Validator\MerlinValidator;
 use Zend\Log\Logger;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * @covers Console\Factory\Service\IndexServiceFactory
+ * @covers Console\Factory\Validator\MerlinValidatorFactory
  */
-class IndexServiceFactoryTest extends \PHPUnit_Framework_TestCase
+class MerlinValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
         $config = [
-            IndexServiceFactory::ELASTIC_SEARCH => '',
+            MerlinValidatorFactory::MERLIN_DATA_STRUCTURE => '',
         ];
 
         /* @var $serviceLocator ServiceLocatorInterface|\PHPUnit_Framework_MockObject_MockObject */
@@ -24,23 +24,23 @@ class IndexServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceLocator
             ->expects(self::at(0))
             ->method('get')
-            ->with(Logger::class)
-            ->willReturn($this->createMock(Logger::class));
+            ->with(MerlinValidatorFactory::CONFIG)
+            ->willReturn($config);
         $serviceLocator
             ->expects(self::at(1))
             ->method('get')
-            ->with(IndexServiceFactory::CONFIG)
-            ->willReturn($config);
+            ->with(Logger::class)
+            ->willReturn($this->createMock(Logger::class));
 
         self::assertInstanceOf(
-            IndexService::class,
-            (new IndexServiceFactory())->createService($serviceLocator)
+            MerlinValidator::class,
+            (new MerlinValidatorFactory())->createService($serviceLocator)
         );
     }
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The config file is incorrect. Please specify the elastic-search information
+     * @expectedExceptionMessage The config file is incorrect. Please specify the merlin data structure
      */
     public function testFactoryThrowException()
     {
@@ -52,14 +52,17 @@ class IndexServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceLocator
             ->expects(self::at(0))
             ->method('get')
-            ->with(Logger::class)
-            ->willReturn($this->createMock(Logger::class));
+            ->with(MerlinValidatorFactory::CONFIG)
+            ->willReturn($config);
         $serviceLocator
             ->expects(self::at(1))
             ->method('get')
-            ->with(IndexServiceFactory::CONFIG)
-            ->willReturn($config);
+            ->with(Logger::class)
+            ->willReturn($this->createMock(Logger::class));
 
-        (new IndexServiceFactory())->createService($serviceLocator);
+        self::assertInstanceOf(
+            MerlinValidator::class,
+            (new MerlinValidatorFactory())->createService($serviceLocator)
+        );
     }
 }

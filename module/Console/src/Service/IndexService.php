@@ -2,21 +2,26 @@
 namespace Console\Service;
 
 use Elasticsearch\Client;
+use Zend\Log\Logger;
 
 class IndexService
 {
-    const ES_INDEX_OPPORTUNITY = 'opportunity';
-    const ES_TYPE_OPPORTUNITY = 'opportunity';
-
     /** @var Client */
     private $elasticSearch;
+    /** @var Logger */
+    private $logger;
+    /** @var array */
+    private $config;
 
     /**
      * @param Client $elasticSearch
+     * @param Logger $logger
      */
-    public function __construct(Client $elasticSearch)
+    public function __construct(Client $elasticSearch, Logger $logger, $config)
     {
         $this->elasticSearch = $elasticSearch;
+        $this->logger = $logger;
+        $this->config = $config;
     }
 
     /**
@@ -26,11 +31,11 @@ class IndexService
      */
     public function createIndex($index)
     {
-        if ($this->elasticSearch->indices()->exists(['index' => $index]) === true) {
+        if ($this->exists($index)) {
             return true;
         }
         switch ($index) {
-            case self::ES_INDEX_OPPORTUNITY:
+            case ES_INDEX_OPPORTUNITY:
                 $this->createOpportunityIndex();
                 break;
         }
@@ -38,93 +43,38 @@ class IndexService
         return false;
     }
 
+    private function exists($index)
+    {
+        try {
+            return $this->elasticSearch->indices()->exists(['index' => $index]);
+        } catch (\Exception $e) {
+            $this->logger->debug('An error occurred during the creation of the index');
+            $this->logger->debug($e->getMessage());
+        }
+        throw new \RuntimeException('An error occurred during the creation of the index');
+    }
+
     /**
      * Function to create the mapping of the opportunity index
      */
     private function createOpportunityIndex()
     {
-        $params = [
-            'index' => self::ES_INDEX_OPPORTUNITY,
-            'body'  => [
-                'mappings' => [
-                    self::ES_TYPE_OPPORTUNITY => [
-                        'properties' => [
-                            'id'                 => [
-                                'type' => 'string',
-                            ],
-                            'type'               => [
-                                'type' => 'string',
-                            ],
-                            'title'              => [
-                                'type' => 'string',
-                            ],
-                            'summary'            => [
-                                'type' => 'string',
-                            ],
-                            'description'        => [
-                                'type' => 'string',
-                            ],
-                            'partner_expertise'  => [
-                                'type' => 'string',
-                            ],
-                            'stage'              => [
-                                'type' => 'string',
-                            ],
-                            'ipr'                => [
-                                'type' => 'string',
-                            ],
-                            'ipr_comment'        => [
-                                'type' => 'string',
-                            ],
-                            'country_code'       => [
-                                'type' => 'string',
-                            ],
-                            'country'            => [
-                                'type' => 'string',
-                            ],
-                            'date'               => [
-                                'type' => 'date',
-                            ],
-                            'deadline'           => [
-                                'type' => 'date',
-                            ],
-                            'partnership_sought' => [
-                                'type' => 'string',
-                            ],
-                            'industries'         => [
-                                'type' => 'string',
-                            ],
-                            'technologies'       => [
-                                'type' => 'string',
-                            ],
-                            'commercials'        => [
-                                'type' => 'string',
-                            ],
-                            'markets'            => [
-                                'type' => 'string',
-                            ],
-                            'eoi'                => [
-                                'type' => 'boolean',
-                            ],
-                            'advantage'          => [
-                                'type' => 'string',
-                            ],
-                            'date_import'        => [
-                                'type' => 'date',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ];
-        $this->elasticSearch->indices()->create($params);
+        $params = $this->config[ES_INDEX_OPPORTUNITY];
+
+        try {
+            $this->elasticSearch->indices()->create($params);
+        } catch (\Exception $e) {
+            $this->logger->debug('An error occurred during the creation of the index');
+            $this->logger->debug($e->getMessage());
+            throw new \RuntimeException('An error occurred during the creation of the index');
+        }
     }
 
     /**
-     * @param $values
-     * @param $id
-     * @param $index
-     * @param $type
+     * @param array  $values
+     * @param string $id
+     * @param string $index
+     * @param string $type
      *
      * @return array
      */
@@ -137,7 +87,13 @@ class IndexService
             'id'    => $id,
         ];
 
-        return $this->elasticSearch->index($params);
+        try {
+            return $this->elasticSearch->index($params);
+        } catch (\Exception $e) {
+            $this->logger->debug('An error occurred during the import of a document');
+            $this->logger->debug($e->getMessage());
+        }
+        throw new \RuntimeException('An error occurred during the import of a document');
     }
 
     /**
@@ -150,8 +106,8 @@ class IndexService
     public function getAll($results = [], $from = 0, $size = 100)
     {
         $query = [
-            'index'   => self::ES_INDEX_OPPORTUNITY,
-            'type'    => self::ES_TYPE_OPPORTUNITY,
+            'index'   => ES_INDEX_OPPORTUNITY,
+            'type'    => ES_TYPE_OPPORTUNITY,
             'from'    => $from,
             'size'    => $size,
             '_source' => ['id', 'date', 'deadline', 'date_import'],
@@ -171,12 +127,10 @@ class IndexService
 
             return $results;
         } catch (\Exception $e) {
-            //TODO Add a logger to deal with errors
-//            echo "An error occurred during the removal of old documents\n";
-//            echo $e->getMessage() . "\n";
+            $this->logger->debug('An error occurred during the removal of old documents');
+            $this->logger->debug($e->getMessage());
         }
-
-        return null;
+        throw new \RuntimeException('An error occurred during the removal of old documents');
     }
 
     /**
@@ -191,11 +145,9 @@ class IndexService
 
             return true;
         } catch (\Exception $e) {
-            //TODO Add a logger to deal with errors
-//            echo "An error occurred during the removal of the documents\n";
-//            echo $e->getMessage() . "\n";
+            $this->logger->debug('An error occurred during the removal of old documents');
+            $this->logger->debug($e->getMessage());
         }
-
-        return false;
+        throw new \RuntimeException('An error occurred during the removal of old documents');
     }
 }

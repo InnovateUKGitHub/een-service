@@ -11,7 +11,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
 {
     public function testTypeValid()
     {
-        self::assertTrue(Helper::checkValidType('opportunity'));
+        self::assertTrue(Helper::checkValidType(ES_INDEX_OPPORTUNITY));
         self::assertTrue(Helper::checkValidType('event'));
         self::assertTrue(Helper::checkValidType('all'));
     }

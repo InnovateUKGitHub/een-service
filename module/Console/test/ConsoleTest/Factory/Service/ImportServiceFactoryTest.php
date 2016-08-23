@@ -6,6 +6,8 @@ use Console\Factory\Service\ImportServiceFactory;
 use Console\Service\HttpService;
 use Console\Service\ImportService;
 use Console\Service\IndexService;
+use Console\Validator\MerlinValidator;
+use Zend\Log\Logger;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -43,6 +45,16 @@ class ImportServiceFactoryTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->with(ImportServiceFactory::CONFIG_SERVICE)
             ->willReturn($config);
+        $serviceLocator
+            ->expects(self::at(3))
+            ->method('get')
+            ->with(MerlinValidator::class)
+            ->willReturn($this->createMock(MerlinValidator::class));
+        $serviceLocator
+            ->expects(self::at(4))
+            ->method('get')
+            ->with(Logger::class)
+            ->willReturn($this->createMock(Logger::class));
 
         self::assertInstanceOf(
             ImportService::class,

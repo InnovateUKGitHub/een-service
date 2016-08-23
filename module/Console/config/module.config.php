@@ -14,6 +14,8 @@ use Console\Service\GenerateService;
 use Console\Service\HttpService;
 use Console\Service\ImportService;
 use Console\Service\IndexService;
+use Console\Validator\MerlinValidator;
+use Console\Factory\Validator\MerlinValidatorFactory;
 
 return [
     'controllers'     => [
@@ -23,12 +25,13 @@ return [
         ],
     ],
     'service_manager' => [
-        'factories' => [
+        'factories'  => [
             DeleteService::class   => DeleteServiceFactory::class,
             GenerateService::class => GenerateServiceFactory::class,
             HttpService::class     => HttpServiceFactory::class,
             ImportService::class   => ImportServiceFactory::class,
             IndexService::class    => IndexServiceFactory::class,
+            MerlinValidator::class => MerlinValidatorFactory::class,
         ],
     ],
     'console'         => [
@@ -70,7 +73,7 @@ return [
                         ],
                     ],
                 ],
-                'delete-all'   => [
+                'delete-all'    => [
                     'options' => [
                         'route'       => 'delete-all [--index=<index>]',
                         'constraints' => [

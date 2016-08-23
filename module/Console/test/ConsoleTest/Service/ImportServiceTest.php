@@ -6,8 +6,10 @@ use Console\Factory\Service\ImportServiceFactory;
 use Console\Service\HttpService;
 use Console\Service\ImportService;
 use Console\Service\IndexService;
+use Console\Validator\MerlinValidator;
 use Zend\Http\Request;
 use Zend\Json\Server\Exception\HttpException;
+use Zend\Log\Logger;
 
 /**
  * @covers Console\Service\ImportService
@@ -24,6 +26,10 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
     private $httpServiceMock;
     /** @var ImportService $service */
     private $service;
+    /** @var MerlinValidator $merlinValidatorMock */
+    private $merlinValidatorMock;
+    /** @var Logger $loggerMock */
+    private $loggerMock;
 
     protected function Setup()
     {
@@ -37,10 +43,14 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->indexServiceMock = $this->createMock(IndexService::class);
         $this->httpServiceMock = $this->createMock(HttpService::class);
+        $this->merlinValidatorMock = $this->createMock(MerlinValidator::class);
+        $this->loggerMock = $this->createMock(Logger::class);
 
         $this->service = new ImportService(
             $this->httpServiceMock,
             $this->indexServiceMock,
+            $this->merlinValidatorMock,
+            $this->loggerMock,
             $config
         );
     }
@@ -78,15 +88,15 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
                 'body' => [
                     [
                         'delete' => [
-                            '_index' => IndexService::ES_INDEX_OPPORTUNITY,
-                            '_type'  => IndexService::ES_TYPE_OPPORTUNITY,
+                            '_index' => ES_INDEX_OPPORTUNITY,
+                            '_type'  => ES_TYPE_OPPORTUNITY,
                             '_id'    => 1,
                         ],
                     ],
                     [
                         'delete' => [
-                            '_index' => IndexService::ES_INDEX_OPPORTUNITY,
-                            '_type'  => IndexService::ES_TYPE_OPPORTUNITY,
+                            '_index' => ES_INDEX_OPPORTUNITY,
+                            '_type'  => ES_TYPE_OPPORTUNITY,
                             '_id'    => 2,
                         ],
                     ],
@@ -157,87 +167,29 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
         $this->service->import(self::MONTH);
     }
 
-    public function testIndexThrowException()
-    {
-        $merlinData = file_get_contents(__DIR__ . '/merlin-data.xml');
-
-        $date = new \DateTime();
-        $now = $date->format('Ymd');
-
-        $this->httpServiceMock->expects(self::once())
-            ->method('setHttpMethod')
-            ->with(Request::METHOD_GET);
-        $this->httpServiceMock->expects(self::once())
-            ->method('setPathToService')
-            ->with(self::PATH);
-        $this->httpServiceMock->expects(self::once())
-            ->method('setQueryParams')
-            ->with([
-                'u'  => '%%MERLIN_GLOBAL_USERNAME%%',
-                'p'  => '%%MERLIN_GLOBAL_PASSWORD%%',
-                'sb' => $now,
-                'sa' => $date->sub(new \DateInterval('P' . self::MONTH . 'M'))->format('Ymd'),
-            ]);
-
-        $this->httpServiceMock->expects(self::once())
-            ->method('execute')
-            ->willReturn($merlinData);
-
-        $this->indexServiceMock->expects(self::once())
-            ->method('index')
-            ->with([
-                'id'                 => 'BOCN20160720001',
-                'type'               => 'BO',
-                'title'              => 'Chinese company offering aluminum sheet',
-                'summary'            => 'The Summary',
-                'description'        => 'The Description',
-                'partner_expertise'  => 'Partner Expertise',
-                'stage'              => '',
-                'ipr'                => '',
-                'ipr_comment'        => '',
-                'country_code'       => 'CN',
-                'country'            => 'China',
-                'date'               => '2016-08-09T00:00:00',
-                'deadline'           => '2017-08-09T00:00:00',
-                'partnership_sought' => [
-                    'Commercial agency agreement',
-                ],
-                'industries'         => [
-                    'National or Regional R&D programme',
-                ],
-                'technologies'       => [
-                    'Non-ferrous Metals',
-                ],
-                'commercials'        => [
-                    'Mining of other non-ferrous metal ores',
-                ],
-                'markets'            => [
-                    'Other Industrial Products (not elsewhere classified)',
-                ],
-                'eoi'                => true,
-                'advantage'          => 'Advantage',
-                'date_import'        => $now,
-            ])
-            ->willThrowException(new \Exception(''));
-
-        $this->service->import(self::MONTH);
-    }
-
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage An error occurred during the retrieve of the 1 month
+     */
     public function testGetDataThrowHttpException()
     {
         $this->httpServiceMock->expects(self::once())
             ->method('execute')
-            ->willThrowException(new HttpException(''));
+            ->willThrowException(new HttpException());
 
-        self::assertNull($this->service->import(self::MONTH));
+        $this->service->import(self::MONTH);
     }
 
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage An error occurred during the retrieve of the 1 month
+     */
     public function testGetDataThrowException()
     {
         $this->httpServiceMock->expects(self::once())
             ->method('execute')
-            ->willThrowException(new \Exception(''));
+            ->willThrowException(new \Exception());
 
-        self::assertNull($this->service->import(self::MONTH));
+        $this->service->import(self::MONTH);
     }
 }

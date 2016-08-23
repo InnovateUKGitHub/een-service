@@ -10,12 +10,14 @@ use Console\Factory\Service\GenerateServiceFactory;
 use Console\Factory\Service\HttpServiceFactory;
 use Console\Factory\Service\ImportServiceFactory;
 use Console\Factory\Service\IndexServiceFactory;
+use Console\Factory\Validator\MerlinValidatorFactory;
 use Console\Module;
 use Console\Service\DeleteService;
 use Console\Service\GenerateService;
 use Console\Service\HttpService;
 use Console\Service\ImportService;
 use Console\Service\IndexService;
+use Console\Validator\MerlinValidator;
 use Zend\Console\Adapter\AdapterInterface;
 
 /**
@@ -40,6 +42,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
                     HttpService::class     => HttpServiceFactory::class,
                     ImportService::class   => ImportServiceFactory::class,
                     IndexService::class    => IndexServiceFactory::class,
+                    MerlinValidator::class => MerlinValidatorFactory::class,
                 ],
             ],
             'console'         => [
@@ -81,7 +84,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
                                 ],
                             ],
                         ],
-                        'delete-all'   => [
+                        'delete-all'    => [
                             'options' => [
                                 'route'       => 'delete-all [--index=<index>]',
                                 'constraints' => [

@@ -17,6 +17,7 @@ return [
     'ZF\\Rest',
     'ZF\\Rpc',
     'ZF\\Versioning',
+    'ZFTool',
     'Console',
     'Search',
 ];

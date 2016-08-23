@@ -4,10 +4,6 @@ namespace Search\Service;
 
 class ElasticSearchService
 {
-    const OPPORTUNITY = 'opportunity';
-
-    const EVENT = 'event';
-
     /** @var QueryService */
     private $query;
 
@@ -28,19 +24,19 @@ class ElasticSearchService
      */
     public function searchOpportunities($params)
     {
-        if ($this->query->exists(self::OPPORTUNITY) === false) {
+        if ($this->query->exists(ES_INDEX_OPPORTUNITY) === false) {
             return ['error' => 'Index not created'];
         }
 
-        return $this->query->search($params, self::OPPORTUNITY, self::OPPORTUNITY);
+        return $this->query->search($params, ES_INDEX_OPPORTUNITY, ES_TYPE_OPPORTUNITY);
     }
 
     public function searchOpportunity($id)
     {
-        if ($this->query->exists(self::OPPORTUNITY) === false) {
+        if ($this->query->exists(ES_INDEX_OPPORTUNITY) === false) {
             return ['error' => 'Index not created'];
         }
 
-        return $this->query->getDocument($id, self::OPPORTUNITY, self::OPPORTUNITY);
+        return $this->query->getDocument($id, ES_INDEX_OPPORTUNITY, ES_TYPE_OPPORTUNITY);
     }
 }

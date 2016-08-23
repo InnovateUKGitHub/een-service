@@ -24,7 +24,7 @@ class ElasticSearchServiceTest extends \PHPUnit_Framework_TestCase
         $queryServiceMock = $this->createMock(QueryService::class);
         $queryServiceMock->expects(self::once())
             ->method('search')
-            ->with($params, ElasticSearchService::OPPORTUNITY, ElasticSearchService::OPPORTUNITY)
+            ->with($params, ES_INDEX_OPPORTUNITY, ES_TYPE_OPPORTUNITY)
             ->willReturn(['success' => true]);
 
         $service = new ElasticSearchService($queryServiceMock);
@@ -38,7 +38,7 @@ class ElasticSearchServiceTest extends \PHPUnit_Framework_TestCase
         $queryServiceMock = $this->createMock(QueryService::class);
         $queryServiceMock->expects(self::once())
             ->method('exists')
-            ->with(ElasticSearchService::OPPORTUNITY)
+            ->with(ES_INDEX_OPPORTUNITY)
             ->willReturn(false);
 
         $service = new ElasticSearchService($queryServiceMock);
@@ -52,7 +52,7 @@ class ElasticSearchServiceTest extends \PHPUnit_Framework_TestCase
         $queryServiceMock = $this->createMock(QueryService::class);
         $queryServiceMock->expects(self::once())
             ->method('getDocument')
-            ->with(self::OPPORTUNITY_ID, ElasticSearchService::OPPORTUNITY, ElasticSearchService::OPPORTUNITY)
+            ->with(self::OPPORTUNITY_ID, ES_INDEX_OPPORTUNITY, ES_TYPE_OPPORTUNITY)
             ->willReturn(['success' => true]);
 
         $service = new ElasticSearchService($queryServiceMock);
@@ -66,7 +66,7 @@ class ElasticSearchServiceTest extends \PHPUnit_Framework_TestCase
         $queryServiceMock = $this->createMock(QueryService::class);
         $queryServiceMock->expects(self::once())
             ->method('exists')
-            ->with(ElasticSearchService::OPPORTUNITY)
+            ->with(ES_INDEX_OPPORTUNITY)
             ->willReturn(false);
 
         $service = new ElasticSearchService($queryServiceMock);

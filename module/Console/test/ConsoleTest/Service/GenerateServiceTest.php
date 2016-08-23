@@ -45,7 +45,7 @@ class GenerateServiceTest extends \PHPUnit_Framework_TestCase
             ->method('index')
             ->willReturn([]);
 
-        $service->generate(GenerateService::OPPORTUNITY, 1);
+        $service->generate(ES_INDEX_OPPORTUNITY, 1);
     }
 
     public function testGenerateEvent()

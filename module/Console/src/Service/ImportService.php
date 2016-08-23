@@ -1,41 +1,52 @@
 <?php
 namespace Console\Service;
 
+use Console\Validator\MerlinValidator;
 use Zend\Http\Request;
 use Zend\Json\Server\Exception\HttpException;
+use Zend\Log\Logger;
 
 class ImportService
 {
     const USERNAME = 'username';
+
     const PASSWORD = 'password';
+
     const PATH_GET_PROFILE = 'path-get-profile';
+
     /** @var string */
     private $username;
     /** @var string */
     private $password;
-    /** @var string */
-    private $type;
     /** @var string */
     private $path;
     /** @var HttpService */
     private $client;
     /** @var IndexService */
     private $indexService;
+    /** @var MerlinValidator */
+    private $merlinValidator;
+    /** @var Logger */
+    private $logger;
 
     /**
      * ImportService constructor.
      *
-     * @param HttpService  $client
-     * @param IndexService $indexService
-     * @param              $config
+     * @param HttpService     $client
+     * @param IndexService    $indexService
+     * @param MerlinValidator $merlinValidator
+     * @param Logger          $logger
+     * @param array           $config
      */
-    public function __construct(HttpService $client, IndexService $indexService, $config)
+    public function __construct(HttpService $client, IndexService $indexService, MerlinValidator $merlinValidator, Logger $logger, $config)
     {
         $this->indexService = $indexService;
+        $this->merlinValidator = $merlinValidator;
         $this->client = $client;
         $this->username = $config[self::USERNAME];
         $this->password = $config[self::PASSWORD];
         $this->path = $config[self::PATH_GET_PROFILE];
+        $this->logger = $logger;
     }
 
     /**
@@ -55,8 +66,8 @@ class ImportService
             ) {
                 $body['body'][] = [
                     'delete' => [
-                        '_index' => IndexService::ES_INDEX_OPPORTUNITY,
-                        '_type'  => IndexService::ES_TYPE_OPPORTUNITY,
+                        '_index' => ES_INDEX_OPPORTUNITY,
+                        '_type'  => ES_TYPE_OPPORTUNITY,
                         '_id'    => $document['_source']['id'],
                     ],
                 ];
@@ -77,10 +88,52 @@ class ImportService
      */
     public function import($month)
     {
-        if (($data = $this->getData($month)) === null) {
-            return null;
+        $this->importOpportunities($this->getData($month));
+    }
+
+    /**
+     * @param string $month
+     *
+     * @return \SimpleXMLElement|null
+     */
+    private function getData($month)
+    {
+        $this->client->setHttpMethod(Request::METHOD_GET);
+        $this->client->setPathToService($this->path);
+        $this->client->setQueryParams($this->buildQuery($month));
+
+        try {
+            return simplexml_load_string($this->client->execute(false));
+        } catch (HttpException $e) {
+            $this->logger->debug("An error occurred during the retrieve of the $month month");
+            $this->logger->debug($e->getMessage());
+        } catch (\Exception $e) {
+            $this->logger->debug("An error occurred during the retrieve of the $month month");
+            $this->logger->debug($e->getMessage());
         }
-        $this->importOpportunities($data);
+
+        throw new \RuntimeException("An error occurred during the retrieve of the $month month");
+    }
+
+    /**
+     * @param string $month
+     *
+     * @return array
+     */
+    private function buildQuery($month)
+    {
+        $return = [];
+        if (empty($this->username) === false) {
+            $return['u'] = $this->username;
+        }
+        if (empty($this->password) === false) {
+            $return['p'] = $this->password;
+        }
+
+        $return['sb'] = (new \DateTime())->sub(new \DateInterval('P' . ($month - 1) . 'M'))->format('Ymd');
+        $return['sa'] = (new \DateTime())->sub(new \DateInterval('P' . ($month) . 'M'))->format('Ymd');
+
+        return $return;
     }
 
     /**
@@ -88,10 +141,14 @@ class ImportService
      */
     private function importOpportunities(\SimpleXMLElement $results)
     {
-        $this->indexService->createIndex(IndexService::ES_INDEX_OPPORTUNITY);
+        $this->indexService->createIndex(ES_INDEX_OPPORTUNITY);
+
+        $this->merlinValidator->checkProfilesExists($results);
 
         $dateImport = (new \DateTime())->format('Ymd');
         foreach ($results->{'profile'} as $profile) {
+
+            $this->merlinValidator->checkProfileDataExists($profile);
 
             $reference = $profile->{'reference'};
             $content = $profile->{'content'};
@@ -114,8 +171,9 @@ class ImportService
                 'ipr_comment'        => (string)$cooperation->{'ipr'}->{'comment'}->__toString(),
                 'country_code'       => (string)$company->{'country'}->{'key'}->__toString(),
                 'country'            => (string)$company->{'country'}->{'label'}->__toString(),
-                'date'               => $datum->{'update'}->__toString() ?: null,
-                'deadline'           => $datum->{'deadline'}->__toString() ?: null,
+                'date_create'        => (string)$datum->{'submit'}->__toString() ?: null,
+                'date'               => (string)$datum->{'update'}->__toString() ?: null,
+                'deadline'           => (string)$datum->{'deadline'}->__toString() ?: null,
                 'partnership_sought' => $this->extractPartnerships($profile->{'partnerships'}),
                 'industries'         => $this->extractIndustries($cooperation->{'exploitations'}),
                 'technologies'       => $this->extractTechnologies($keyword->{'technologies'}),
@@ -126,18 +184,12 @@ class ImportService
                 'date_import'        => $dateImport,
             ];
 
-            try {
-                $this->indexService->index(
-                    $params,
-                    $id,
-                    IndexService::ES_INDEX_OPPORTUNITY,
-                    IndexService::ES_TYPE_OPPORTUNITY
-                );
-            } catch (\Exception $e) {
-                //TODO Add a logger to deal with errors
-//                echo "An error occurred during the import of a document\n";
-//                echo $e->getMessage() . "\n";
-            }
+            $this->indexService->index(
+                $params,
+                $id,
+                ES_INDEX_OPPORTUNITY,
+                ES_TYPE_OPPORTUNITY
+            );
         }
     }
 
@@ -222,56 +274,5 @@ class ImportService
         }
 
         return $result;
-    }
-
-    /**
-     * @param string $month
-     *
-     * @return \SimpleXMLElement|null
-     */
-    private function getData($month)
-    {
-        $this->client->setHttpMethod(Request::METHOD_GET);
-        $this->client->setPathToService($this->path);
-        $this->client->setQueryParams($this->buildQuery($month));
-
-        try {
-            $result = simplexml_load_string($this->client->execute(false));
-        } catch (HttpException $e) {
-            //TODO Add a logger to deal with errors
-//            echo "An error occurred during the retrieve of the $month month\n";
-//            echo $e->getMessage() . "\n";
-
-            return null;
-        } catch (\Exception $e) {
-            //TODO Add a logger to deal with errors
-//            echo "An error occurred during the retrieve of the $month month\n";
-//            echo $e->getMessage() . "\n";
-
-            return null;
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param string $month
-     *
-     * @return array
-     */
-    private function buildQuery($month)
-    {
-        $return = [];
-        if (empty($this->username) === false) {
-            $return['u'] = $this->username;
-        }
-        if (empty($this->password) === false) {
-            $return['p'] = $this->password;
-        }
-
-        $return['sb'] = (new \DateTime())->sub(new \DateInterval('P' . ($month - 1) . 'M'))->format('Ymd');
-        $return['sa'] = (new \DateTime())->sub(new \DateInterval('P' . ($month) . 'M'))->format('Ymd');
-
-        return $return;
     }
 }

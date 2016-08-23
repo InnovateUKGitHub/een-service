@@ -5,16 +5,20 @@ namespace Console\Factory\Service;
 use Console\Service\HttpService;
 use Console\Service\ImportService;
 use Console\Service\IndexService;
+use Console\Validator\MerlinValidator;
 use Zend\Http\Exception\InvalidArgumentException;
+use Zend\Log\Logger;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 final class ImportServiceFactory implements FactoryInterface
 {
     const CONFIG_SERVICE = 'config';
+
     const CONFIG_MERLIN = 'merlin';
 
     const SERVER = 'server';
+
     const PORT = 'port';
 
     /**
@@ -24,9 +28,7 @@ final class ImportServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /** @var HttpService $httpService */
         $httpService = $serviceLocator->get(HttpService::class);
-        /** @var IndexService $indexService */
         $indexService = $serviceLocator->get(IndexService::class);
 
         $config = $serviceLocator->get(self::CONFIG_SERVICE);
@@ -58,6 +60,10 @@ final class ImportServiceFactory implements FactoryInterface
             'Content-type' => 'application/xml',
         ]);
 
-        return new ImportService($httpService, $indexService, $config[self::CONFIG_MERLIN]);
+        $merlinValidator = $serviceLocator->get(MerlinValidator::class);
+
+        $logger = $serviceLocator->get(Logger::class);
+
+        return new ImportService($httpService, $indexService, $merlinValidator, $logger, $config[self::CONFIG_MERLIN]);
     }
 }

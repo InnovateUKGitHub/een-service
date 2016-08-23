@@ -6,7 +6,6 @@ use Faker\Generator;
 
 class GenerateService
 {
-    const OPPORTUNITY = 'opportunity';
     const EVENT = 'event';
     const ALL = 'all';
 
@@ -34,7 +33,7 @@ class GenerateService
     public function generate($index, $number)
     {
         switch ($index) {
-            case self::OPPORTUNITY:
+            case ES_INDEX_OPPORTUNITY:
                 $this->generateOpportunities($number);
                 break;
             case self::EVENT:
@@ -52,7 +51,7 @@ class GenerateService
      */
     private function generateOpportunities($number)
     {
-        $this->indexService->createIndex(IndexService::ES_INDEX_OPPORTUNITY);
+        $this->indexService->createIndex(ES_INDEX_OPPORTUNITY);
 
         for ($i = 0; $i < $number; $i++) {
             $params = [
@@ -80,8 +79,8 @@ class GenerateService
             $this->indexService->index(
                 $params,
                 $params['id'],
-                IndexService::ES_INDEX_OPPORTUNITY,
-                IndexService::ES_TYPE_OPPORTUNITY
+                ES_INDEX_OPPORTUNITY,
+                ES_TYPE_OPPORTUNITY
             );
         }
     }
