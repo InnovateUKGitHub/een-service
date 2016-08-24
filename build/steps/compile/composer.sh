@@ -9,26 +9,21 @@
 set -e
 
 # force compile on first build
-test -e compiled/drupal/composer.lock || forceCompile=true
+test -e compiled/drupal/composer.json || forceCompile=true
 
-composerChanges=`diff composer.lock compiled/composer.lock || true`
+composerChanges=`diff composer.json compiled/composer.json || true`
 
 if [ ! -z "$composerChanges" ] || [ ! -z "$forceCompile" ];then
-    echo "composer.lock has changed:"
+    echo "composer.json has changed:"
     echo $composerChanges
 
     php ./bin/composer self-update
 
-    if [ "$phpdox" = "true" ] || [ "$testcucumber" = "true" ] || [ "$testphpunit" = "true" ]; then
-        echo "running composer (with dev packages)"
-        php ./bin/composer install --optimize-autoloader
-    else
-        echo "running composer (no dev packages)"
-        php ./bin/composer install --no-dev --optimize-autoloader
-    fi
+    echo "running composer (with dev packages)"
+    php ./bin/composer install --optimize-autoloader
 
 else
-    echo "drupal/composer.lock has not changed, only running autoload"
+    echo "drupal/composer.json has not changed, only running autoload"
 
     php ./bin/composer self-update
     php ./bin/composer dump-autoload
