@@ -5,12 +5,11 @@ namespace SearchTest;
 use Search\Controller\OpportunitiesController;
 use Search\Factory\Controller\OpportunitiesControllerFactory;
 use Search\Factory\Service\ElasticSearchServiceFactory;
-use Search\Factory\Service\MerlinServiceFactory;
 use Search\Factory\Service\QueryServiceFactory;
 use Search\Module;
 use Search\Service\ElasticSearchService;
-use Search\Service\MerlinService;
 use Search\Service\QueryService;
+use Zend\Router\Http\Segment;
 
 /**
  * @covers Search\Module
@@ -21,107 +20,113 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     {
         $module = new Module();
 
-        self::assertEquals([
-            'service_manager'        => [
+        $config = $module->getConfig();
+
+        self::assertArrayHasKey('service_manager', $config);
+        self::assertArrayHasKey('controllers', $config);
+        self::assertArrayHasKey('router', $config);
+        self::assertArrayHasKey('zf-content-negotiation', $config);
+        self::assertArrayHasKey('zf-content-validation', $config);
+        self::assertArrayHasKey('input_filter_specs', $config);
+        self::assertArrayHasKey('view_manager', $config);
+
+        self::assertEquals(
+            [
                 'factories' => [
                     ElasticSearchService::class => ElasticSearchServiceFactory::class,
                     QueryService::class         => QueryServiceFactory::class,
                 ],
             ],
-            'router'                 => [
+            $config['service_manager']
+        );
+        self::assertEquals(
+            [
+                'factories' => [
+                    OpportunitiesController::class => OpportunitiesControllerFactory::class,
+                ],
+            ],
+            $config['controllers']
+        );
+        self::assertEquals(
+            [
                 'routes' => [
                     'een.opportunities' => [
-                        'type'          => 'Segment',
-                        'options'       => [
-                            'route'    => '/v1/een/opportunities',
-                            'defaults' => [
-                                'controller' => OpportunitiesController::class,
-                                'action'     => 'opportunities',
+                        'type'    => Segment::class,
+                        'options' => [
+                            'route'       => '/opportunities[/:id]',
+                            'constraints' => [
+                                'id' => '[\d\w]+',
                             ],
-                        ],
-                        'may_terminate' => true,
-                        'child_routes'  => [
-                            'details' => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'       => '/:id',
-                                    'constraints' => [
-                                        'id' => '[\d\w]+',
-                                    ],
-                                    'defaults'    => [
-                                        'action' => 'detail',
-                                    ],
-                                ],
+                            'defaults'    => [
+                                'controller' => OpportunitiesController::class,
                             ],
                         ],
                     ],
                 ],
             ],
-            'zf-versioning'          => [
-                'uri' => [
-                    0 => 'een.opportunities',
-                ],
-            ],
-            'zf-rest'                => [],
-            'zf-content-negotiation' => [
+            $config['router']
+        );
+        self::assertEquals(
+            [
                 'controllers'            => [
                     OpportunitiesController::class => 'Json',
                 ],
                 'accept_whitelist'       => [
                     OpportunitiesController::class => [
-                        0 => 'application/vnd.een.v1+json',
-                        1 => 'application/json',
-                        2 => 'application/*+json',
+                        'application/json',
+                        'application/*+json',
                     ],
                 ],
                 'content_type_whitelist' => [
                     OpportunitiesController::class => [
-                        0 => 'application/vnd.een.v1+json',
-                        1 => 'application/json',
+                        'application/json',
                     ],
                 ],
             ],
-            'zf-hal'                 => [
-                'metadata_map' => [],
-            ],
-            'zf-content-validation'  => [
+            $config['zf-content-negotiation']
+        );
+        self::assertEquals(
+            [
                 OpportunitiesController::class => [
-                    'input_filter' => 'Search\\Opportunities\\Validator',
+                    'POST' => OpportunitiesController::class,
                 ],
             ],
-            'input_filter_specs'     => [
-                'Search\\Opportunities\\Validator' => [
-                    0 => [
+            $config['zf-content-validation']
+        );
+        self::assertEquals(
+            [
+                OpportunitiesController::class => [
+                    [
                         'required'   => true,
                         'validators' => [],
                         'filters'    => [],
                         'name'       => 'from',
                     ],
-                    1 => [
+                    [
                         'required'   => true,
                         'validators' => [],
                         'filters'    => [],
                         'name'       => 'size',
                     ],
-                    2 => [
+                    [
                         'required'   => true,
                         'validators' => [],
                         'filters'    => [],
                         'name'       => 'search',
                     ],
-                    3 => [
+                    [
                         'required'   => false,
                         'validators' => [],
                         'filters'    => [],
                         'name'       => 'opportunity_type',
                     ],
-                    4 => [
+                    [
                         'required'   => true,
                         'validators' => [],
                         'filters'    => [],
                         'name'       => 'sort',
                     ],
-                    5 => [
+                    [
                         'required'   => true,
                         'validators' => [],
                         'filters'    => [],
@@ -129,22 +134,16 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
                     ],
                 ],
             ],
-            'controllers'            => [
-                'factories' => [
-                    OpportunitiesController::class => OpportunitiesControllerFactory::class,
+            $config['input_filter_specs']
+        );
+        self::assertEquals(
+            [
+                'strategies' => [
+                    'ViewJsonStrategy',
                 ],
             ],
-            'zf-rpc'                 => [
-                OpportunitiesController::class => [
-                    'service_name' => 'Opportunities',
-                    'http_methods' => [
-                        0 => 'GET',
-                        1 => 'POST',
-                    ],
-                    'route_name'   => 'een.opportunities',
-                ],
-            ],
-        ], $module->getConfig());
+            $config['view_manager']
+        );
     }
 
     public function testAutoloaderConfig()
@@ -153,8 +152,8 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
         $result = $module->getAutoloaderConfig();
 
-        self::assertArrayHasKey('ZF\Apigility\Autoloader', $result);
-        self::assertArrayHasKey('namespaces', $result['ZF\Apigility\Autoloader']);
-        self::assertArrayHasKey('Search', $result['ZF\Apigility\Autoloader']['namespaces']);
+        self::assertArrayHasKey('Zend\Loader\StandardAutoloader', $result);
+        self::assertArrayHasKey('namespaces', $result['Zend\Loader\StandardAutoloader']);
+        self::assertArrayHasKey('Search', $result['Zend\Loader\StandardAutoloader']['namespaces']);
     }
 }

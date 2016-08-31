@@ -52,7 +52,7 @@ class QueryService
                             [
                                 'query_string' => [
                                     'fields' => ['title', 'summary', 'description'],
-                                    'query'  => '*' . implode('* AND *', $searches) . '*',
+                                    'query'  => implode('* AND ', $searches) . '*',
                                 ],
                             ],
                         ],
@@ -66,12 +66,25 @@ class QueryService
             $query['body']['query']['bool']['must'][] = [
                 'query_string' => [
                     'default_field' => 'type',
-                    'query'         => '*' . implode('* OR *', $types) . '*',
+                    'query'         => implode('* OR ', $types) . '*',
                 ],
             ];
         }
 
         return $this->convertResult($this->elasticSearch->search($query));
+    }
+
+    /**
+     * @param array $results
+     *
+     * @return array
+     */
+    private function convertResult($results)
+    {
+        return [
+            'total'   => $results['hits']['total'],
+            'results' => $results['hits']['hits'],
+        ];
     }
 
     /**
@@ -90,18 +103,5 @@ class QueryService
         ];
 
         return $this->elasticSearch->get($params);
-    }
-
-    /**
-     * @param array $results
-     *
-     * @return array
-     */
-    private function convertResult($results)
-    {
-        return [
-            'total'   => $results['hits']['total'],
-            'results' => $results['hits']['hits'],
-        ];
     }
 }

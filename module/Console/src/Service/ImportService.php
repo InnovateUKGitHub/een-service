@@ -92,51 +92,6 @@ class ImportService
     }
 
     /**
-     * @param string $month
-     *
-     * @return \SimpleXMLElement|null
-     */
-    private function getData($month)
-    {
-        $this->client->setHttpMethod(Request::METHOD_GET);
-        $this->client->setPathToService($this->path);
-        $this->client->setQueryParams($this->buildQuery($month));
-
-        try {
-            return simplexml_load_string($this->client->execute(false));
-        } catch (HttpException $e) {
-            $this->logger->debug("An error occurred during the retrieve of the $month month");
-            $this->logger->debug($e->getMessage());
-        } catch (\Exception $e) {
-            $this->logger->debug("An error occurred during the retrieve of the $month month");
-            $this->logger->debug($e->getMessage());
-        }
-
-        throw new \RuntimeException("An error occurred during the retrieve of the $month month");
-    }
-
-    /**
-     * @param string $month
-     *
-     * @return array
-     */
-    private function buildQuery($month)
-    {
-        $return = [];
-        if (empty($this->username) === false) {
-            $return['u'] = $this->username;
-        }
-        if (empty($this->password) === false) {
-            $return['p'] = $this->password;
-        }
-
-        $return['sb'] = (new \DateTime())->sub(new \DateInterval('P' . ($month - 1) . 'M'))->format('Ymd');
-        $return['sa'] = (new \DateTime())->sub(new \DateInterval('P' . ($month) . 'M'))->format('Ymd');
-
-        return $return;
-    }
-
-    /**
      * @param \SimpleXMLElement $results
      */
     private function importOpportunities(\SimpleXMLElement $results)
@@ -274,5 +229,50 @@ class ImportService
         }
 
         return $result;
+    }
+
+    /**
+     * @param string $month
+     *
+     * @return \SimpleXMLElement|null
+     */
+    private function getData($month)
+    {
+        $this->client->setHttpMethod(Request::METHOD_GET);
+        $this->client->setPathToService($this->path);
+        $this->client->setQueryParams($this->buildQuery($month));
+
+        try {
+            return simplexml_load_string($this->client->execute(false));
+        } catch (HttpException $e) {
+            $this->logger->debug("An error occurred during the retrieve of the $month month");
+            $this->logger->debug($e->getMessage());
+        } catch (\Exception $e) {
+            $this->logger->debug("An error occurred during the retrieve of the $month month");
+            $this->logger->debug($e->getMessage());
+        }
+
+        throw new \RuntimeException("An error occurred during the retrieve of the $month month");
+    }
+
+    /**
+     * @param string $month
+     *
+     * @return array
+     */
+    private function buildQuery($month)
+    {
+        $return = [];
+        if (empty($this->username) === false) {
+            $return['u'] = $this->username;
+        }
+        if (empty($this->password) === false) {
+            $return['p'] = $this->password;
+        }
+
+        $return['sb'] = (new \DateTime())->sub(new \DateInterval('P' . ($month - 1) . 'M'))->format('Ymd');
+        $return['sa'] = (new \DateTime())->sub(new \DateInterval('P' . ($month) . 'M'))->format('Ymd');
+
+        return $return;
     }
 }

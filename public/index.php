@@ -1,16 +1,7 @@
-<?php // @codingStandardsIgnoreFile
-/**
- * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
- * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
- */
+<?php
 
-if ($_SERVER['APPLICATION_ENV'] == 'development'
-    || $_SERVER['APPLICATION_ENV'] == 'development_vagrant'
-    || $_SERVER['APPLICATION_ENV'] == 'integration_v3'
-) {
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-}
+use Zend\Mvc\Application;
+use Zend\Stdlib\ArrayUtils;
 
 /**
  * This makes our life easier when dealing with paths. Everything is relative
@@ -19,41 +10,31 @@ if ($_SERVER['APPLICATION_ENV'] == 'development'
 chdir(dirname(__DIR__));
 
 // Decline static file requests back to the PHP built-in webserver
-if (php_sapi_name() === 'cli-server' && is_file(__DIR__ . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH))) {
-    return false;
+if (php_sapi_name() === 'cli-server') {
+    $path = realpath(__DIR__ . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+    if (__FILE__ !== $path && is_file($path)) {
+        return false;
+    }
+    unset($path);
 }
 
-if (!file_exists('vendor/autoload.php')) {
+// Composer autoloading
+include __DIR__ . '/../vendor/autoload.php';
+
+if (!class_exists(Application::class)) {
     throw new RuntimeException(
-        'Unable to load ZF2. Run `php composer.phar install` or define a ZF2_PATH environment variable.'
+        "Unable to load application.\n"
+        . "- Type `composer install` if you are developing locally.\n"
+        . "- Type `vagrant ssh -c 'composer install'` if you are using Vagrant.\n"
+        . "- Type `docker-compose run zf composer install` if you are using Docker.\n"
     );
 }
 
-// Setup autoloading
-include 'vendor/autoload.php';
-
-if (!defined('APPLICATION_PATH')) {
-    define('APPLICATION_PATH', realpath(__DIR__ . '/../'));
-}
-
-$appConfig = include APPLICATION_PATH . '/config/application.config.php';
-
-if (file_exists(APPLICATION_PATH . '/config/development.config.php')) {
-    $appConfig = Zend\Stdlib\ArrayUtils::merge($appConfig, include APPLICATION_PATH . '/config/development.config.php');
-}
-
-// Some OS/Web Server combinations do not glob properly for paths unless they
-// are fully qualified (e.g., IBM i). The following prefixes the default glob
-// path with the value of the current working directory to ensure configuration
-// globbing will work cross-platform.
-if (isset($appConfig['module_listener_options']['config_glob_paths'])) {
-    foreach ($appConfig['module_listener_options']['config_glob_paths'] as $index => $path) {
-        if ($path !== 'config/autoload/{,*.}{global,local}.php') {
-            continue;
-        }
-        $appConfig['module_listener_options']['config_glob_paths'][$index] = getcwd() . '/' . $path;
-    }
+// Retrieve configuration
+$appConfig = require __DIR__ . '/../config/application.config.php';
+if (file_exists(__DIR__ . '/../config/development.config.php')) {
+    $appConfig = ArrayUtils::merge($appConfig, require __DIR__ . '/../config/development.config.php');
 }
 
 // Run the application!
-ZF\Apigility\Application::init($appConfig)->run();
+Application::init($appConfig)->run();

@@ -5,7 +5,7 @@ namespace SearchTest\Factory\Service;
 use Search\Factory\Service\ElasticSearchServiceFactory;
 use Search\Service\ElasticSearchService;
 use Search\Service\QueryService;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * @covers Search\Factory\Service\ElasticSearchServiceFactory
@@ -16,16 +16,16 @@ class ElasticSearchServiceFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $queryServiceMock = $this->createMock(QueryService::class);
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|ServiceLocatorInterface $serviceLocatorMock */
-        $serviceLocatorMock = $this->createMock(ServiceLocatorInterface::class);
-        $serviceLocatorMock->expects(self::once())
+        /* @var \PHPUnit_Framework_MockObject_MockObject|ServiceManager $serviceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
+        $serviceManager->expects(self::once())
             ->method('get')
             ->with(QueryService::class)
             ->willReturn($queryServiceMock);
 
-        $factory = new ElasticSearchServiceFactory();
-
-        $service = $factory->createService($serviceLocatorMock);
-        self::assertInstanceOf(ElasticSearchService::class, $service);
+        self::assertInstanceOf(
+            ElasticSearchService::class,
+            (new ElasticSearchServiceFactory())->__invoke($serviceManager)
+        );
     }
 }

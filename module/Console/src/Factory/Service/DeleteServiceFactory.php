@@ -4,17 +4,16 @@ namespace Console\Factory\Service;
 
 use Console\Service\DeleteService;
 use Elasticsearch\ClientBuilder;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceManager;
 
-final class DeleteServiceFactory implements FactoryInterface
+final class DeleteServiceFactory
 {
     /**
-     * {@inheritDoc}
+     * @param ServiceManager $serviceManager
      *
      * @return DeleteService
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ServiceManager $serviceManager)
     {
         $elasticSearch = ClientBuilder::create()->build();
 

@@ -49,19 +49,19 @@ return [
         'technologies' => [
             'technology' => [
                 'required' => false,
-                'label' => '',
+                'label'    => '',
             ],
         ],
         'naces'        => [
             'nace' => [
                 'required' => false,
-                'label' => '',
+                'label'    => '',
             ],
         ],
         'markets'      => [
             'market' => [
                 'required' => false,
-                'label' => '',
+                'label'    => '',
             ],
         ],
     ],

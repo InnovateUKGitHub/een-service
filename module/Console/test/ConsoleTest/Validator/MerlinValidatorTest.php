@@ -46,7 +46,7 @@ class MerlinValidatorTest extends \PHPUnit_Framework_TestCase
                 'technologies' => [
                     'technology' => [
                         'required' => false,
-                        'label'   => '',
+                        'label'    => '',
                     ],
                 ],
             ],
@@ -85,7 +85,7 @@ class MerlinValidatorTest extends \PHPUnit_Framework_TestCase
                 'technologies' => [
                     'technology' => [
                         'required' => false,
-                        'label'   => '',
+                        'label'    => '',
                     ],
                 ],
             ],
@@ -124,7 +124,7 @@ class MerlinValidatorTest extends \PHPUnit_Framework_TestCase
                 'technologies' => [
                     'technology' => [
                         'required' => false,
-                        'label'   => '',
+                        'label'    => '',
                     ],
                 ],
             ],

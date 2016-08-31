@@ -9,10 +9,9 @@ use ConsoleTest\Bootstrap;
 use Zend\Console\Exception\BadMethodCallException;
 use Zend\Console\Exception\InvalidArgumentException;
 use Zend\Console\Request;
-use Zend\Mvc\Controller\PluginManager;
+use Zend\Mvc\Console\Router\RouteMatch;
 use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\RouteMatch;
-use Zend\Mvc\Router\RouteStackInterface;
+use Zend\Router\RouteStackInterface;
 
 /**
  * @covers Console\Controller\GenerateController
@@ -48,16 +47,13 @@ class GenerateControllerTest extends \PHPUnit_Framework_TestCase
         $serviceManager = Bootstrap::getServiceManager();
         /** @var RouteStackInterface $router */
         $router = $serviceManager->get('HttpRouter');
-        $routeMatch = new RouteMatch($routMatch);
+        $routeMatch = new RouteMatch($routMatch, count($routMatch));
 
         $event = new MvcEvent();
         $event->setRouter($router);
         $event->setRouteMatch($routeMatch);
 
-        $pluginManager = new PluginManager();
         $controller->setEvent($event);
-        $controller->setPluginManager($pluginManager);
-        $controller->setServiceLocator($serviceManager);
 
         return $controller;
     }

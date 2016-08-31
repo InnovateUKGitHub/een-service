@@ -8,10 +8,9 @@ use ConsoleTest\Bootstrap;
 use Zend\Console\Exception\BadMethodCallException;
 use Zend\Console\Exception\InvalidArgumentException;
 use Zend\Console\Request;
-use Zend\Mvc\Controller\PluginManager;
 use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\RouteMatch;
-use Zend\Mvc\Router\RouteStackInterface;
+use Zend\Router\RouteMatch;
+use Zend\Router\RouteStackInterface;
 
 /**
  * @covers Console\Controller\ImportController
@@ -24,6 +23,17 @@ class ImportControllerTest extends \PHPUnit_Framework_TestCase
     public function Setup()
     {
         $this->importService = $this->createMock(ImportService::class);
+    }
+
+    /**
+     * @expectedException BadMethodCallException
+     * @expectedExceptionMessage This is a console tool only
+     */
+    public function testGenerateActionNotConsole()
+    {
+        $controller = $this->buildController(['action' => 'import']);
+
+        $controller->dispatch($controller->getRequest());
     }
 
     private function buildController($routMatch)
@@ -39,23 +49,9 @@ class ImportControllerTest extends \PHPUnit_Framework_TestCase
         $event->setRouter($router);
         $event->setRouteMatch($routeMatch);
 
-        $pluginManager = new PluginManager();
         $controller->setEvent($event);
-        $controller->setPluginManager($pluginManager);
-        $controller->setServiceLocator($serviceManager);
 
         return $controller;
-    }
-
-    /**
-     * @expectedException BadMethodCallException
-     * @expectedExceptionMessage This is a console tool only
-     */
-    public function testGenerateActionNotConsole()
-    {
-        $controller = $this->buildController(['action' => 'import']);
-
-        $controller->dispatch($controller->getRequest());
     }
 
     /**

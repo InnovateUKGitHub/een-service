@@ -4,24 +4,23 @@ namespace Console\Factory\Validator;
 
 use Console\Validator\MerlinValidator;
 use Zend\Log\Logger;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceManager;
 
-final class MerlinValidatorFactory implements FactoryInterface
+final class MerlinValidatorFactory
 {
     const CONFIG = 'config';
 
     const MERLIN_DATA_STRUCTURE = 'merlin-data-structure';
 
     /**
-     * {@inheritDoc}
+     * @param ServiceManager $serviceManager
      *
      * @return MerlinValidator
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ServiceManager $serviceManager)
     {
-        $config = $serviceLocator->get(self::CONFIG);
-        $logger = $serviceLocator->get(Logger::class);
+        $config = $serviceManager->get(self::CONFIG);
+        $logger = $serviceManager->get(Logger::class);
 
         if (array_key_exists(self::MERLIN_DATA_STRUCTURE, $config) === false) {
             throw new \InvalidArgumentException('The config file is incorrect. Please specify the merlin data structure');

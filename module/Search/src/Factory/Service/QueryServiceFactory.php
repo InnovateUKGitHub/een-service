@@ -4,17 +4,16 @@ namespace Search\Factory\Service;
 
 use Elasticsearch\ClientBuilder;
 use Search\Service\QueryService;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceManager;
 
-final class QueryServiceFactory implements FactoryInterface
+final class QueryServiceFactory
 {
     /**
-     * @param ServiceLocatorInterface $sm
+     * @param ServiceManager $serviceManager
      *
      * @return QueryService
      */
-    public function createService(ServiceLocatorInterface $sm)
+    public function __invoke(ServiceManager $serviceManager)
     {
         $elasticSearch = ClientBuilder::create()->build();
 

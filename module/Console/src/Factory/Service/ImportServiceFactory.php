@@ -8,10 +8,9 @@ use Console\Service\IndexService;
 use Console\Validator\MerlinValidator;
 use Zend\Http\Exception\InvalidArgumentException;
 use Zend\Log\Logger;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceManager;
 
-final class ImportServiceFactory implements FactoryInterface
+final class ImportServiceFactory
 {
     const CONFIG_SERVICE = 'config';
 
@@ -22,16 +21,16 @@ final class ImportServiceFactory implements FactoryInterface
     const PORT = 'port';
 
     /**
-     * {@inheritDoc}
+     * @param ServiceManager $serviceManager
      *
      * @return ImportService
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ServiceManager $serviceManager)
     {
-        $httpService = $serviceLocator->get(HttpService::class);
-        $indexService = $serviceLocator->get(IndexService::class);
+        $httpService = $serviceManager->get(HttpService::class);
+        $indexService = $serviceManager->get(IndexService::class);
 
-        $config = $serviceLocator->get(self::CONFIG_SERVICE);
+        $config = $serviceManager->get(self::CONFIG_SERVICE);
 
         // Test if the require keys are present in the configuration
         if (array_key_exists(self::CONFIG_MERLIN, $config) === false) {
@@ -60,9 +59,9 @@ final class ImportServiceFactory implements FactoryInterface
             'Content-type' => 'application/xml',
         ]);
 
-        $merlinValidator = $serviceLocator->get(MerlinValidator::class);
+        $merlinValidator = $serviceManager->get(MerlinValidator::class);
 
-        $logger = $serviceLocator->get(Logger::class);
+        $logger = $serviceManager->get(Logger::class);
 
         return new ImportService($httpService, $indexService, $merlinValidator, $logger, $config[self::CONFIG_MERLIN]);
     }

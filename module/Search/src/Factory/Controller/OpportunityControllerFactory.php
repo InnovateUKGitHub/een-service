@@ -4,20 +4,19 @@ namespace Search\Factory\Controller;
 
 use Search\Controller\OpportunitiesController;
 use Search\Service\ElasticSearchService;
-use Zend\Mvc\Controller\ControllerManager;
+use Zend\ServiceManager\ServiceManager;
 
 final class OpportunitiesControllerFactory
 {
     /**
-     * @param ControllerManager $controllers
+     * @param ServiceManager $serviceManager
      *
      * @return OpportunitiesController
      */
-    public function __invoke(ControllerManager $controllers)
+    public function __invoke(ServiceManager $serviceManager)
     {
-        $serviceLocator = $controllers->getServiceLocator();
         /** @var ElasticSearchService $service */
-        $service = $serviceLocator->get(ElasticSearchService::class);
+        $service = $serviceManager->get(ElasticSearchService::class);
 
         return new OpportunitiesController($service);
     }

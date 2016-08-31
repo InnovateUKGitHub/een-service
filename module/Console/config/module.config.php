@@ -9,29 +9,29 @@ use Console\Factory\Service\GenerateServiceFactory;
 use Console\Factory\Service\HttpServiceFactory;
 use Console\Factory\Service\ImportServiceFactory;
 use Console\Factory\Service\IndexServiceFactory;
+use Console\Factory\Validator\MerlinValidatorFactory;
 use Console\Service\DeleteService;
 use Console\Service\GenerateService;
 use Console\Service\HttpService;
 use Console\Service\ImportService;
 use Console\Service\IndexService;
 use Console\Validator\MerlinValidator;
-use Console\Factory\Validator\MerlinValidatorFactory;
 
 return [
-    'controllers'     => [
-        'factories' => [
-            GenerateController::class => GenerateControllerFactory::class,
-            ImportController::class   => ImportControllerFactory::class,
-        ],
-    ],
     'service_manager' => [
-        'factories'  => [
+        'factories' => [
             DeleteService::class   => DeleteServiceFactory::class,
             GenerateService::class => GenerateServiceFactory::class,
             HttpService::class     => HttpServiceFactory::class,
             ImportService::class   => ImportServiceFactory::class,
             IndexService::class    => IndexServiceFactory::class,
             MerlinValidator::class => MerlinValidatorFactory::class,
+        ],
+    ],
+    'controllers'     => [
+        'factories' => [
+            GenerateController::class => GenerateControllerFactory::class,
+            ImportController::class   => ImportControllerFactory::class,
         ],
     ],
     'console'         => [
@@ -86,6 +86,21 @@ return [
                     ],
                 ],
             ],
+        ],
+    ],
+    'view_manager'    => [
+        'display_not_found_reason' => true,
+        'display_exceptions'       => true,
+        'doctype'                  => 'HTML5',
+        'not_found_template'       => 'error/404',
+        'exception_template'       => 'error/index',
+        'template_map'             => [
+            'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
+            'error/404'     => __DIR__ . '/../view/error/404.phtml',
+            'error/index'   => __DIR__ . '/../view/error/index.phtml',
+        ],
+        'template_path_stack'      => [
+            __DIR__ . '/../view',
         ],
     ],
 ];

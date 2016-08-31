@@ -4,23 +4,19 @@ namespace Console\Factory\Controller;
 
 use Console\Controller\ImportController;
 use Console\Service\ImportService;
-use Zend\Di\ServiceLocator;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceManager;
 
-final class ImportControllerFactory implements FactoryInterface
+final class ImportControllerFactory
 {
     /**
-     * {@inheritDoc}
+     * @param ServiceManager $serviceManager
      *
      * @return ImportController
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ServiceManager $serviceManager)
     {
-        /** @var ServiceLocator $sl */
-        $sl = $serviceLocator->getServiceLocator();
         /** @var ImportService $generateService */
-        $importService = $sl->get(ImportService::class);
+        $importService = $serviceManager->get(ImportService::class);
 
         return new ImportController($importService);
     }

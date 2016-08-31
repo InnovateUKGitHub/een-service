@@ -5,10 +5,10 @@ namespace ConsoleTest\Service;
 use Console\Service\HttpService;
 use Zend\Http\Client;
 use Zend\Http\Exception\InvalidArgumentException;
+use Zend\Http\Exception\RuntimeException;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Json\Server\Exception\HttpException;
-use Zend\Http\Exception\RuntimeException;
 
 /**
  * @covers Console\Service\HttpService

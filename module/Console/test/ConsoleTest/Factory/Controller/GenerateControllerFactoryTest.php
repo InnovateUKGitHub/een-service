@@ -6,7 +6,7 @@ use Console\Controller\GenerateController;
 use Console\Factory\Controller\GenerateControllerFactory;
 use Console\Service\DeleteService;
 use Console\Service\GenerateService;
-use Zend\Mvc\Controller\ControllerManager;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * @covers Console\Factory\Controller\GenerateControllerFactory
@@ -15,26 +15,21 @@ class GenerateControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
-        /* @var $serviceLocator ControllerManager|\PHPUnit_Framework_MockObject_MockObject */
-        $serviceLocator = $this->createMock(ControllerManager::class);
+        /* @var \PHPUnit_Framework_MockObject_MockObject|ServiceManager $serviceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
 
-        $serviceLocator
+        $serviceManager
             ->expects(self::at(0))
-            ->method('getServiceLocator')
-            ->willReturn($serviceLocator);
-
-        $serviceLocator
-            ->expects(self::at(1))
             ->method('get')
             ->willReturn($this->createMock(GenerateService::class));
-        $serviceLocator
-            ->expects(self::at(2))
+        $serviceManager
+            ->expects(self::at(1))
             ->method('get')
             ->willReturn($this->createMock(DeleteService::class));
 
         self::assertInstanceOf(
             GenerateController::class,
-            (new GenerateControllerFactory())->createService($serviceLocator)
+            (new GenerateControllerFactory())->__invoke($serviceManager)
         );
     }
 }

@@ -5,7 +5,7 @@ namespace ConsoleTest\Factory\Service;
 use Console\Factory\Service\GenerateServiceFactory;
 use Console\Service\GenerateService;
 use Console\Service\IndexService;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * @covers Console\Factory\Service\GenerateServiceFactory
@@ -14,10 +14,10 @@ class GenerateServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
-        /* @var $serviceLocator ServiceLocatorInterface|\PHPUnit_Framework_MockObject_MockObject */
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        /* @var \PHPUnit_Framework_MockObject_MockObject|ServiceManager $serviceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
 
-        $serviceLocator
+        $serviceManager
             ->expects(self::once())
             ->method('get')
             ->with(IndexService::class)
@@ -25,7 +25,7 @@ class GenerateServiceFactoryTest extends \PHPUnit_Framework_TestCase
 
         self::assertInstanceOf(
             GenerateService::class,
-            (new GenerateServiceFactory())->createService($serviceLocator)
+            (new GenerateServiceFactory())->__invoke($serviceManager)
         );
     }
 }

@@ -5,7 +5,7 @@ namespace ConsoleTest\Factory\Service;
 use Console\Factory\Validator\MerlinValidatorFactory;
 use Console\Validator\MerlinValidator;
 use Zend\Log\Logger;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * @covers Console\Factory\Validator\MerlinValidatorFactory
@@ -18,15 +18,15 @@ class MerlinValidatorFactoryTest extends \PHPUnit_Framework_TestCase
             MerlinValidatorFactory::MERLIN_DATA_STRUCTURE => '',
         ];
 
-        /* @var $serviceLocator ServiceLocatorInterface|\PHPUnit_Framework_MockObject_MockObject */
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        /* @var \PHPUnit_Framework_MockObject_MockObject|ServiceManager $serviceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
 
-        $serviceLocator
+        $serviceManager
             ->expects(self::at(0))
             ->method('get')
             ->with(MerlinValidatorFactory::CONFIG)
             ->willReturn($config);
-        $serviceLocator
+        $serviceManager
             ->expects(self::at(1))
             ->method('get')
             ->with(Logger::class)
@@ -34,7 +34,7 @@ class MerlinValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 
         self::assertInstanceOf(
             MerlinValidator::class,
-            (new MerlinValidatorFactory())->createService($serviceLocator)
+            (new MerlinValidatorFactory())->__invoke($serviceManager)
         );
     }
 
@@ -46,15 +46,15 @@ class MerlinValidatorFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $config = [];
 
-        /* @var $serviceLocator ServiceLocatorInterface|\PHPUnit_Framework_MockObject_MockObject */
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        /* @var \PHPUnit_Framework_MockObject_MockObject|ServiceManager $serviceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
 
-        $serviceLocator
+        $serviceManager
             ->expects(self::at(0))
             ->method('get')
             ->with(MerlinValidatorFactory::CONFIG)
             ->willReturn($config);
-        $serviceLocator
+        $serviceManager
             ->expects(self::at(1))
             ->method('get')
             ->with(Logger::class)
@@ -62,7 +62,7 @@ class MerlinValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 
         self::assertInstanceOf(
             MerlinValidator::class,
-            (new MerlinValidatorFactory())->createService($serviceLocator)
+            (new MerlinValidatorFactory())->__invoke($serviceManager)
         );
     }
 }

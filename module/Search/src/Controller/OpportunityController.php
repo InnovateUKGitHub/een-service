@@ -4,13 +4,13 @@ namespace Search\Controller;
 
 use Search\Service\ElasticSearchService;
 use Zend\InputFilter\InputFilter;
-use Zend\Mvc\Controller\AbstractActionController;
-use ZF\ContentNegotiation\ViewModel;
+use Zend\Mvc\Controller\AbstractRestfulController;
+use Zend\View\Model\JsonModel;
 
 /**
  * @method InputFilter getInputFilter()
  */
-final class OpportunitiesController extends AbstractActionController
+final class OpportunitiesController extends AbstractRestfulController
 {
     /** @var ElasticSearchService */
     private $service;
@@ -26,22 +26,24 @@ final class OpportunitiesController extends AbstractActionController
     }
 
     /**
-     * @return ViewModel
+     * @param array $data
+     *
+     * @return JsonModel
      */
-    public function opportunitiesAction()
+    public function create($data)
     {
         $params = $this->getInputFilter()->getValues();
 
-        return new ViewModel($this->service->searchOpportunities($params));
+        return $this->service->searchOpportunities($params);
     }
 
     /**
-     * @return ViewModel
+     * @param string $id
+     *
+     * @return JsonModel
      */
-    public function detailAction()
+    public function get($id)
     {
-        $id = (string)$this->params()->fromRoute('id');
-
-        return new ViewModel($this->service->searchOpportunity($id));
+        return $this->service->searchOpportunity($id);
     }
 }

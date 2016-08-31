@@ -4,20 +4,19 @@ namespace Console\Factory\Service;
 
 use Console\Service\GenerateService;
 use Console\Service\IndexService;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceManager;
 
-final class GenerateServiceFactory implements FactoryInterface
+final class GenerateServiceFactory
 {
     /**
-     * {@inheritDoc}
+     * @param ServiceManager $serviceManager
      *
      * @return GenerateService
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ServiceManager $serviceManager)
     {
         /** @var IndexService $service */
-        $service = $serviceLocator->get(IndexService::class);
+        $service = $serviceManager->get(IndexService::class);
         $faker = \Faker\Factory::create();
 
         return new GenerateService($service, $faker);

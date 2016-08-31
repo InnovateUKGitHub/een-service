@@ -28,14 +28,25 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
     public function testConfigIsCorrect()
     {
         $module = new Module();
-        self::assertEquals([
-            'controllers'     => [
+
+        $config = $module->getConfig();
+
+        self::assertArrayHasKey('controllers', $config);
+        self::assertArrayHasKey('service_manager', $config);
+        self::assertArrayHasKey('console', $config);
+        self::assertArrayHasKey('view_manager', $config);
+
+        self::assertEquals(
+            [
                 'factories' => [
                     GenerateController::class => GenerateControllerFactory::class,
                     ImportController::class   => ImportControllerFactory::class,
                 ],
             ],
-            'service_manager' => [
+            $config['controllers']
+        );
+        self::assertEquals(
+            [
                 'factories' => [
                     DeleteService::class   => DeleteServiceFactory::class,
                     GenerateService::class => GenerateServiceFactory::class,
@@ -45,7 +56,10 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
                     MerlinValidator::class => MerlinValidatorFactory::class,
                 ],
             ],
-            'console'         => [
+            $config['service_manager']
+        );
+        self::assertEquals(
+            [
                 'router' => [
                     'routes' => [
                         'import-data'   => [
@@ -99,7 +113,8 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
                     ],
                 ],
             ],
-        ], $module->getConfig());
+            $config['console']
+        );
     }
 
     public function testConsoleUsageIsCorrect()

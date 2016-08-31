@@ -18,11 +18,6 @@ class QueryServiceTest extends \PHPUnit_Framework_TestCase
     /** @var \PHPUnit_Framework_MockObject_MockObject|Client $elasticSearchMock */
     private $elasticSearchMock;
 
-    protected function Setup()
-    {
-        $this->elasticSearchMock = $this->createMock(Client::class);
-    }
-
     public function testExist()
     {
         $service = new QueryService($this->elasticSearchMock);
@@ -71,13 +66,13 @@ class QueryServiceTest extends \PHPUnit_Framework_TestCase
                                 [
                                     'query_string' => [
                                         'fields' => ['title', 'summary', 'description'],
-                                        'query'  => '*Some* AND *Search*',
+                                        'query'  => 'Some* AND Search*',
                                     ],
                                 ],
                                 [
                                     'query_string' => [
                                         'default_field' => 'type',
-                                        'query'         => '*BO* OR *RD*',
+                                        'query'         => 'BO* OR RD*',
                                     ],
                                 ],
                             ],
@@ -143,5 +138,10 @@ class QueryServiceTest extends \PHPUnit_Framework_TestCase
             ['success' => true],
             $service->getDocument(self::OPPORTUNITY_ID, self::INDEX, self::TYPE)
         );
+    }
+
+    protected function Setup()
+    {
+        $this->elasticSearchMock = $this->createMock(Client::class);
     }
 }

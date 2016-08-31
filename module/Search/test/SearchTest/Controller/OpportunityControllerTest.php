@@ -4,10 +4,10 @@ namespace ConsoleTest\Controller;
 
 use Search\Controller\OpportunitiesController;
 use Search\Service\ElasticSearchService;
+use Zend\Http\Request;
 use Zend\InputFilter\InputFilter;
 use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\RouteMatch;
-use ZF\ContentNegotiation\ViewModel;
+use Zend\Router\Http\RouteMatch;
 use ZF\ContentValidation\InputFilter\InputFilterPlugin;
 
 /**
@@ -15,7 +15,7 @@ use ZF\ContentValidation\InputFilter\InputFilterPlugin;
  */
 class OpportunitiesControllerTest extends \PHPUnit_Framework_TestCase
 {
-    public function testOpportunitiesAction()
+    public function testCreate()
     {
         /** @var \PHPUnit_Framework_MockObject_MockObject|ElasticSearchService $elasticSearchServiceMock */
         $elasticSearchServiceMock = $this->createMock(ElasticSearchService::class);
@@ -28,26 +28,33 @@ class OpportunitiesControllerTest extends \PHPUnit_Framework_TestCase
 
         $elasticSearchServiceMock->expects(self::once())
             ->method('searchOpportunities')
-            ->with(['params' => 'myParams']);
+            ->with(['params' => 'myParams'])
+            ->willReturn(['success' => true]);
 
         $inputFilterMock->expects(self::once())
             ->method('getValues')
             ->willReturn(['params' => 'myParams']);
 
         $controller = new OpportunitiesController($elasticSearchServiceMock);
-        $routeMatch = new RouteMatch(['action' => 'opportunities']);
+        $routeMatch = new RouteMatch([]);
 
         $event = new MvcEvent();
-        $event->setRouteMatch($routeMatch);
         $event->setParam(InputFilter::class, $inputFilterMock);
+        $event->setRouteMatch($routeMatch);
 
         $controller->setEvent($event);
         $controller->getPluginManager()->setService('getInputFilter', $inputFilterPluginMock);
 
-        self::assertInstanceOf(ViewModel::class, $controller->dispatch($controller->getRequest()));
+        $request = new Request();
+        $request->setMethod(Request::METHOD_POST);
+
+        self::assertEquals(
+            ['success' => true],
+            $controller->dispatch($request)
+        );
     }
 
-    public function testDetailsAction()
+    public function testGet()
     {
         $id = 'myOpportunityId';
 
@@ -56,16 +63,23 @@ class OpportunitiesControllerTest extends \PHPUnit_Framework_TestCase
 
         $elasticSearchServiceMock->expects(self::once())
             ->method('searchOpportunity')
-            ->with($id);
+            ->with($id)
+            ->willReturn(['found' => true]);
 
         $controller = new OpportunitiesController($elasticSearchServiceMock);
-        $routeMatch = new RouteMatch(['action' => 'detail', 'id' => $id]);
+        $routeMatch = new RouteMatch(['id' => $id]);
 
         $event = new MvcEvent();
         $event->setRouteMatch($routeMatch);
         $controller->setEvent($event);
 
-        self::assertInstanceOf(ViewModel::class, $controller->dispatch($controller->getRequest()));
+        $request = new Request();
+        $request->setMethod(Request::METHOD_GET);
+
+        self::assertEquals(
+            ['found' => true],
+            $controller->dispatch($request)
+        );
     }
 
 }

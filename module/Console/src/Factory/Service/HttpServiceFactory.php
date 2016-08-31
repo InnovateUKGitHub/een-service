@@ -5,17 +5,16 @@ namespace Console\Factory\Service;
 use Console\Service\HttpService;
 use Zend\Http\Client;
 use Zend\Http\Client\Adapter\Curl;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceManager;
 
-final class HttpServiceFactory implements FactoryInterface
+final class HttpServiceFactory
 {
     /**
-     * {@inheritDoc}
+     * @param ServiceManager $serviceManager
      *
      * @return HttpService
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ServiceManager $serviceManager)
     {
         $adapter = new Curl();
         $adapter->setCurlOption(CURLOPT_ENCODING, 'deflate');

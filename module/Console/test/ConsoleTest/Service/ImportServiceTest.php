@@ -31,30 +31,6 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
     /** @var Logger $loggerMock */
     private $loggerMock;
 
-    protected function Setup()
-    {
-        $config = [
-            ImportServiceFactory::SERVER    => 'een.ec.europa.eu',
-            ImportServiceFactory::PORT      => '80',
-            ImportService::PATH_GET_PROFILE => 'tools/services/podv6/QueryService.svc/GetProfiles?',
-            ImportService::USERNAME         => '%%MERLIN_GLOBAL_USERNAME%%',
-            ImportService::PASSWORD         => '%%MERLIN_GLOBAL_PASSWORD%%',
-        ];
-
-        $this->indexServiceMock = $this->createMock(IndexService::class);
-        $this->httpServiceMock = $this->createMock(HttpService::class);
-        $this->merlinValidatorMock = $this->createMock(MerlinValidator::class);
-        $this->loggerMock = $this->createMock(Logger::class);
-
-        $this->service = new ImportService(
-            $this->httpServiceMock,
-            $this->indexServiceMock,
-            $this->merlinValidatorMock,
-            $this->loggerMock,
-            $config
-        );
-    }
-
     public function testDelete()
     {
         $now = new \DateTime();
@@ -191,5 +167,29 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
             ->willThrowException(new \Exception());
 
         $this->service->import(self::MONTH);
+    }
+
+    protected function Setup()
+    {
+        $config = [
+            ImportServiceFactory::SERVER    => 'een.ec.europa.eu',
+            ImportServiceFactory::PORT      => '80',
+            ImportService::PATH_GET_PROFILE => 'tools/services/podv6/QueryService.svc/GetProfiles?',
+            ImportService::USERNAME         => '%%MERLIN_GLOBAL_USERNAME%%',
+            ImportService::PASSWORD         => '%%MERLIN_GLOBAL_PASSWORD%%',
+        ];
+
+        $this->indexServiceMock = $this->createMock(IndexService::class);
+        $this->httpServiceMock = $this->createMock(HttpService::class);
+        $this->merlinValidatorMock = $this->createMock(MerlinValidator::class);
+        $this->loggerMock = $this->createMock(Logger::class);
+
+        $this->service = new ImportService(
+            $this->httpServiceMock,
+            $this->indexServiceMock,
+            $this->merlinValidatorMock,
+            $this->loggerMock,
+            $config
+        );
     }
 }

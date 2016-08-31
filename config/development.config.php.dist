@@ -1,19 +1,18 @@
 <?php
 /**
- * @license   http://opensource.org/licenses/BSD-3-Clause BSD-3-Clause
- * @copyright Copyright (c) 2014 Zend Technologies USA Inc. (http://www.zend.com)
+ * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
+ * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-return array(
-    // Development time modules
-    'modules' => array(
-        'ZFTool',
-        'ZF\Apigility\Admin',
-    ),
-    // development time configuration globbing
-    'module_listener_options' => array(
-        'config_glob_paths' => array('config/autoload/{,*.}{global,local}-development.php'),
+return [
+    // Additional modules to include when in development mode
+    'modules' => [
+    ],
+    // Configuration overrides during development mode
+    'module_listener_options' => [
+        'config_glob_paths' => [realpath(__DIR__) . '/autoload/{,*.}{global,local}-development.php'],
         'config_cache_enabled' => false,
         'module_map_cache_enabled' => false,
-    )
-);
+    ],
+];

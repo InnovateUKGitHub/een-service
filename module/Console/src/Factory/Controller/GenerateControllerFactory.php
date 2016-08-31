@@ -5,26 +5,21 @@ namespace Console\Factory\Controller;
 use Console\Controller\GenerateController;
 use Console\Service\DeleteService;
 use Console\Service\GenerateService;
-use Zend\Di\ServiceLocator;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceManager;
 
-final class GenerateControllerFactory implements FactoryInterface
+final class GenerateControllerFactory
 {
     /**
-     * {@inheritDoc}
+     * @param ServiceManager $serviceManager
      *
      * @return GenerateController
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ServiceManager $serviceManager)
     {
-        /** @var ServiceLocator $sl */
-        $sl = $serviceLocator->getServiceLocator();
-
         /** @var GenerateService $generateService */
-        $generateService = $sl->get(GenerateService::class);
+        $generateService = $serviceManager->get(GenerateService::class);
         /** @var DeleteService $deleteService */
-        $deleteService = $sl->get(DeleteService::class);
+        $deleteService = $serviceManager->get(DeleteService::class);
 
         return new GenerateController($generateService, $deleteService);
     }

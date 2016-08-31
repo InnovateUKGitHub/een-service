@@ -5,7 +5,7 @@ namespace ConsoleTest\Factory\Controller;
 use Console\Controller\ImportController;
 use Console\Factory\Controller\ImportControllerFactory;
 use Console\Service\ImportService;
-use Zend\Mvc\Controller\ControllerManager;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * @covers Console\Factory\Controller\ImportControllerFactory
@@ -14,22 +14,17 @@ class ImportControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
-        /* @var $serviceLocator ControllerManager|\PHPUnit_Framework_MockObject_MockObject */
-        $serviceLocator = $this->createMock(ControllerManager::class);
+        /* @var \PHPUnit_Framework_MockObject_MockObject|ServiceManager $serviceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
 
-        $serviceLocator
-            ->expects(self::at(0))
-            ->method('getServiceLocator')
-            ->willReturn($serviceLocator);
-
-        $serviceLocator
-            ->expects(self::at(1))
+        $serviceManager
+            ->expects(self::once())
             ->method('get')
             ->willReturn($this->createMock(ImportService::class));
 
         self::assertInstanceOf(
             ImportController::class,
-            (new ImportControllerFactory())->createService($serviceLocator)
+            (new ImportControllerFactory())->__invoke($serviceManager)
         );
     }
 }

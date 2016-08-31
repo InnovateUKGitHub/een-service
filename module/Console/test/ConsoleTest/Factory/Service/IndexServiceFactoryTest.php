@@ -5,7 +5,7 @@ namespace ConsoleTest\Factory\Service;
 use Console\Factory\Service\IndexServiceFactory;
 use Console\Service\IndexService;
 use Zend\Log\Logger;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * @covers Console\Factory\Service\IndexServiceFactory
@@ -18,15 +18,15 @@ class IndexServiceFactoryTest extends \PHPUnit_Framework_TestCase
             IndexServiceFactory::ELASTIC_SEARCH => '',
         ];
 
-        /* @var $serviceLocator ServiceLocatorInterface|\PHPUnit_Framework_MockObject_MockObject */
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        /* @var \PHPUnit_Framework_MockObject_MockObject|ServiceManager $serviceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
 
-        $serviceLocator
+        $serviceManager
             ->expects(self::at(0))
             ->method('get')
             ->with(Logger::class)
             ->willReturn($this->createMock(Logger::class));
-        $serviceLocator
+        $serviceManager
             ->expects(self::at(1))
             ->method('get')
             ->with(IndexServiceFactory::CONFIG)
@@ -34,7 +34,7 @@ class IndexServiceFactoryTest extends \PHPUnit_Framework_TestCase
 
         self::assertInstanceOf(
             IndexService::class,
-            (new IndexServiceFactory())->createService($serviceLocator)
+            (new IndexServiceFactory())->__invoke($serviceManager)
         );
     }
 
@@ -46,20 +46,20 @@ class IndexServiceFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $config = [];
 
-        /* @var $serviceLocator ServiceLocatorInterface|\PHPUnit_Framework_MockObject_MockObject */
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        /* @var \PHPUnit_Framework_MockObject_MockObject|ServiceManager $serviceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
 
-        $serviceLocator
+        $serviceManager
             ->expects(self::at(0))
             ->method('get')
             ->with(Logger::class)
             ->willReturn($this->createMock(Logger::class));
-        $serviceLocator
+        $serviceManager
             ->expects(self::at(1))
             ->method('get')
             ->with(IndexServiceFactory::CONFIG)
             ->willReturn($config);
 
-        (new IndexServiceFactory())->createService($serviceLocator);
+        (new IndexServiceFactory())->__invoke($serviceManager);
     }
 }

@@ -16,6 +16,5 @@ data/cache/*
 !data/cache/.gitkeep
 .vagrant
 html-coverage
-composer.lock
 cache/
 logs/

@@ -8,7 +8,7 @@ use Console\Service\ImportService;
 use Console\Service\IndexService;
 use Console\Validator\MerlinValidator;
 use Zend\Log\Logger;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * @covers Console\Factory\Service\ImportServiceFactory
@@ -27,30 +27,30 @@ class ImportServiceFactoryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        /* @var $serviceLocator ServiceLocatorInterface|\PHPUnit_Framework_MockObject_MockObject */
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        /* @var \PHPUnit_Framework_MockObject_MockObject|ServiceManager $serviceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
 
-        $serviceLocator
+        $serviceManager
             ->expects(self::at(0))
             ->method('get')
             ->with(HttpService::class)
             ->willReturn($this->createMock(HttpService::class));
-        $serviceLocator
+        $serviceManager
             ->expects(self::at(1))
             ->method('get')
             ->with(IndexService::class)
             ->willReturn($this->createMock(IndexService::class));
-        $serviceLocator
+        $serviceManager
             ->expects(self::at(2))
             ->method('get')
             ->with(ImportServiceFactory::CONFIG_SERVICE)
             ->willReturn($config);
-        $serviceLocator
+        $serviceManager
             ->expects(self::at(3))
             ->method('get')
             ->with(MerlinValidator::class)
             ->willReturn($this->createMock(MerlinValidator::class));
-        $serviceLocator
+        $serviceManager
             ->expects(self::at(4))
             ->method('get')
             ->with(Logger::class)
@@ -58,7 +58,7 @@ class ImportServiceFactoryTest extends \PHPUnit_Framework_TestCase
 
         self::assertInstanceOf(
             ImportService::class,
-            (new ImportServiceFactory())->createService($serviceLocator)
+            (new ImportServiceFactory())->__invoke($serviceManager)
         );
     }
 
@@ -70,16 +70,16 @@ class ImportServiceFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $config = [];
 
-        /* @var $serviceLocator ServiceLocatorInterface|\PHPUnit_Framework_MockObject_MockObject */
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        /* @var \PHPUnit_Framework_MockObject_MockObject|ServiceManager $serviceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
 
-        $serviceLocator
+        $serviceManager
             ->expects(self::at(2))
             ->method('get')
             ->with(ImportServiceFactory::CONFIG_SERVICE)
             ->willReturn($config);
 
-        (new ImportServiceFactory())->createService($serviceLocator);
+        (new ImportServiceFactory())->__invoke($serviceManager);
     }
 
     /**
@@ -92,16 +92,16 @@ class ImportServiceFactoryTest extends \PHPUnit_Framework_TestCase
             ImportServiceFactory::CONFIG_MERLIN => [],
         ];
 
-        /* @var $serviceLocator ServiceLocatorInterface|\PHPUnit_Framework_MockObject_MockObject */
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        /* @var \PHPUnit_Framework_MockObject_MockObject|ServiceManager $serviceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
 
-        $serviceLocator
+        $serviceManager
             ->expects(self::at(2))
             ->method('get')
             ->with(ImportServiceFactory::CONFIG_SERVICE)
             ->willReturn($config);
 
-        (new ImportServiceFactory())->createService($serviceLocator);
+        (new ImportServiceFactory())->__invoke($serviceManager);
     }
 
     /**
@@ -116,16 +116,16 @@ class ImportServiceFactoryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        /* @var $serviceLocator ServiceLocatorInterface|\PHPUnit_Framework_MockObject_MockObject */
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        /* @var \PHPUnit_Framework_MockObject_MockObject|ServiceManager $serviceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
 
-        $serviceLocator
+        $serviceManager
             ->expects(self::at(2))
             ->method('get')
             ->with(ImportServiceFactory::CONFIG_SERVICE)
             ->willReturn($config);
 
-        (new ImportServiceFactory())->createService($serviceLocator);
+        (new ImportServiceFactory())->__invoke($serviceManager);
     }
 
     /**
@@ -141,16 +141,16 @@ class ImportServiceFactoryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        /* @var $serviceLocator ServiceLocatorInterface|\PHPUnit_Framework_MockObject_MockObject */
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        /* @var \PHPUnit_Framework_MockObject_MockObject|ServiceManager $serviceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
 
-        $serviceLocator
+        $serviceManager
             ->expects(self::at(2))
             ->method('get')
             ->with(ImportServiceFactory::CONFIG_SERVICE)
             ->willReturn($config);
 
-        (new ImportServiceFactory())->createService($serviceLocator);
+        (new ImportServiceFactory())->__invoke($serviceManager);
     }
 
     /**
@@ -167,16 +167,16 @@ class ImportServiceFactoryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        /* @var $serviceLocator ServiceLocatorInterface|\PHPUnit_Framework_MockObject_MockObject */
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        /* @var \PHPUnit_Framework_MockObject_MockObject|ServiceManager $serviceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
 
-        $serviceLocator
+        $serviceManager
             ->expects(self::at(2))
             ->method('get')
             ->with(ImportServiceFactory::CONFIG_SERVICE)
             ->willReturn($config);
 
-        (new ImportServiceFactory())->createService($serviceLocator);
+        (new ImportServiceFactory())->__invoke($serviceManager);
     }
 
     /**
@@ -194,15 +194,15 @@ class ImportServiceFactoryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        /* @var $serviceLocator ServiceLocatorInterface|\PHPUnit_Framework_MockObject_MockObject */
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        /* @var \PHPUnit_Framework_MockObject_MockObject|ServiceManager $serviceManager */
+        $serviceManager = $this->createMock(ServiceManager::class);
 
-        $serviceLocator
+        $serviceManager
             ->expects(self::at(2))
             ->method('get')
             ->with(ImportServiceFactory::CONFIG_SERVICE)
             ->willReturn($config);
 
-        (new ImportServiceFactory())->createService($serviceLocator);
+        (new ImportServiceFactory())->__invoke($serviceManager);
     }
 }

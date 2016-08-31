@@ -2,21 +2,28 @@
 
 namespace Search;
 
-use ZF\Apigility\Provider\ApigilityProviderInterface;
+use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
+use Zend\ModuleManager\Feature\ConfigProviderInterface;
 
-class Module implements ApigilityProviderInterface
+class Module implements ConfigProviderInterface, AutoloaderProviderInterface
 {
+    /**
+     * {@inheritDoc}
+     */
     public function getConfig()
     {
         return include __DIR__ . '/../config/module.config.php';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getAutoloaderConfig()
     {
         return [
-            'ZF\Apigility\Autoloader' => [
+            'Zend\Loader\StandardAutoloader' => [
                 'namespaces' => [
-                    __NAMESPACE__ => __DIR__,
+                    __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
                 ],
             ],
         ];
