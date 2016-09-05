@@ -83,12 +83,13 @@ class ImportService
 
     /**
      * @param string $month
+     * @param string $type
      *
      * @return null
      */
-    public function import($month)
+    public function import($month, $type)
     {
-        $this->importOpportunities($this->getData($month));
+        $this->importOpportunities($this->getData($month, $type));
     }
 
     /**
@@ -102,7 +103,6 @@ class ImportService
 
         $dateImport = (new \DateTime())->format('Ymd');
         foreach ($results->{'profile'} as $profile) {
-
             $this->merlinValidator->checkProfileDataExists($profile);
 
             $reference = $profile->{'reference'};
@@ -233,14 +233,15 @@ class ImportService
 
     /**
      * @param string $month
+     * @param string $type
      *
      * @return \SimpleXMLElement|null
      */
-    private function getData($month)
+    private function getData($month, $type)
     {
         $this->client->setHttpMethod(Request::METHOD_GET);
         $this->client->setPathToService($this->path);
-        $this->client->setQueryParams($this->buildQuery($month));
+        $this->client->setQueryParams($this->buildQuery($month, $type));
 
         try {
             return simplexml_load_string($this->client->execute(false));
@@ -257,10 +258,11 @@ class ImportService
 
     /**
      * @param string $month
+     * @param string $type
      *
      * @return array
      */
-    private function buildQuery($month)
+    private function buildQuery($month, $type)
     {
         $return = [];
         if (empty($this->username) === false) {
@@ -270,8 +272,8 @@ class ImportService
             $return['p'] = $this->password;
         }
 
-        $return['sb'] = (new \DateTime())->sub(new \DateInterval('P' . ($month - 1) . 'M'))->format('Ymd');
-        $return['sa'] = (new \DateTime())->sub(new \DateInterval('P' . ($month) . 'M'))->format('Ymd');
+        $return[$type . 'b'] = (new \DateTime())->sub(new \DateInterval('P' . ($month - 1) . 'M'))->format('Ymd');
+        $return[$type . 'a'] = (new \DateTime())->sub(new \DateInterval('P' . ($month) . 'M'))->format('Ymd');
 
         return $return;
     }

@@ -74,7 +74,7 @@ return [
                 'name'       => 'size',
             ],
             [
-                'required'   => true,
+                'required'   => false,
                 'validators' => [],
                 'filters'    => [],
                 'name'       => 'search',
@@ -86,7 +86,7 @@ return [
                 'name'       => 'opportunity_type',
             ],
             [
-                'required'   => true,
+                'required'   => false,
                 'validators' => [],
                 'filters'    => [],
                 'name'       => 'sort',
