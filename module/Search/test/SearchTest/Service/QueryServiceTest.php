@@ -46,9 +46,6 @@ class QueryServiceTest extends \PHPUnit_Framework_TestCase
                 'BO',
                 'RD',
             ],
-            'sort'             => [
-                ['date.timestamp' => 'desc'],
-            ],
             'source'           => ['name', 'description'],
         ];
 
@@ -79,7 +76,6 @@ class QueryServiceTest extends \PHPUnit_Framework_TestCase
                         ],
                     ],
                 ],
-                'sort'    => $params['sort'],
                 '_source' => $params['source'],
             ])
             ->willReturn([

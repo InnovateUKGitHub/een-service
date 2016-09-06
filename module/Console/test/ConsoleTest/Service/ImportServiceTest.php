@@ -140,7 +140,7 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
             ->method('execute')
             ->willReturn($merlinData);
 
-        $this->service->import(self::MONTH);
+        $this->service->import(self::MONTH, 's');
     }
 
     /**
@@ -153,7 +153,7 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
             ->method('execute')
             ->willThrowException(new HttpException());
 
-        $this->service->import(self::MONTH);
+        $this->service->import(self::MONTH, 's');
     }
 
     /**
@@ -166,7 +166,7 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
             ->method('execute')
             ->willThrowException(new \Exception());
 
-        $this->service->import(self::MONTH);
+        $this->service->import(self::MONTH, 's');
     }
 
     protected function Setup()

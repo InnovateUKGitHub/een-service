@@ -64,9 +64,10 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
                     'routes' => [
                         'import-data'   => [
                             'options' => [
-                                'route'       => 'import [--month=<month>]',
+                                'route'       => 'import [--month=<month>] [--type=<type>]',
                                 'constraints' => [
                                     'month' => '[1|2|3|4|5|6|7|8|9|10|11|12]',
+                                    'type'  => '[s|u]',
                                 ],
                                 'defaults'    => [
                                     'controller' => ImportController::class,
@@ -123,8 +124,9 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         /** @var \PHPUnit_Framework_MockObject_MockObject|AdapterInterface $console */
         $console = $this->createMock(AdapterInterface::class);
         self::assertEquals([
-            'import [--month=<month>]'                       => 'import date from merlin into elasticSearch',
+            'import [--month=<month>] [--type=<type>]'       => 'import date from merlin into elasticSearch',
             ['--month', 'The number amount of month to go back. [1|2|3|4|5|6|7|8|9|10|11|12] (default: 1)'],
+            ['--type', 'The type of data to import from. [s|u] (default: u)'],
             'delete [--since=<since>]'                       => 'import date from merlin into elasticSearch',
             ['--since', 'The number amount of month out of date (default: 12)'],
             'generate [--index=<index>] [--number=<number>]' => 'Generate random data into elasticSearch for test purpose',
