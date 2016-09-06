@@ -109,7 +109,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
                         'name'       => 'size',
                     ],
                     [
-                        'required'   => true,
+                        'required'   => false,
                         'validators' => [],
                         'filters'    => [],
                         'name'       => 'search',
@@ -121,7 +121,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
                         'name'       => 'opportunity_type',
                     ],
                     [
-                        'required'   => true,
+                        'required'   => false,
                         'validators' => [],
                         'filters'    => [],
                         'name'       => 'sort',

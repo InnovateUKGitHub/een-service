@@ -59,9 +59,11 @@ class QueryService
                     ],
                 ],
             ],
-            'sort'    => $params['sort'],
             '_source' => $params['source'],
         ];
+        if (!empty($params['sort'])) {
+            $query['body']['sort'] = $params['sort'];
+        }
         if ($types) {
             $query['body']['query']['bool']['must'][] = [
                 'query_string' => [

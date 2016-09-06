@@ -34,12 +34,13 @@ final class ImportController extends AbstractActionController
         }
 
         $month = (int)$this->params('month', 1);
+        $type = (string)$this->params('type', 'u');
 
         if (Helper::checkValidMonth($month) === false) {
             throw new InvalidArgumentException('The month enter is not valid');
         }
 
-        $this->importService->import($month);
+        $this->importService->import($month, $type);
 
         return ['success' => true];
     }

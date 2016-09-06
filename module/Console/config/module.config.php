@@ -39,9 +39,10 @@ return [
             'routes' => [
                 'import-data'   => [
                     'options' => [
-                        'route'       => 'import [--month=<month>]',
+                        'route'       => 'import [--month=<month>] [--type=<type>]',
                         'constraints' => [
                             'month' => '[1|2|3|4|5|6|7|8|9|10|11|12]',
+                            'type'  => '[s|u]',
                         ],
                         'defaults'    => [
                             'controller' => ImportController::class,
