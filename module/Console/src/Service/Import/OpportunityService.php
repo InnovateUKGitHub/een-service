@@ -14,7 +14,6 @@ class OpportunityService
     private $merlinData;
     /** @var MerlinValidator */
     private $merlinValidator;
-
     /** @var array */
     private $structure;
 

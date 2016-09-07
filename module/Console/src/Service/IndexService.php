@@ -87,6 +87,7 @@ class IndexService
         } catch (\Exception $e) {
             $this->logger->debug('An error occurred during the import of a document');
             $this->logger->debug($e->getMessage());
+            $this->logger->debug($e->getTraceAsString());
         }
         throw new \RuntimeException('An error occurred during the import of a document');
     }

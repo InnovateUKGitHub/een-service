@@ -7,8 +7,12 @@ return [
     'EventClosingDate'                => '',
     'ContactAttributes'               => '',
     'Description'                     => '',
-    'EventType'                       => '',
-    'EventStyle'                      => '',
+    'EventType'                       => [
+        'required' => false,
+    ],
+    'EventStyle'                      => [
+        'required' => false,
+    ],
     'EventStatus'                     => '',
     'HostOrganisation'                => '',
     'CountryISO'                      => '',
@@ -17,7 +21,9 @@ return [
     'Preliminarytext'                 => '',
     'DeadlineForRegistering'          => '',
     'LocationDetailsCity'             => '',
-    'LocationDetailsCountry'          => '',
+    'LocationDetailsCountry'          => [
+        'required' => false,
+    ],
     'LocationDetailsName'             => '',
     'LocationDetailsEventAddress'     => '',
     'LocationDetailsContactTelephone' => '',
@@ -26,7 +32,9 @@ return [
     'LocationContactName'             => '',
     'LocationContactFax'              => '',
     'LocationContactTelephone'        => '',
-    'LocationContactEmail'            => '',
+    'LocationContactEmail'          => [
+        'required' => false,
+    ],
     'Created'                         => '',
     'Status'                          => '',
     'keyword'                         => [
@@ -50,7 +58,9 @@ return [
         ],
     ],
     'Coorganisers'                    => [
-        'Coorganiser' => '',
+        'Coorganiser' => [
+            'required' => false,
+        ],
     ],
     'ContactName'                     => '',
     'ContactTelephone'                => '',

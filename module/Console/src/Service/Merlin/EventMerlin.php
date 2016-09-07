@@ -45,7 +45,8 @@ class EventMerlin
         $this->client->setQueryParams($this->buildQuery($month, $type));
 
         try {
-            return simplexml_load_string($this->client->execute());
+            $result = $this->client->execute();
+            return simplexml_load_string(str_replace('utf-16', 'utf-8', $result));
         } catch (HttpException $e) {
             $this->logger->debug("An error occurred during the retrieve of the $month month");
             $this->logger->debug($e->getMessage());

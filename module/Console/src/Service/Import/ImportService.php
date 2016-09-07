@@ -24,8 +24,6 @@ class ImportService
      * @param string $index
      * @param string $month
      * @param string $type
-     *
-     * @return null
      */
     public function import($index, $month, $type)
     {
@@ -33,7 +31,7 @@ class ImportService
             case ES_INDEX_OPPORTUNITY:
                 $this->opportunityService->import($month, $type);
                 break;
-            case 'event':
+            case ES_INDEX_EVENT:
                 $this->eventService->import($month, $type);
                 break;
         }
