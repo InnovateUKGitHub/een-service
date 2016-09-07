@@ -8,6 +8,8 @@ class QueryService
 {
     /** @var Client */
     private $elasticSearch;
+    /** @var string */
+    private $query;
 
     /**
      * QueryService constructor.
@@ -17,6 +19,7 @@ class QueryService
     public function __construct(Client $elasticSearch)
     {
         $this->elasticSearch = $elasticSearch;
+        $this->query = [];
     }
 
     /**
@@ -29,6 +32,16 @@ class QueryService
         return $this->elasticSearch->indices()->exists(['index' => $index]);
     }
 
+    public function buildQuery($fields, $values, $operator = 'AND')
+    {
+        $this->query[] = [
+            'query_string' => [
+                'fields' => $fields,
+                'query'  => implode('* ' . $operator . ' ', $values) . '*',
+            ],
+        ];
+    }
+
     /**
      * @param array  $params
      * @param string $index
@@ -38,8 +51,6 @@ class QueryService
      */
     public function search($params, $index, $type)
     {
-        $searches = explode(' ', trim($params['search']));
-        $types = $params['opportunity_type'];
         $query = [
             'index'   => $index,
             'type'    => $type,
@@ -48,14 +59,7 @@ class QueryService
             'body'    => [
                 'query' => [
                     'bool' => [
-                        'must' => [
-                            [
-                                'query_string' => [
-                                    'fields' => ['title', 'summary', 'description'],
-                                    'query'  => implode('* AND ', $searches) . '*',
-                                ],
-                            ],
-                        ],
+                        'must' => $this->query,
                     ],
                 ],
             ],
@@ -64,15 +68,7 @@ class QueryService
         if (!empty($params['sort'])) {
             $query['body']['sort'] = $params['sort'];
         }
-        if ($types) {
-            $query['body']['query']['bool']['must'][] = [
-                'query_string' => [
-                    'default_field' => 'type',
-                    'query'         => implode('* OR ', $types) . '*',
-                ],
-            ];
-        }
-
+//print_r($query); die;
         return $this->convertResult($this->elasticSearch->search($query));
     }
 

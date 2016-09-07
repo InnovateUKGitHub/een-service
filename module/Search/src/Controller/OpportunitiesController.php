@@ -5,7 +5,6 @@ namespace Search\Controller;
 use Search\Service\ElasticSearchService;
 use Zend\InputFilter\InputFilter;
 use Zend\Mvc\Controller\AbstractRestfulController;
-use Zend\View\Model\JsonModel;
 
 /**
  * @method InputFilter getInputFilter()
@@ -28,7 +27,7 @@ final class OpportunitiesController extends AbstractRestfulController
     /**
      * @param array $data
      *
-     * @return JsonModel
+     * @return array
      */
     public function create($data)
     {
@@ -40,7 +39,7 @@ final class OpportunitiesController extends AbstractRestfulController
     /**
      * @param string $id
      *
-     * @return JsonModel
+     * @return array
      */
     public function get($id)
     {

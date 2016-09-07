@@ -89,7 +89,7 @@ class EventService
 
             $this->indexService->index(
                 $params,
-                microtime(),
+                microtime(true),
                 ES_INDEX_EVENT,
                 ES_TYPE_EVENT
             );

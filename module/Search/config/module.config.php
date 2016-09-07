@@ -2,7 +2,9 @@
 
 namespace Search;
 
+use Search\Controller\EventsController;
 use Search\Controller\OpportunitiesController;
+use Search\Factory\Controller\EventsControllerFactory;
 use Search\Factory\Controller\OpportunitiesControllerFactory;
 use Search\Factory\Service\ElasticSearchServiceFactory;
 use Search\Factory\Service\QueryServiceFactory;
@@ -20,6 +22,7 @@ return [
     'controllers'            => [
         'factories' => [
             OpportunitiesController::class => OpportunitiesControllerFactory::class,
+            EventsController::class         => EventsControllerFactory::class,
         ],
     ],
     'router'                 => [
@@ -36,14 +39,31 @@ return [
                     ],
                 ],
             ],
+            'een.events'        => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'       => '/events[/:id]',
+                    'constraints' => [
+                        'id' => '[\d]+\.[\d]+',
+                    ],
+                    'defaults'    => [
+                        'controller' => EventsController::class,
+                    ],
+                ],
+            ],
         ],
     ],
     'zf-content-negotiation' => [
         'controllers'            => [
             OpportunitiesController::class => 'Json',
+            EventsController::class => 'Json',
         ],
         'accept_whitelist'       => [
             OpportunitiesController::class => [
+                'application/json',
+                'application/*+json',
+            ],
+            EventsController::class => [
                 'application/json',
                 'application/*+json',
             ],
@@ -52,15 +72,59 @@ return [
             OpportunitiesController::class => [
                 'application/json',
             ],
+            EventsController::class => [
+                'application/json',
+            ],
         ],
     ],
     'zf-content-validation'  => [
         OpportunitiesController::class => [
             'POST' => OpportunitiesController::class,
         ],
+        EventsController::class => [
+            'POST' => EventsController::class,
+        ],
     ],
     'input_filter_specs'     => [
         OpportunitiesController::class => [
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'from',
+            ],
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'size',
+            ],
+            [
+                'required'   => false,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'search',
+            ],
+            [
+                'required'   => false,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'opportunity_type',
+            ],
+            [
+                'required'   => false,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'sort',
+            ],
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'source',
+            ],
+        ],
+        EventsController::class => [
             [
                 'required'   => true,
                 'validators' => [],

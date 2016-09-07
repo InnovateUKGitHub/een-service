@@ -28,6 +28,12 @@ class ElasticSearchService
             return ['error' => 'Index not created'];
         }
 
+        $searches = explode(' ', trim($params['search']));
+        $this->query->buildQuery(['title', 'summary', 'description'], $searches);
+        if (count($params['opportunity_type']) !== 0) {
+            $this->query->buildQuery(['type'], $params['opportunity_type'], 'OR');
+        }
+
         return $this->query->search($params, ES_INDEX_OPPORTUNITY, ES_TYPE_OPPORTUNITY);
     }
 
@@ -38,5 +44,31 @@ class ElasticSearchService
         }
 
         return $this->query->getDocument($id, ES_INDEX_OPPORTUNITY, ES_TYPE_OPPORTUNITY);
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return array
+     */
+    public function searchEvents($params)
+    {
+        if ($this->query->exists(ES_INDEX_EVENT) === false) {
+            return ['error' => 'Index not created'];
+        }
+
+        $searches = explode(' ', trim($params['search']));
+        $this->query->buildQuery(['title', 'description'], $searches);
+
+        return $this->query->search($params, ES_INDEX_EVENT, ES_TYPE_EVENT);
+    }
+
+    public function searchEvent($id)
+    {
+        if ($this->query->exists(ES_INDEX_EVENT) === false) {
+            return ['error' => 'Index not created'];
+        }
+
+        return $this->query->getDocument($id, ES_INDEX_EVENT, ES_TYPE_EVENT);
     }
 }
