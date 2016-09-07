@@ -3,7 +3,8 @@
 namespace Console\Controller;
 
 use Console\Helper\Helper;
-use Console\Service\ImportService;
+use Console\Service\Import\DeleteService;
+use Console\Service\Import\ImportService;
 use Zend\Console\Exception\BadMethodCallException;
 use Zend\Console\Exception\InvalidArgumentException;
 use Zend\Console\Request;
@@ -13,15 +14,19 @@ final class ImportController extends AbstractActionController
 {
     /** @var ImportService */
     private $importService;
+    /** @var DeleteService */
+    private $deleteService;
 
     /**
      * GenerateController constructor.
      *
      * @param ImportService $importService
+     * @param DeleteService $deleteService
      */
-    public function __construct(ImportService $importService)
+    public function __construct(ImportService $importService, DeleteService $deleteService)
     {
         $this->importService = $importService;
+        $this->deleteService = $deleteService;
     }
 
     /**
@@ -33,6 +38,7 @@ final class ImportController extends AbstractActionController
             throw new BadMethodCallException('This is a console tool only');
         }
 
+        $index = (string)$this->params('index', 'opportunity');
         $month = (int)$this->params('month', 1);
         $type = (string)$this->params('type', 'u');
 
@@ -40,7 +46,7 @@ final class ImportController extends AbstractActionController
             throw new InvalidArgumentException('The month enter is not valid');
         }
 
-        $this->importService->import($month, $type);
+        $this->importService->import($index, $month, $type);
 
         return ['success' => true];
     }
@@ -54,13 +60,14 @@ final class ImportController extends AbstractActionController
             throw new BadMethodCallException('This is a console tool only');
         }
 
+        $index = (string)$this->params('index', 'opportunity');
         $since = (int)$this->params('since', 12);
 
         if ($since <= 0) {
             throw new InvalidArgumentException('The month enter is not valid');
         }
 
-        $this->importService->delete($since, new \DateTime());
+        $this->deleteService->deleteOutOfDate($index, $since);
 
         return ['success' => true];
     }

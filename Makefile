@@ -61,31 +61,6 @@ import:
 	@echo "Importing update Data for Month -12..."
 	@sh -c "php public/index.php import --month=12"
 
-	@echo "Importing new Data for Month -1..."
-	@sh -c "php public/index.php import --month=1 --type=s"
-	@echo "Importing new Data for Month -2..."
-	@sh -c "php public/index.php import --month=2 --type=s"
-	@echo "Importing new Data for Month -3..."
-	@sh -c "php public/index.php import --month=3 --type=s"
-	@echo "Importing new Data for Month -4..."
-	@sh -c "php public/index.php import --month=4 --type=s"
-	@echo "Importing new Data for Month -5..."
-	@sh -c "php public/index.php import --month=5 --type=s"
-	@echo "Importing new Data for Month -6..."
-	@sh -c "php public/index.php import --month=6 --type=s"
-	@echo "Importing new Data for Month -7..."
-	@sh -c "php public/index.php import --month=7 --type=s"
-	@echo "Importing new Data for Month -8..."
-	@sh -c "php public/index.php import --month=8 --type=s"
-	@echo "Importing new Data for Month -9..."
-	@sh -c "php public/index.php import --month=9 --type=s"
-	@echo "Importing new Data for Month -10..."
-	@sh -c "php public/index.php import --month=10 --type=s"
-	@echo "Importing new Data for Month -11..."
-	@sh -c "php public/index.php import --month=11 --type=s"
-	@echo "Importing new Data for Month -12..."
-	@sh -c "php public/index.php import --month=12 --type=s"
-
 	@make -s delete
 
 delete:

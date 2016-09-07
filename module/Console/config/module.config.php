@@ -1,37 +1,34 @@
 <?php
 
-use Console\Controller\GenerateController;
-use Console\Controller\ImportController;
-use Console\Factory\Controller\GenerateControllerFactory;
-use Console\Factory\Controller\ImportControllerFactory;
-use Console\Factory\Service\DeleteServiceFactory;
-use Console\Factory\Service\GenerateServiceFactory;
-use Console\Factory\Service\HttpServiceFactory;
-use Console\Factory\Service\ImportServiceFactory;
-use Console\Factory\Service\IndexServiceFactory;
-use Console\Factory\Validator\MerlinValidatorFactory;
-use Console\Service\DeleteService;
-use Console\Service\GenerateService;
-use Console\Service\HttpService;
-use Console\Service\ImportService;
-use Console\Service\IndexService;
-use Console\Validator\MerlinValidator;
+use Console\Controller as Controller;
+use Console\Factory\Controller as ControllerFactory;
+use Console\Factory\Service as ServiceFactory;
+use Console\Factory\Validator as ValidatorFactory;
+use Console\Service as Service;
+use Console\Validator as Validator;
 
 return [
     'service_manager' => [
         'factories' => [
-            DeleteService::class   => DeleteServiceFactory::class,
-            GenerateService::class => GenerateServiceFactory::class,
-            HttpService::class     => HttpServiceFactory::class,
-            ImportService::class   => ImportServiceFactory::class,
-            IndexService::class    => IndexServiceFactory::class,
-            MerlinValidator::class => MerlinValidatorFactory::class,
+            Service\PurgeService::class    => ServiceFactory\PurgeServiceFactory::class,
+            Service\GenerateService::class => ServiceFactory\GenerateServiceFactory::class,
+            Service\HttpService::class     => ServiceFactory\HttpServiceFactory::class,
+            Service\IndexService::class    => ServiceFactory\IndexServiceFactory::class,
+
+            Service\Import\ImportService::class      => ServiceFactory\Import\ImportServiceFactory::class,
+            Service\Import\DeleteService::class      => ServiceFactory\Import\DeleteServiceFactory::class,
+            Service\Import\OpportunityService::class => ServiceFactory\Import\OpportunityServiceFactory::class,
+            Service\Import\EventService::class       => ServiceFactory\Import\EventServiceFactory::class,
+            Service\Merlin\OpportunityMerlin::class  => ServiceFactory\Merlin\OpportunityMerlinFactory::class,
+            Service\Merlin\EventMerlin::class        => ServiceFactory\Merlin\EventMerlinFactory::class,
+
+            Validator\MerlinValidator::class => ValidatorFactory\MerlinValidatorFactory::class,
         ],
     ],
     'controllers'     => [
         'factories' => [
-            GenerateController::class => GenerateControllerFactory::class,
-            ImportController::class   => ImportControllerFactory::class,
+            Controller\GenerateController::class => ControllerFactory\GenerateControllerFactory::class,
+            Controller\ImportController::class   => ControllerFactory\ImportControllerFactory::class,
         ],
     ],
     'console'         => [
@@ -39,25 +36,27 @@ return [
             'routes' => [
                 'import-data'   => [
                     'options' => [
-                        'route'       => 'import [--month=<month>] [--type=<type>]',
+                        'route'       => 'import [--index=<index>] [--month=<month>] [--type=<type>]',
                         'constraints' => [
+                            'index' => '[opportunity|event]',
                             'month' => '[1|2|3|4|5|6|7|8|9|10|11|12]',
                             'type'  => '[s|u]',
                         ],
                         'defaults'    => [
-                            'controller' => ImportController::class,
+                            'controller' => Controller\ImportController::class,
                             'action'     => 'import',
                         ],
                     ],
                 ],
                 'delete-data'   => [
                     'options' => [
-                        'route'       => 'delete [--since=<since>]',
+                        'route'       => 'delete [--index=<index>] [--since=<since>]',
                         'constraints' => [
+                            'index' => '[opportunity|event]',
                             'since' => '[\d]+',
                         ],
                         'defaults'    => [
-                            'controller' => ImportController::class,
+                            'controller' => Controller\ImportController::class,
                             'action'     => 'delete',
                         ],
                     ],
@@ -69,7 +68,7 @@ return [
                             'index' => '[opportunity|event|all]',
                         ],
                         'defaults'    => [
-                            'controller' => GenerateController::class,
+                            'controller' => Controller\GenerateController::class,
                             'action'     => 'generate',
                         ],
                     ],
@@ -81,7 +80,7 @@ return [
                             'index' => '[opportunity|event|all]',
                         ],
                         'defaults'    => [
-                            'controller' => GenerateController::class,
+                            'controller' => Controller\GenerateController::class,
                             'action'     => 'delete',
                         ],
                     ],

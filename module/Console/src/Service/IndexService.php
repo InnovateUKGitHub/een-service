@@ -16,6 +16,7 @@ class IndexService
     /**
      * @param Client $elasticSearch
      * @param Logger $logger
+     * @param array  $config
      */
     public function __construct(Client $elasticSearch, Logger $logger, $config)
     {
@@ -26,21 +27,13 @@ class IndexService
 
     /**
      * @param string $index
-     *
-     * @return bool
      */
     public function createIndex($index)
     {
         if ($this->exists($index)) {
-            return true;
+            return;
         }
-        switch ($index) {
-            case ES_INDEX_OPPORTUNITY:
-                $this->createOpportunityIndex();
-                break;
-        }
-
-        return false;
+        $this->create($index);
     }
 
     private function exists($index)
@@ -55,11 +48,13 @@ class IndexService
     }
 
     /**
-     * Function to create the mapping of the opportunity index
+     * Function to create the mapping of the elastic index
+     *
+     * @param string $index
      */
-    private function createOpportunityIndex()
+    private function create($index)
     {
-        $params = $this->config[ES_INDEX_OPPORTUNITY];
+        $params = $this->config[$index];
 
         try {
             $this->elasticSearch->indices()->create($params);

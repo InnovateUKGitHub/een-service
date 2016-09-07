@@ -1,52 +1,42 @@
 <?php
-namespace Console\Service;
 
+namespace Console\Service\Import;
+
+use Console\Service\IndexService;
+use Console\Service\Merlin\OpportunityMerlin;
 use Console\Validator\MerlinValidator;
-use Zend\Http\Request;
-use Zend\Json\Server\Exception\HttpException;
-use Zend\Log\Logger;
 
-class ImportService
+class OpportunityService
 {
-    const USERNAME = 'username';
-
-    const PASSWORD = 'password';
-
-    const PATH_GET_PROFILE = 'path-get-profile';
-
-    /** @var string */
-    private $username;
-    /** @var string */
-    private $password;
-    /** @var string */
-    private $path;
-    /** @var HttpService */
-    private $client;
     /** @var IndexService */
     private $indexService;
+    /** @var OpportunityMerlin */
+    private $merlinData;
     /** @var MerlinValidator */
     private $merlinValidator;
-    /** @var Logger */
-    private $logger;
+
+    /** @var array */
+    private $structure;
 
     /**
-     * ImportService constructor.
+     * OpportunityService constructor.
      *
-     * @param HttpService     $client
-     * @param IndexService    $indexService
-     * @param MerlinValidator $merlinValidator
-     * @param Logger          $logger
-     * @param array           $config
+     * @param IndexService      $indexService
+     * @param OpportunityMerlin $merlinData
+     * @param MerlinValidator   $merlinValidator
+     * @param array             $structure
      */
-    public function __construct(HttpService $client, IndexService $indexService, MerlinValidator $merlinValidator, Logger $logger, $config)
+    public function __construct(
+        IndexService $indexService,
+        OpportunityMerlin $merlinData,
+        MerlinValidator $merlinValidator,
+        $structure
+    )
     {
         $this->indexService = $indexService;
+        $this->merlinData = $merlinData;
         $this->merlinValidator = $merlinValidator;
-        $this->client = $client;
-        $this->username = $config[self::USERNAME];
-        $this->password = $config[self::PASSWORD];
-        $this->path = $config[self::PATH_GET_PROFILE];
-        $this->logger = $logger;
+        $this->structure = $structure;
     }
 
     /**
@@ -81,29 +71,17 @@ class ImportService
         $this->indexService->delete($body);
     }
 
-    /**
-     * @param string $month
-     * @param string $type
-     *
-     * @return null
-     */
     public function import($month, $type)
     {
-        $this->importOpportunities($this->getData($month, $type));
-    }
+        $results = $this->merlinData->getList($month, $type);
 
-    /**
-     * @param \SimpleXMLElement $results
-     */
-    private function importOpportunities(\SimpleXMLElement $results)
-    {
         $this->indexService->createIndex(ES_INDEX_OPPORTUNITY);
 
         $this->merlinValidator->checkProfilesExists($results);
 
         $dateImport = (new \DateTime())->format('Ymd');
         foreach ($results->{'profile'} as $profile) {
-            $this->merlinValidator->checkProfileDataExists($profile);
+            $this->merlinValidator->checkDataExists($profile, $this->structure);
 
             $reference = $profile->{'reference'};
             $content = $profile->{'content'};
@@ -229,52 +207,5 @@ class ImportService
         }
 
         return $result;
-    }
-
-    /**
-     * @param string $month
-     * @param string $type
-     *
-     * @return \SimpleXMLElement|null
-     */
-    private function getData($month, $type)
-    {
-        $this->client->setHttpMethod(Request::METHOD_GET);
-        $this->client->setPathToService($this->path);
-        $this->client->setQueryParams($this->buildQuery($month, $type));
-
-        try {
-            return simplexml_load_string($this->client->execute(false));
-        } catch (HttpException $e) {
-            $this->logger->debug("An error occurred during the retrieve of the $month month");
-            $this->logger->debug($e->getMessage());
-        } catch (\Exception $e) {
-            $this->logger->debug("An error occurred during the retrieve of the $month month");
-            $this->logger->debug($e->getMessage());
-        }
-
-        throw new \RuntimeException("An error occurred during the retrieve of the $month month");
-    }
-
-    /**
-     * @param string $month
-     * @param string $type
-     *
-     * @return array
-     */
-    private function buildQuery($month, $type)
-    {
-        $return = [];
-        if (empty($this->username) === false) {
-            $return['u'] = $this->username;
-        }
-        if (empty($this->password) === false) {
-            $return['p'] = $this->password;
-        }
-
-        $return[$type . 'b'] = (new \DateTime())->sub(new \DateInterval('P' . ($month - 1) . 'M'))->format('Ymd');
-        $return[$type . 'a'] = (new \DateTime())->sub(new \DateInterval('P' . ($month) . 'M'))->format('Ymd');
-
-        return $return;
     }
 }
