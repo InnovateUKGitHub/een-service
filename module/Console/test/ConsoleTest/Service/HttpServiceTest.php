@@ -93,39 +93,6 @@ class HttpServiceTest extends \PHPUnit_Framework_TestCase
             ->with(self::REQUEST_BODY);
         $responseMock = $this->createMock(Response::class);
         $responseMock->expects(self::once())
-            ->method('getBody')
-            ->willReturn('{"success": 1}');
-        $this->clientMock
-            ->expects(self::once())
-            ->method('send')
-            ->willReturn($responseMock);
-
-        $service->setHttpMethod(Request::METHOD_POST);
-        $service->setPathToService(self::PATH_TO_SERVICE);
-        $service->setRequestBody(self::REQUEST_BODY);
-        $service->setServer(self::SERVER);
-        $service->setPort(self::PORT);
-
-        self::assertEquals(['success' => true], $service->execute());
-    }
-
-    public function testExecuteNotJson()
-    {
-        $service = new HttpService($this->clientMock);
-        $this->clientMock
-            ->expects(self::once())
-            ->method('setMethod')
-            ->with(Request::METHOD_POST);
-        $this->clientMock
-            ->expects(self::once())
-            ->method('setUri')
-            ->with(self::HTTP_SCHEME . '://' . self::SERVER . ':' . self::PORT . '/' . self::PATH_TO_SERVICE);
-        $this->clientMock
-            ->expects(self::once())
-            ->method('setRawBody')
-            ->with(self::REQUEST_BODY);
-        $responseMock = $this->createMock(Response::class);
-        $responseMock->expects(self::once())
             ->method('getContent')
             ->willReturn('{"success": 1}');
         $this->clientMock
@@ -139,50 +106,7 @@ class HttpServiceTest extends \PHPUnit_Framework_TestCase
         $service->setServer(self::SERVER);
         $service->setPort(self::PORT);
 
-        self::assertEquals('{"success": 1}', $service->execute(false));
-    }
-
-    public function testExecuteThrowExceptionContentNull()
-    {
-        $service = new HttpService($this->clientMock);
-        $this->clientMock
-            ->expects(self::once())
-            ->method('setMethod')
-            ->with(Request::METHOD_POST);
-        $this->clientMock
-            ->expects(self::once())
-            ->method('setUri')
-            ->with(
-                self::HTTP_SCHEME . '://' .
-                self::USER . '.' . self::PASSWORD . '@' . self::SERVER . ':' . self::PORT . '/' .
-                self::VERSION . '/' . self::PATH_TO_SERVICE
-            );
-        $this->clientMock
-            ->expects(self::once())
-            ->method('setRawBody')
-            ->with(self::REQUEST_BODY);
-        $responseMock = $this->createMock(Response::class);
-        $responseMock->expects(self::once())
-            ->method('getBody')
-            ->willReturn('{"success" => 1}');
-        $this->clientMock
-            ->expects(self::once())
-            ->method('send')
-            ->willReturn($responseMock);
-
-        $service->setUserName(self::USER);
-        $service->setPassword(self::PASSWORD);
-        $service->setVersion(self::VERSION);
-        $service->setHttpMethod(Request::METHOD_POST);
-        $service->setPathToService(self::PATH_TO_SERVICE);
-        $service->setRequestBody(self::REQUEST_BODY);
-        $service->setServer(self::SERVER);
-        $service->setPort(self::PORT);
-
-        $this->expectException(HttpException::class);
-        $this->expectExceptionMessage('Malformed JSON response: {"success" => 1}');
-
-        $service->execute();
+        self::assertEquals('{"success": 1}', $service->execute());
     }
 
     public function testExecuteThrowExceptionAfterSendException()

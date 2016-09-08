@@ -147,12 +147,6 @@ return [
                 'required'   => false,
                 'validators' => [],
                 'filters'    => [],
-                'name'       => 'opportunity_type',
-            ],
-            [
-                'required'   => false,
-                'validators' => [],
-                'filters'    => [],
                 'name'       => 'sort',
             ],
             [

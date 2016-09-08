@@ -3,8 +3,8 @@
 namespace Console\Factory\Controller;
 
 use Console\Controller\GenerateController;
-use Console\Service\DeleteService;
 use Console\Service\GenerateService;
+use Console\Service\PurgeService;
 use Zend\ServiceManager\ServiceManager;
 
 final class GenerateControllerFactory
@@ -16,10 +16,8 @@ final class GenerateControllerFactory
      */
     public function __invoke(ServiceManager $serviceManager)
     {
-        /** @var GenerateService $generateService */
         $generateService = $serviceManager->get(GenerateService::class);
-        /** @var DeleteService $deleteService */
-        $deleteService = $serviceManager->get(DeleteService::class);
+        $deleteService = $serviceManager->get(PurgeService::class);
 
         return new GenerateController($generateService, $deleteService);
     }

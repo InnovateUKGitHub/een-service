@@ -3,8 +3,8 @@
 namespace ConsoleTest\Controller;
 
 use Console\Controller\GenerateController;
-use Console\Service\DeleteService;
 use Console\Service\GenerateService;
+use Console\Service\PurgeService;
 use ConsoleTest\Bootstrap;
 use Zend\Console\Exception\BadMethodCallException;
 use Zend\Console\Exception\InvalidArgumentException;
@@ -20,13 +20,13 @@ class GenerateControllerTest extends \PHPUnit_Framework_TestCase
 {
     /** @var \PHPUnit_Framework_MockObject_MockObject|GenerateService */
     private $generateServiceMock;
-    /** @var \PHPUnit_Framework_MockObject_MockObject|DeleteService */
-    private $deleteServiceMock;
+    /** @var \PHPUnit_Framework_MockObject_MockObject|PurgeService */
+    private $purgeServiceMock;
 
     public function Setup()
     {
         $this->generateServiceMock = $this->createMock(GenerateService::class);
-        $this->deleteServiceMock = $this->createMock(DeleteService::class);
+        $this->purgeServiceMock = $this->createMock(PurgeService::class);
     }
 
     /**
@@ -42,7 +42,7 @@ class GenerateControllerTest extends \PHPUnit_Framework_TestCase
 
     private function buildController($routMatch)
     {
-        $controller = new GenerateController($this->generateServiceMock, $this->deleteServiceMock);
+        $controller = new GenerateController($this->generateServiceMock, $this->purgeServiceMock);
 
         $serviceManager = Bootstrap::getServiceManager();
         /** @var RouteStackInterface $router */

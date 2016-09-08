@@ -2,14 +2,14 @@
 
 namespace ConsoleTest\Service;
 
-use Console\Service\DeleteService;
+use Console\Service\PurgeService;
 use Elasticsearch\Client;
 use Elasticsearch\Namespaces\IndicesNamespace;
 
 /**
- * @covers Console\Service\DeleteService
+ * @covers Console\Service\PurgeService
  */
-class DeleteServiceTest extends \PHPUnit_Framework_TestCase
+class PurgeServiceTest extends \PHPUnit_Framework_TestCase
 {
     public function testDelete()
     {
@@ -18,7 +18,7 @@ class DeleteServiceTest extends \PHPUnit_Framework_TestCase
         /** @var \PHPUnit_Framework_MockObject_MockObject|IndicesNamespace $indicesMock */
         $indicesMock = $this->createMock(IndicesNamespace::class);
 
-        $service = new DeleteService($serviceMock);
+        $service = new PurgeService($serviceMock);
 
         $serviceMock
             ->expects(self::once())

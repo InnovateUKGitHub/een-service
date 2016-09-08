@@ -3,7 +3,8 @@
 namespace ConsoleTest\Controller;
 
 use Console\Controller\ImportController;
-use Console\Service\ImportService;
+use Console\Service\Import\DeleteService;
+use Console\Service\Import\ImportService;
 use ConsoleTest\Bootstrap;
 use Zend\Console\Exception\BadMethodCallException;
 use Zend\Console\Exception\InvalidArgumentException;
@@ -19,10 +20,13 @@ class ImportControllerTest extends \PHPUnit_Framework_TestCase
 {
     /** @var \PHPUnit_Framework_MockObject_MockObject|ImportService */
     private $importService;
+    /** @var \PHPUnit_Framework_MockObject_MockObject|DeleteService */
+    private $deleteService;
 
     public function Setup()
     {
         $this->importService = $this->createMock(ImportService::class);
+        $this->deleteService = $this->createMock(DeleteService::class);
     }
 
     /**
@@ -38,7 +42,7 @@ class ImportControllerTest extends \PHPUnit_Framework_TestCase
 
     private function buildController($routMatch)
     {
-        $controller = new ImportController($this->importService);
+        $controller = new ImportController($this->importService, $this->deleteService);
 
         $serviceManager = Bootstrap::getServiceManager();
         /** @var RouteStackInterface $router */

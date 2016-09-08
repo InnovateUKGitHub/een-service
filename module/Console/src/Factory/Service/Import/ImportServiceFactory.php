@@ -10,12 +10,7 @@ use Zend\ServiceManager\ServiceManager;
 final class ImportServiceFactory
 {
     const CONFIG_SERVICE = 'config';
-
     const CONFIG_MERLIN = 'merlin';
-
-    const SERVER = 'server';
-
-    const PORT = 'port';
 
     /**
      * @param ServiceManager $serviceManager

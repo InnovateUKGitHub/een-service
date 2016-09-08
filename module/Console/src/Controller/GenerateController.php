@@ -3,8 +3,8 @@
 namespace Console\Controller;
 
 use Console\Helper\Helper;
-use Console\Service\DeleteService;
 use Console\Service\GenerateService;
+use Console\Service\PurgeService;
 use Zend\Console\Exception\BadMethodCallException;
 use Zend\Console\Exception\InvalidArgumentException;
 use Zend\Console\Request;
@@ -14,19 +14,19 @@ final class GenerateController extends AbstractActionController
 {
     /** @var GenerateService */
     private $generateService;
-    /** @var DeleteService */
-    private $deleteService;
+    /** @var PurgeService */
+    private $purgeService;
 
     /**
      * GenerateController constructor.
      *
      * @param GenerateService $generateService
-     * @param DeleteService   $deleteService
+     * @param PurgeService   $purgeService
      */
-    public function __construct(GenerateService $generateService, DeleteService $deleteService)
+    public function __construct(GenerateService $generateService, PurgeService $purgeService)
     {
         $this->generateService = $generateService;
-        $this->deleteService = $deleteService;
+        $this->purgeService = $purgeService;
     }
 
     /**
@@ -67,7 +67,7 @@ final class GenerateController extends AbstractActionController
             throw new InvalidArgumentException('The index enter is not valid');
         }
 
-        $this->deleteService->delete($index);
+        $this->purgeService->delete($index);
 
         return ['delete' => 'success'];
     }

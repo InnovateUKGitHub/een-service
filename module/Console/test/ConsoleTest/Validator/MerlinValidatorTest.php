@@ -51,7 +51,7 @@ class MerlinValidatorTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ];
-        $this->validator = new MerlinValidator($this->loggerMock, $this->config);
+        $this->validator = new MerlinValidator($this->loggerMock);
 
         $xml = '
 <pod>
@@ -70,7 +70,7 @@ class MerlinValidatorTest extends \PHPUnit_Framework_TestCase
 </pod>
 ';
         $merlinData = simplexml_load_string($xml);
-        $this->validator->checkProfileDataExists($merlinData);
+        $this->validator->checkDataExists($merlinData, $this->config);
     }
 
     public function testCheckProfileDataExistsWithoutRequiredValue()
@@ -90,7 +90,7 @@ class MerlinValidatorTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ];
-        $this->validator = new MerlinValidator($this->loggerMock, $this->config);
+        $this->validator = new MerlinValidator($this->loggerMock);
 
         $xml = '
 <pod>
@@ -105,7 +105,7 @@ class MerlinValidatorTest extends \PHPUnit_Framework_TestCase
 </pod>
 ';
         $merlinData = simplexml_load_string($xml);
-        $this->validator->checkProfileDataExists($merlinData);
+        $this->validator->checkDataExists($merlinData, $this->config);
     }
 
     /**
@@ -129,10 +129,10 @@ class MerlinValidatorTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ];
-        $this->validator = new MerlinValidator($this->loggerMock, $this->config);
+        $this->validator = new MerlinValidator($this->loggerMock);
 
         $merlinData = simplexml_load_string('<pod><keyword></keyword></pod>');
-        $this->validator->checkProfileDataExists($merlinData);
+        $this->validator->checkDataExists($merlinData, $this->config);
     }
 
     protected function Setup()

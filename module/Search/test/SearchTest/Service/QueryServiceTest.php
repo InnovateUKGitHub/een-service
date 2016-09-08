@@ -1,6 +1,6 @@
 <?php
 
-namespace ConsoleTest\Service;
+namespace SearchTest\Service;
 
 use Elasticsearch\Client;
 use Elasticsearch\Namespaces\IndicesNamespace;
@@ -59,20 +59,7 @@ class QueryServiceTest extends \PHPUnit_Framework_TestCase
                 'body'    => [
                     'query' => [
                         'bool' => [
-                            'must' => [
-                                [
-                                    'query_string' => [
-                                        'fields' => ['title', 'summary', 'description'],
-                                        'query'  => 'Some* AND Search*',
-                                    ],
-                                ],
-                                [
-                                    'query_string' => [
-                                        'default_field' => 'type',
-                                        'query'         => 'BO* OR RD*',
-                                    ],
-                                ],
-                            ],
+                            'must' => [],
                         ],
                     ],
                 ],
