@@ -42,6 +42,26 @@ class QueryService
         ];
     }
 
+    public function buildRangeQuery($field, $value, $operator)
+    {
+        $this->query[] = [
+            'range' => [
+                $field => [
+                    $operator => $value,
+                ],
+            ],
+        ];
+    }
+
+    public function buildNotNullQuery($field)
+    {
+        $this->query[] = [
+            'exists' => [
+                'field' => $field,
+            ],
+        ];
+    }
+
     /**
      * @param array  $params
      * @param string $index
@@ -68,6 +88,7 @@ class QueryService
         if (!empty($params['sort'])) {
             $query['body']['sort'] = $params['sort'];
         }
+
 //print_r($query); die;
         return $this->convertResult($this->elasticSearch->search($query));
     }
