@@ -19,6 +19,7 @@ return [
             Service\Import\DeleteService::class      => ServiceFactory\Import\DeleteServiceFactory::class,
             Service\Import\OpportunityService::class => ServiceFactory\Import\OpportunityServiceFactory::class,
             Service\Import\EventService::class       => ServiceFactory\Import\EventServiceFactory::class,
+            Service\Import\Event\MerlinIngest::class => ServiceFactory\Import\Event\MerlinIngestFactory::class,
             Service\Merlin\OpportunityMerlin::class  => ServiceFactory\Merlin\OpportunityMerlinFactory::class,
             Service\Merlin\EventMerlin::class        => ServiceFactory\Merlin\EventMerlinFactory::class,
 

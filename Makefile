@@ -66,6 +66,10 @@ import:
 delete:
 	@sh -c "php public/index.php delete"
 
+import-event:
+	@echo "Importing Event..."
+	@sh -c "php public/index.php import --index=event"
+
 delete-all:
 	@sh -c "php public/index.php delete-all"
 

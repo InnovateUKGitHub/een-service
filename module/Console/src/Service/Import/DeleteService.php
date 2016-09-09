@@ -28,7 +28,7 @@ class DeleteService
                 $this->opportunityService->delete($since, new \DateTime());
                 break;
             case ES_INDEX_EVENT:
-                $this->eventService->delete($since, new \DateTime());
+                $this->eventService->delete(new \DateTime());
                 break;
         }
     }

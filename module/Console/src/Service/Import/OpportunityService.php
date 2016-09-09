@@ -44,7 +44,11 @@ class OpportunityService
      */
     public function delete($since, \DateTime $now)
     {
-        $results = $this->indexService->getAll();
+        $results = $this->indexService->getAll(
+            ES_INDEX_OPPORTUNITY,
+            ES_TYPE_OPPORTUNITY,
+            ['date', 'deadline', 'date_import']
+        );
 
         $dateImport = $now->format('Ymd');
         $dateSince = $now->sub(new \DateInterval('P' . $since . 'M'))->format('Ymd');

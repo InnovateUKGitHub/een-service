@@ -34,37 +34,31 @@ class EventMerlin
     }
 
     /**
-     * @param string $month
-     * @param string $type
-     *
      * @return \SimpleXMLElement|null
      */
-    public function getList($month, $type)
+    public function getList()
     {
         $this->client->setPathToService($this->path);
-        $this->client->setQueryParams($this->buildQuery($month, $type));
+        $this->client->setQueryParams($this->buildQuery());
 
         try {
             $result = $this->client->execute();
             return simplexml_load_string(str_replace('utf-16', 'utf-8', $result));
         } catch (HttpException $e) {
-            $this->logger->debug("An error occurred during the retrieve of the $month month");
+            $this->logger->debug("An error occurred during the retrieve of the merlin events");
             $this->logger->debug($e->getMessage());
         } catch (\Exception $e) {
-            $this->logger->debug("An error occurred during the retrieve of the $month month");
+            $this->logger->debug("An error occurred during the retrieve of the merlin events");
             $this->logger->debug($e->getMessage());
         }
 
-        throw new \RuntimeException("An error occurred during the retrieve of the $month month");
+        throw new \RuntimeException("An error occurred during the retrieve of the merlin events");
     }
 
     /**
-     * @param string $month
-     * @param string $type
-     *
      * @return array
      */
-    private function buildQuery($month, $type)
+    private function buildQuery()
     {
         $return = [];
         if (empty($this->username) === false) {

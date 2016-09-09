@@ -32,7 +32,7 @@ class ImportService
                 $this->opportunityService->import($month, $type);
                 break;
             case ES_INDEX_EVENT:
-                $this->eventService->import($month, $type);
+                $this->eventService->import();
                 break;
         }
     }

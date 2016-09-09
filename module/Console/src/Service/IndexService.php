@@ -93,20 +93,23 @@ class IndexService
     }
 
     /**
-     * @param array $results
-     * @param int   $from
-     * @param int   $size
+     * @param string $index
+     * @param string $type
+     * @param array  $source
+     * @param array  $results
+     * @param int    $from
+     * @param int    $size
      *
      * @return array|null
      */
-    public function getAll($results = [], $from = 0, $size = 100)
+    public function getAll($index, $type, $source, $results = [], $from = 0, $size = 100)
     {
         $query = [
-            'index'   => ES_INDEX_OPPORTUNITY,
-            'type'    => ES_TYPE_OPPORTUNITY,
+            'index'   => $index,
+            'type'    => $type,
             'from'    => $from,
             'size'    => $size,
-            '_source' => ['id', 'date', 'deadline', 'date_import'],
+            '_source' => $source,
         ];
 
         try {
@@ -118,7 +121,7 @@ class IndexService
             }
 
             if (count($tmp['hits']['hits']) > 0) {
-                return $this->getAll($results, $from + $size);
+                return $this->getAll($index, $type, $source, $results, $from + $size);
             }
 
             return $results;

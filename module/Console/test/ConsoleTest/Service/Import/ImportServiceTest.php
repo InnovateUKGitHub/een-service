@@ -34,8 +34,7 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
     public function testImportEvent()
     {
         $this->eventServiceMock->expects(self::once())
-            ->method('import')
-            ->with(self::MONTH, 's');
+            ->method('import');
         $this->opportunityServiceMock->expects(self::never())
             ->method('import');
 
