@@ -165,7 +165,7 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
                 'type'    => ES_TYPE_OPPORTUNITY,
                 'from'    => 0,
                 'size'    => 100,
-                '_source' => ['id', 'date', 'deadline', 'date_import'],
+                '_source' => ['date', 'deadline', 'date_import'],
             ])
             ->willReturn(['hits' => ['hits' => ['A hit']]]);
 
@@ -176,11 +176,18 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
                 'type'    => ES_TYPE_OPPORTUNITY,
                 'from'    => 100,
                 'size'    => 100,
-                '_source' => ['id', 'date', 'deadline', 'date_import'],
+                '_source' => ['date', 'deadline', 'date_import'],
             ])
             ->willReturn(['hits' => ['hits' => []]]);
 
-        self::assertEquals(['hits' => ['hits' => ['A hit']]], $this->service->getAll());
+        self::assertEquals(
+            ['hits' => ['hits' => ['A hit']]],
+            $this->service->getAll(
+                ES_INDEX_OPPORTUNITY,
+                ES_TYPE_OPPORTUNITY,
+                ['date', 'deadline', 'date_import']
+            )
+        );
     }
 
     /**
@@ -196,11 +203,15 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
                 'type'    => ES_TYPE_OPPORTUNITY,
                 'from'    => 0,
                 'size'    => 100,
-                '_source' => ['id', 'date', 'deadline', 'date_import'],
+                '_source' => ['date', 'deadline', 'date_import'],
             ])
             ->willThrowException(new \Exception());
 
-        $this->service->getAll();
+        $this->service->getAll(
+            ES_INDEX_OPPORTUNITY,
+            ES_TYPE_OPPORTUNITY,
+            ['date', 'deadline', 'date_import']
+        );
     }
 
     public function testDelete()

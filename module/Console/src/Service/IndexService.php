@@ -16,6 +16,7 @@ class IndexService
     /**
      * @param Client $elasticSearch
      * @param Logger $logger
+     * @param array  $config
      */
     public function __construct(Client $elasticSearch, Logger $logger, $config)
     {
@@ -26,21 +27,13 @@ class IndexService
 
     /**
      * @param string $index
-     *
-     * @return bool
      */
     public function createIndex($index)
     {
         if ($this->exists($index)) {
-            return true;
+            return;
         }
-        switch ($index) {
-            case ES_INDEX_OPPORTUNITY:
-                $this->createOpportunityIndex();
-                break;
-        }
-
-        return false;
+        $this->create($index);
     }
 
     private function exists($index)
@@ -55,11 +48,13 @@ class IndexService
     }
 
     /**
-     * Function to create the mapping of the opportunity index
+     * Function to create the mapping of the elastic index
+     *
+     * @param string $index
      */
-    private function createOpportunityIndex()
+    private function create($index)
     {
-        $params = $this->config[ES_INDEX_OPPORTUNITY];
+        $params = $this->config[$index];
 
         try {
             $this->elasticSearch->indices()->create($params);
@@ -92,25 +87,29 @@ class IndexService
         } catch (\Exception $e) {
             $this->logger->debug('An error occurred during the import of a document');
             $this->logger->debug($e->getMessage());
+            $this->logger->debug($e->getTraceAsString());
         }
         throw new \RuntimeException('An error occurred during the import of a document');
     }
 
     /**
-     * @param array $results
-     * @param int   $from
-     * @param int   $size
+     * @param string $index
+     * @param string $type
+     * @param array  $source
+     * @param array  $results
+     * @param int    $from
+     * @param int    $size
      *
      * @return array|null
      */
-    public function getAll($results = [], $from = 0, $size = 100)
+    public function getAll($index, $type, $source, $results = [], $from = 0, $size = 100)
     {
         $query = [
-            'index'   => ES_INDEX_OPPORTUNITY,
-            'type'    => ES_TYPE_OPPORTUNITY,
+            'index'   => $index,
+            'type'    => $type,
             'from'    => $from,
             'size'    => $size,
-            '_source' => ['id', 'date', 'deadline', 'date_import'],
+            '_source' => $source,
         ];
 
         try {
@@ -122,7 +121,7 @@ class IndexService
             }
 
             if (count($tmp['hits']['hits']) > 0) {
-                return $this->getAll($results, $from + $size);
+                return $this->getAll($index, $type, $source, $results, $from + $size);
             }
 
             return $results;

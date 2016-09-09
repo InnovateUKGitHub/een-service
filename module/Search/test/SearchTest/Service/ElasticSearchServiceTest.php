@@ -1,6 +1,6 @@
 <?php
 
-namespace ConsoleTest\Service;
+namespace SearchTest\Service;
 
 use Search\Service\ElasticSearchService;
 use Search\Service\QueryService;
@@ -18,6 +18,7 @@ class ElasticSearchServiceTest extends \PHPUnit_Framework_TestCase
             'from'   => 0,
             'size'   => 10,
             'search' => 'Some Search',
+            'opportunity_type' => [],
         ];
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|QueryService $queryServiceMock */

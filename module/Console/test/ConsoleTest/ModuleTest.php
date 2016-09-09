@@ -5,18 +5,30 @@ use Console\Controller\GenerateController;
 use Console\Controller\ImportController;
 use Console\Factory\Controller\GenerateControllerFactory;
 use Console\Factory\Controller\ImportControllerFactory;
-use Console\Factory\Service\DeleteServiceFactory;
 use Console\Factory\Service\GenerateServiceFactory;
 use Console\Factory\Service\HttpServiceFactory;
-use Console\Factory\Service\ImportServiceFactory;
+use Console\Factory\Service\Import\DeleteServiceFactory;
+use Console\Factory\Service\Import\Event\MerlinIngestFactory;
+use Console\Factory\Service\Import\EventServiceFactory;
+use Console\Factory\Service\Import\ImportServiceFactory;
+use Console\Factory\Service\Import\OpportunityServiceFactory;
 use Console\Factory\Service\IndexServiceFactory;
+use Console\Factory\Service\Merlin\EventMerlinFactory;
+use Console\Factory\Service\Merlin\OpportunityMerlinFactory;
+use Console\Factory\Service\PurgeServiceFactory;
 use Console\Factory\Validator\MerlinValidatorFactory;
 use Console\Module;
-use Console\Service\DeleteService;
 use Console\Service\GenerateService;
 use Console\Service\HttpService;
-use Console\Service\ImportService;
+use Console\Service\Import\DeleteService;
+use Console\Service\Import\Event\MerlinIngest;
+use Console\Service\Import\EventService;
+use Console\Service\Import\ImportService;
+use Console\Service\Import\OpportunityService;
 use Console\Service\IndexService;
+use Console\Service\Merlin\EventMerlin;
+use Console\Service\Merlin\OpportunityMerlin;
+use Console\Service\PurgeService;
 use Console\Validator\MerlinValidator;
 use Zend\Console\Adapter\AdapterInterface;
 
@@ -48,12 +60,18 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         self::assertEquals(
             [
                 'factories' => [
-                    DeleteService::class   => DeleteServiceFactory::class,
-                    GenerateService::class => GenerateServiceFactory::class,
-                    HttpService::class     => HttpServiceFactory::class,
-                    ImportService::class   => ImportServiceFactory::class,
-                    IndexService::class    => IndexServiceFactory::class,
-                    MerlinValidator::class => MerlinValidatorFactory::class,
+                    GenerateService::class    => GenerateServiceFactory::class,
+                    HttpService::class        => HttpServiceFactory::class,
+                    IndexService::class       => IndexServiceFactory::class,
+                    MerlinValidator::class    => MerlinValidatorFactory::class,
+                    PurgeService::class       => PurgeServiceFactory::class,
+                    ImportService::class      => ImportServiceFactory::class,
+                    DeleteService::class      => DeleteServiceFactory::class,
+                    OpportunityService::class => OpportunityServiceFactory::class,
+                    EventService::class       => EventServiceFactory::class,
+                    OpportunityMerlin::class  => OpportunityMerlinFactory::class,
+                    EventMerlin::class        => EventMerlinFactory::class,
+                    MerlinIngest::class       => MerlinIngestFactory::class,
                 ],
             ],
             $config['service_manager']
@@ -64,10 +82,11 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
                     'routes' => [
                         'import-data'   => [
                             'options' => [
-                                'route'       => 'import [--month=<month>] [--type=<type>]',
+                                'route'       => 'import [--index=<index>] [--month=<month>] [--type=<type>]',
                                 'constraints' => [
                                     'month' => '[1|2|3|4|5|6|7|8|9|10|11|12]',
                                     'type'  => '[s|u]',
+                                    'index' => '[opportunity|event]',
                                 ],
                                 'defaults'    => [
                                     'controller' => ImportController::class,
@@ -77,9 +96,10 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
                         ],
                         'delete-data'   => [
                             'options' => [
-                                'route'       => 'delete [--since=<since>]',
+                                'route'       => 'delete [--index=<index>] [--since=<since>]',
                                 'constraints' => [
                                     'since' => '[\d]+',
+                                    'index' => '[opportunity|event]',
                                 ],
                                 'defaults'    => [
                                     'controller' => ImportController::class,

@@ -193,11 +193,9 @@ class HttpService
     }
 
     /**
-     * @param bool $json
-     *
      * @return string json
      */
-    public function execute($json = true)
+    public function execute()
     {
         $uri = $this->buildUri();
         $this->client->setUri($uri);
@@ -208,17 +206,7 @@ class HttpService
             throw new HttpException($e->getMessage());
         }
 
-        if ($json === false) {
-            return $response->getContent();
-        }
-
-        $rawContent = $response->getBody();
-        $content = json_decode($rawContent, true);
-        if ($content === null) {
-            throw new HttpException('Malformed JSON response: ' . (string)$rawContent);
-        }
-
-        return $content;
+        return $response->getContent();
     }
 
     /**

@@ -22,8 +22,8 @@ final class HttpServiceFactory
             CURLOPT_MAXCONNECTS   => 3,
             CURLOPT_FRESH_CONNECT => true,
         ]);
-        $adapter->setOptions(['timeout' => 30]);
-        $client = new Client(null, ['timeout' => 30]);
+        $adapter->setOptions(['timeout' => 300]);
+        $client = new Client(null, ['timeout' => 300]);
         $client->setAdapter($adapter);
 
         return new HttpService($client);

@@ -4,7 +4,7 @@ namespace Console\Service;
 
 use Elasticsearch\Client;
 
-class DeleteService
+class PurgeService
 {
     /** @var Client */
     private $elasticSearch;
@@ -20,6 +20,8 @@ class DeleteService
     }
 
     /**
+     * Function used only to clean all the indexes
+     *
      * @param $index
      *
      * @return array

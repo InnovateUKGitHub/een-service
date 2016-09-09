@@ -15,7 +15,6 @@
     <testsuites>
         <testsuite name="ElasticSearch">
             <directory>module/Console/test</directory>
-            <directory>module/Ingest/test</directory>
             <directory>module/Search/test</directory>
         </testsuite>
     </testsuites>
@@ -23,7 +22,6 @@
     <filter>
         <whitelist processUncoveredFilesFromWhintitelist="true">
             <directory suffix=".php">module/Console/src</directory>
-            <directory suffix=".php">module/Ingest/src</directory>
             <directory suffix=".php">module/Search/src</directory>
         </whitelist>
     </filter>

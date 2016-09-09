@@ -1,6 +1,6 @@
 <?php
 
-namespace ConsoleTest\Controller;
+namespace SearchTest\Controller;
 
 use Search\Controller\OpportunitiesController;
 use Search\Service\ElasticSearchService;

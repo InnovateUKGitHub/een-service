@@ -3,7 +3,8 @@
 namespace Console\Factory\Controller;
 
 use Console\Controller\ImportController;
-use Console\Service\ImportService;
+use Console\Service\Import\DeleteService;
+use Console\Service\Import\ImportService;
 use Zend\ServiceManager\ServiceManager;
 
 final class ImportControllerFactory
@@ -15,9 +16,9 @@ final class ImportControllerFactory
      */
     public function __invoke(ServiceManager $serviceManager)
     {
-        /** @var ImportService $generateService */
         $importService = $serviceManager->get(ImportService::class);
+        $deleteService = $serviceManager->get(DeleteService::class);
 
-        return new ImportController($importService);
+        return new ImportController($importService, $deleteService);
     }
 }

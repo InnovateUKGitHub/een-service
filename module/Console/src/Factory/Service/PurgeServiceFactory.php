@@ -2,21 +2,21 @@
 
 namespace Console\Factory\Service;
 
-use Console\Service\DeleteService;
+use Console\Service\PurgeService;
 use Elasticsearch\ClientBuilder;
 use Zend\ServiceManager\ServiceManager;
 
-final class DeleteServiceFactory
+final class PurgeServiceFactory
 {
     /**
      * @param ServiceManager $serviceManager
      *
-     * @return DeleteService
+     * @return PurgeService
      */
     public function __invoke(ServiceManager $serviceManager)
     {
         $elasticSearch = ClientBuilder::create()->build();
 
-        return new DeleteService($elasticSearch);
+        return new PurgeService($elasticSearch);
     }
 }

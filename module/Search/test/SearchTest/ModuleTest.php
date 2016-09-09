@@ -2,7 +2,9 @@
 
 namespace SearchTest;
 
+use Search\Controller\EventsController;
 use Search\Controller\OpportunitiesController;
+use Search\Factory\Controller\EventsControllerFactory;
 use Search\Factory\Controller\OpportunitiesControllerFactory;
 use Search\Factory\Service\ElasticSearchServiceFactory;
 use Search\Factory\Service\QueryServiceFactory;
@@ -43,6 +45,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
             [
                 'factories' => [
                     OpportunitiesController::class => OpportunitiesControllerFactory::class,
+                    EventsController::class => EventsControllerFactory::class,
                 ],
             ],
             $config['controllers']
@@ -62,6 +65,18 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
                             ],
                         ],
                     ],
+                    'een.events' => [
+                        'type'    => Segment::class,
+                        'options' => [
+                            'route'       => '/events[/:id]',
+                            'constraints' => [
+                                'id' => '[\d]+\.[\d]+',
+                            ],
+                            'defaults'    => [
+                                'controller' => EventsController::class,
+                            ],
+                        ],
+                    ],
                 ],
             ],
             $config['router']
@@ -70,15 +85,23 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
             [
                 'controllers'            => [
                     OpportunitiesController::class => 'Json',
+                    EventsController::class => 'Json',
                 ],
                 'accept_whitelist'       => [
                     OpportunitiesController::class => [
                         'application/json',
                         'application/*+json',
                     ],
+                    EventsController::class => [
+                        'application/json',
+                        'application/*+json',
+                    ],
                 ],
                 'content_type_whitelist' => [
                     OpportunitiesController::class => [
+                        'application/json',
+                    ],
+                    EventsController::class => [
                         'application/json',
                     ],
                 ],
@@ -89,6 +112,9 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
             [
                 OpportunitiesController::class => [
                     'POST' => OpportunitiesController::class,
+                ],
+                EventsController::class => [
+                    'POST' => EventsController::class,
                 ],
             ],
             $config['zf-content-validation']
@@ -119,6 +145,38 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
                         'validators' => [],
                         'filters'    => [],
                         'name'       => 'opportunity_type',
+                    ],
+                    [
+                        'required'   => false,
+                        'validators' => [],
+                        'filters'    => [],
+                        'name'       => 'sort',
+                    ],
+                    [
+                        'required'   => true,
+                        'validators' => [],
+                        'filters'    => [],
+                        'name'       => 'source',
+                    ],
+                ],
+                EventsController::class => [
+                    [
+                        'required'   => true,
+                        'validators' => [],
+                        'filters'    => [],
+                        'name'       => 'from',
+                    ],
+                    [
+                        'required'   => true,
+                        'validators' => [],
+                        'filters'    => [],
+                        'name'       => 'size',
+                    ],
+                    [
+                        'required'   => false,
+                        'validators' => [],
+                        'filters'    => [],
+                        'name'       => 'search',
                     ],
                     [
                         'required'   => false,
