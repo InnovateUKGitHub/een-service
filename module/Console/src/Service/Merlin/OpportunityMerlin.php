@@ -3,6 +3,7 @@
 namespace Console\Service\Merlin;
 
 use Console\Service\HttpService;
+use Zend\Http\Request;
 use Zend\Json\Server\Exception\HttpException;
 use Zend\Log\Logger;
 
@@ -41,11 +42,9 @@ class OpportunityMerlin
      */
     public function getList($month, $type)
     {
-        $this->client->setPathToService($this->path);
-        $this->client->setQueryParams($this->buildQuery($month, $type));
-
         try {
-            $result = $this->client->execute();
+            $result = $this->client->execute(Request::METHOD_GET, $this->path, $this->buildQuery($month, $type));
+
             return simplexml_load_string($result);
         } catch (HttpException $e) {
             $this->logger->debug("An error occurred during the retrieve of the $month month");

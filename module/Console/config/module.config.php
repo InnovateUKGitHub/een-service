@@ -20,6 +20,7 @@ return [
             Service\Import\OpportunityService::class => ServiceFactory\Import\OpportunityServiceFactory::class,
             Service\Import\EventService::class       => ServiceFactory\Import\EventServiceFactory::class,
             Service\Import\Event\MerlinIngest::class => ServiceFactory\Import\Event\MerlinIngestFactory::class,
+            Service\Import\Event\EventBrite::class   => ServiceFactory\Import\Event\EventBriteFactory::class,
             Service\Merlin\OpportunityMerlin::class  => ServiceFactory\Merlin\OpportunityMerlinFactory::class,
             Service\Merlin\EventMerlin::class        => ServiceFactory\Merlin\EventMerlinFactory::class,
 

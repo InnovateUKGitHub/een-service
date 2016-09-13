@@ -2,10 +2,9 @@
 
 namespace Console\Factory\Service\Merlin;
 
-use Console\Service\HttpService;
+use Console\Factory\Service\HttpServiceFactory;
 use Console\Service\Merlin\OpportunityMerlin;
 use Zend\Http\Exception\InvalidArgumentException;
-use Zend\Http\Request;
 use Zend\Log\Logger;
 use Zend\ServiceManager\ServiceManager;
 
@@ -23,7 +22,7 @@ final class OpportunityMerlinFactory
      */
     public function __invoke(ServiceManager $serviceManager)
     {
-        $client = $serviceManager->get(HttpService::class);
+        $client = (new HttpServiceFactory())->__invoke($serviceManager);
         $config = $serviceManager->get(self::CONFIG_SERVICE);
 
         // Test if the require keys are present in the configuration
@@ -48,11 +47,10 @@ final class OpportunityMerlinFactory
         }
 
         $client->setServer($config[self::CONFIG_MERLIN][self::SERVER]);
-        $client->setPort($config[self::CONFIG_MERLIN][self::PORT]);
 
-        $client->setHttpMethod(Request::METHOD_GET);
         $client->setHeaders([
             'Content-type' => 'application/xml',
+            'Accept' => 'application/xml',
         ]);
 
         $logger = $serviceManager->get(Logger::class);

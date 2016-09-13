@@ -2,6 +2,7 @@
 
 namespace Console\Service\Import;
 
+use Console\Service\Import\Event\EventBrite;
 use Console\Service\Import\Event\MerlinIngest;
 use Console\Service\IndexService;
 use Console\Service\Merlin\EventMerlin;
@@ -14,6 +15,8 @@ class EventService
     private $merlinData;
     /** @var MerlinIngest */
     private $merlinIngest;
+    /** @var EventBrite */
+    private $eventBrite;
 
     /**
      * EventService constructor.
@@ -21,25 +24,29 @@ class EventService
      * @param IndexService $indexService
      * @param EventMerlin  $merlinData
      * @param MerlinIngest $merlinIngest
+     * @param EventBrite    $eventBrite
      */
     public function __construct(
         IndexService $indexService,
         EventMerlin $merlinData,
-        MerlinIngest $merlinIngest
+        MerlinIngest $merlinIngest,
+        EventBrite $eventBrite
     )
     {
         $this->indexService = $indexService;
         $this->merlinData = $merlinData;
         $this->merlinIngest = $merlinIngest;
+        $this->eventBrite = $eventBrite;
     }
 
     public function import()
     {
         $this->indexService->createIndex(ES_INDEX_EVENT);
 
-        $dateImport = (new \DateTime())->format('Ymd');
-
-        $this->merlinIngest->import($this->merlinData->getList(), $dateImport);
+//        $dateImport = (new \DateTime())->format('Ymd');
+//
+//        $this->merlinIngest->import($this->merlinData->getList(), $dateImport);
+        $this->eventBrite->getList();
     }
 
     public function delete(\DateTime $now)
