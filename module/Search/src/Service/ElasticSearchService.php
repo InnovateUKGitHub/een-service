@@ -30,7 +30,7 @@ class ElasticSearchService
 
         $searches = explode(' ', trim($params['search']));
         $this->query->buildQuery(['title', 'summary', 'description'], $searches);
-        if (count($params['opportunity_type']) !== 0) {
+        if (empty($params['opportunity_type']) === false) {
             $this->query->buildQuery(['type'], $params['opportunity_type'], 'OR');
         }
 
