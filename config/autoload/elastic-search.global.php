@@ -102,7 +102,7 @@ return [
                             'closing_date'           => [
                                 'type' => 'date',
                             ],
-                            'contact_attributes'     => [
+                            'url'     => [
                                 'type' => 'string',
                             ],
                             'description'            => [
@@ -148,9 +148,6 @@ return [
                                 'type' => 'string',
                             ],
                             'location_fax'           => [
-                                'type' => 'string',
-                            ],
-                            'location_website'       => [
                                 'type' => 'string',
                             ],
                             'location_contact_name'  => [

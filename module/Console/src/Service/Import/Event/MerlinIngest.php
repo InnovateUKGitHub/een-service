@@ -43,16 +43,18 @@ class MerlinIngest
         foreach ($events->{'event'} as $event) {
             $this->merlinValidator->checkDataExists($event, $this->structure);
 
+            $id = sha1((string)$event->{'EventTitle'}->__toString());
             $params = [
+                'id'                     => $id,
                 'title'                  => (string)$event->{'EventTitle'}->__toString() ?: null,
                 'start_date'             => (string)$event->{'EventStartDate'}->__toString() ?: null,
                 'end_date'               => (string)$event->{'EventEndDate'}->__toString() ?: null,
                 'closing_date'           => (string)$event->{'EventClosingDate'}->__toString() ?: null,
-                'contact_attributes'     => (string)$event->{'ContactAttributes'}->__toString() ?: null,
+                'url'                    => (string)$event->{'ContactAttributes'}->__toString() ?:
+                    ((string)$event->{'location_website'}->__toString() ?: null),
                 'description'            => (string)$event->{'Description'}->__toString() ?: null,
                 'type'                   => (string)$event->{'EventType'}->__toString() ?: null,
                 'style'                  => (string)$event->{'EventStyle'}->__toString() ?: null,
-                'event_status'           => (string)$event->{'EventStatus'}->__toString() ?: null,
                 'host_organisation'      => (string)$event->{'HostOrganisation'}->__toString() ?: null,
                 'country_code'           => (string)$event->{'CountryISO'}->__toString() ?: null,
                 'country'                => (string)$event->{'Country'}->__toString() ?: null,
@@ -65,13 +67,13 @@ class MerlinIngest
                 'location_address'       => (string)$event->{'LocationDetailsEventAddress'}->__toString() ?: null,
                 'location_phone'         => (string)$event->{'LocationDetailsContactTelephone'}->__toString() ?: null,
                 'location_fax'           => (string)$event->{'LocationDetailsContactFax'}->__toString() ?: null,
-                'location_website'       => (string)$event->{'LocationDetailsWebPage'}->__toString() ?: null,
                 'location_contact_name'  => (string)$event->{'LocationContactName'}->__toString() ?: null,
                 'location_contact_fax'   => (string)$event->{'LocationContactFax'}->__toString() ?: null,
                 'location_contact_phone' => (string)$event->{'LocationContactTelephone'}->__toString() ?: null,
                 'location_contact_email' => (string)$event->{'LocationContactEmail'}->__toString() ?: null,
                 'created'                => (string)$event->{'Created'}->__toString() ?: null,
-                'status'                 => (string)$event->{'Status'}->__toString() ?: null,
+                'status'                 => (string)$event->{'Status'}->__toString() ?:
+                    ((string)$event->{'EventStatus'}->__toString() ?: null),
                 'contact_name'           => (string)$event->{'ContactName'}->__toString() ?: null,
                 'contact_phone'          => (string)$event->{'ContactTelephone'}->__toString() ?: null,
                 'contact_fax'            => (string)$event->{'ContactFax'}->__toString() ?: null,
@@ -82,7 +84,7 @@ class MerlinIngest
 
             $this->indexService->index(
                 $params,
-                microtime(true),
+                $id,
                 ES_INDEX_EVENT,
                 ES_TYPE_EVENT
             );

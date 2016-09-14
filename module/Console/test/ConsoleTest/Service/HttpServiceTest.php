@@ -18,7 +18,7 @@ class HttpServiceTest extends \PHPUnit_Framework_TestCase
     const HTTP_SCHEME = 'http';
     const SERVER = 'server';
     const PORT = 80;
-    const PATH_TO_SERVICE = 'path-to-service';
+    const PATH_TO_SERVICE = '/path-to-service';
     const REQUEST_BODY = 'request-body';
     const USER = 'user';
     const PASSWORD = 'password';
@@ -86,11 +86,8 @@ class HttpServiceTest extends \PHPUnit_Framework_TestCase
         $this->clientMock
             ->expects(self::once())
             ->method('setUri')
-            ->with(self::HTTP_SCHEME . '://' . self::SERVER . ':' . self::PORT . '/' . self::PATH_TO_SERVICE);
-        $this->clientMock
-            ->expects(self::once())
-            ->method('setRawBody')
-            ->with(self::REQUEST_BODY);
+            ->with(self::HTTP_SCHEME . '://' . self::SERVER . self::PATH_TO_SERVICE);
+
         $responseMock = $this->createMock(Response::class);
         $responseMock->expects(self::once())
             ->method('getContent')
@@ -100,13 +97,13 @@ class HttpServiceTest extends \PHPUnit_Framework_TestCase
             ->method('send')
             ->willReturn($responseMock);
 
-        $service->setHttpMethod(Request::METHOD_POST);
-        $service->setPathToService(self::PATH_TO_SERVICE);
         $service->setRequestBody(self::REQUEST_BODY);
         $service->setServer(self::SERVER);
-        $service->setPort(self::PORT);
 
-        self::assertEquals('{"success": 1}', $service->execute());
+        self::assertEquals('{"success": 1}', $service->execute(
+            Request::METHOD_POST,
+            self::PATH_TO_SERVICE
+        ));
     }
 
     public function testExecuteThrowExceptionAfterSendException()
@@ -121,6 +118,9 @@ class HttpServiceTest extends \PHPUnit_Framework_TestCase
         $this->expectException(HttpException::class);
         $this->expectExceptionMessage('Send Failed');
 
-        $service->execute();
+        $service->execute(
+            Request::METHOD_POST,
+            self::PATH_TO_SERVICE
+        );
     }
 }

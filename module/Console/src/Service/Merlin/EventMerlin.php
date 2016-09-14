@@ -3,6 +3,7 @@
 namespace Console\Service\Merlin;
 
 use Console\Service\HttpService;
+use Zend\Http\Request;
 use Zend\Json\Server\Exception\HttpException;
 use Zend\Log\Logger;
 
@@ -38,11 +39,9 @@ class EventMerlin
      */
     public function getList()
     {
-        $this->client->setPathToService($this->path);
-        $this->client->setQueryParams($this->buildQuery());
-
         try {
-            $result = $this->client->execute();
+            $result = $this->client->execute(Request::METHOD_GET, $this->path, $this->buildQuery());
+
             return simplexml_load_string(str_replace('utf-16', 'utf-8', $result));
         } catch (HttpException $e) {
             $this->logger->debug("An error occurred during the retrieve of the merlin events");

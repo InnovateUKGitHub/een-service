@@ -11,16 +11,12 @@ class HttpService
 {
     /** @var string */
     private $server;
-    /** @var integer */
-    private $port;
     /** @var string */
     private $userName;
     /** @var string */
     private $password;
     /** @var string */
     private $pathToService;
-    /** @var string */
-    private $version;
     /** @var string http or https */
     private $httpScheme = 'http';
     /** @var string Request::METHOD_GET|PUT|POST|DELETE etc. */
@@ -133,13 +129,13 @@ class HttpService
     }
 
     /**
-     * @param string $version
+     * @param string $scheme
      *
      * @return $this
      */
-    public function setVersion($version)
+    public function setScheme($scheme)
     {
-        $this->version = $version;
+        $this->httpScheme = $scheme;
 
         return $this;
     }
@@ -152,18 +148,6 @@ class HttpService
     public function setServer($server)
     {
         $this->server = $server;
-
-        return $this;
-    }
-
-    /**
-     * @param string $port
-     *
-     * @return $this
-     */
-    public function setPort($port)
-    {
-        $this->port = $port;
 
         return $this;
     }
@@ -193,12 +177,22 @@ class HttpService
     }
 
     /**
+     * @param string $request
+     * @param string $path
+     * @param array  $params
+     *
      * @return string json
      */
-    public function execute()
+    public function execute($request, $path, $params = [])
     {
-        $uri = $this->buildUri();
-        $this->client->setUri($uri);
+        $this->setHttpMethod($request);
+        $this->setPathToService($path);
+
+        if ($params) {
+            $this->client->setParameterGet($params);
+        }
+
+        $this->client->setUri($this->buildUri());
 
         try {
             $response = $this->client->send();
@@ -214,19 +208,14 @@ class HttpService
      */
     private function buildUri()
     {
-        $uri = $this->httpScheme . '://';
         if (!empty($this->userName) || !empty($this->password)) {
-            $uri .= $this->userName . '.' . $this->password . '@';
+            $this->client->setAuth($this->userName, $this->password);
         }
-        $uri .= $this->server;
-        if (!empty($this->port)) {
-            $uri .= ':' . $this->port;
-        }
-        if (!empty($this->version)) {
-            $uri .= '/' . $this->version;
-        }
+
+        $uri = $this->httpScheme . '://' . $this->server;
+
         if (!empty($this->pathToService)) {
-            $uri .= '/' . $this->pathToService;
+            $uri .= $this->pathToService;
         }
 
         return $uri;

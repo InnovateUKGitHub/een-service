@@ -61,7 +61,7 @@ class OpportunityService
                     'delete' => [
                         '_index' => ES_INDEX_OPPORTUNITY,
                         '_type'  => ES_TYPE_OPPORTUNITY,
-                        '_id'    => $document['_source']['id'],
+                        '_id'    => $document['_id'],
                     ],
                 ];
             }
