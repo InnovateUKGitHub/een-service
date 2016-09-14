@@ -60,7 +60,7 @@ class ElasticSearchService
         $searches = explode(' ', trim($params['search']));
         $this->query->buildQuery(['title', 'description'], $searches);
         $this->query->buildRangeQuery('end_date', 'now/d', 'gte');
-        $this->query->buildNotNullQuery(['location_website', 'contact_attributes']);
+        $this->query->buildNotNullQuery(['url']);
 
         return $this->query->search($params, ES_INDEX_EVENT, ES_TYPE_EVENT);
     }

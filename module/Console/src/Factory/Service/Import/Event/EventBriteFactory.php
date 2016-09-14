@@ -4,6 +4,7 @@ namespace Console\Factory\Service\Import\Event;
 
 use Console\Factory\Service\HttpServiceFactory;
 use Console\Service\Import\Event\EventBrite;
+use Console\Service\IndexService;
 use Zend\Log\Logger;
 use Zend\ServiceManager\ServiceManager;
 
@@ -25,6 +26,7 @@ final class EventBriteFactory
     {
         $client = (new HttpServiceFactory())->__invoke($serviceManager);
         $logger = $serviceManager->get(Logger::class);
+        $indexService = $serviceManager->get(IndexService::class);
         $config = $serviceManager->get(self::CONFIG);
 
         if (array_key_exists(self::EVENT_BRITE, $config) === false) {
@@ -42,6 +44,6 @@ final class EventBriteFactory
             ]
         );
 
-        return new EventBrite($client, $logger, $config[self::EVENT_BRITE]);
+        return new EventBrite($client, $indexService, $logger, $config[self::EVENT_BRITE]);
     }
 }

@@ -8,6 +8,7 @@ use Console\Factory\Controller\ImportControllerFactory;
 use Console\Factory\Service\GenerateServiceFactory;
 use Console\Factory\Service\HttpServiceFactory;
 use Console\Factory\Service\Import\DeleteServiceFactory;
+use Console\Factory\Service\Import\Event\EventBriteFactory;
 use Console\Factory\Service\Import\Event\MerlinIngestFactory;
 use Console\Factory\Service\Import\EventServiceFactory;
 use Console\Factory\Service\Import\ImportServiceFactory;
@@ -21,6 +22,7 @@ use Console\Module;
 use Console\Service\GenerateService;
 use Console\Service\HttpService;
 use Console\Service\Import\DeleteService;
+use Console\Service\Import\Event\EventBrite;
 use Console\Service\Import\Event\MerlinIngest;
 use Console\Service\Import\EventService;
 use Console\Service\Import\ImportService;
@@ -72,6 +74,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
                     OpportunityMerlin::class  => OpportunityMerlinFactory::class,
                     EventMerlin::class        => EventMerlinFactory::class,
                     MerlinIngest::class       => MerlinIngestFactory::class,
+                    EventBrite::class         => EventBriteFactory::class,
                 ],
             ],
             $config['service_manager']

@@ -43,10 +43,10 @@ class EventService
     {
         $this->indexService->createIndex(ES_INDEX_EVENT);
 
-//        $dateImport = (new \DateTime())->format('Ymd');
-//
-//        $this->merlinIngest->import($this->merlinData->getList(), $dateImport);
-        $this->eventBrite->getList();
+        $dateImport = (new \DateTime())->format('Ymd');
+
+        $this->merlinIngest->import($this->merlinData->getList(), $dateImport);
+        $this->eventBrite->import($dateImport);
     }
 
     public function delete(\DateTime $now)
