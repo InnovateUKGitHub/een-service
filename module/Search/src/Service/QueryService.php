@@ -9,7 +9,9 @@ class QueryService
     /** @var Client */
     private $elasticSearch;
     /** @var string */
-    private $query;
+    private $must;
+    /** @var string */
+    private $should;
 
     /**
      * QueryService constructor.
@@ -19,7 +21,8 @@ class QueryService
     public function __construct(Client $elasticSearch)
     {
         $this->elasticSearch = $elasticSearch;
-        $this->query = [];
+        $this->must = [];
+        $this->should = [];
     }
 
     /**
@@ -32,9 +35,9 @@ class QueryService
         return $this->elasticSearch->indices()->exists(['index' => $index]);
     }
 
-    public function buildQuery($fields, $values, $operator = 'AND')
+    public function mustQueryString($fields, $values, $operator = 'AND')
     {
-        $this->query[] = [
+        $this->must[] = [
             'query_string' => [
                 'fields' => $fields,
                 'query'  => implode('* ' . $operator . ' ', $values) . '*',
@@ -42,9 +45,9 @@ class QueryService
         ];
     }
 
-    public function buildRangeQuery($field, $value, $operator)
+    public function mustRange($field, $value, $operator)
     {
-        $this->query[] = [
+        $this->must[] = [
             'range' => [
                 $field => [
                     $operator => $value,
@@ -53,11 +56,32 @@ class QueryService
         ];
     }
 
-    public function buildNotNullQuery($field)
+    public function mustExist($field)
     {
-        $this->query[] = [
+        $this->must[] = [
             'exists' => [
                 'field' => $field,
+            ],
+        ];
+    }
+
+    public function mustFuzzy($field, $search)
+    {
+        $this->must[] = [
+            'fuzzy' => [
+                $field => $search,
+            ],
+        ];
+    }
+
+    public function shouldMatchPhrase($field, $search)
+    {
+        $this->should[] = [
+            'match_phrase' => [
+                $field => [
+                    'query' => $search,
+                    'slop'  => 50,
+                ],
             ],
         ];
     }
@@ -78,18 +102,22 @@ class QueryService
             'size'    => $params['size'],
             'body'    => [
                 'query' => [
-                    'bool' => [
-                        'must' => $this->query,
-                    ],
+                    'bool' => [],
                 ],
             ],
             '_source' => $params['source'],
         ];
+        if (!empty($this->must)) {
+            $query['body']['query']['bool']['must'] = $this->must;
+        }
+        if (!empty($this->should)) {
+            $query['body']['query']['bool']['minimum_should_match'] = 1;
+            $query['body']['query']['bool']['should'] = $this->should;
+        }
         if (!empty($params['sort'])) {
             $query['body']['sort'] = $params['sort'];
         }
 
-//print_r($query); die;
         return $this->convertResult($this->elasticSearch->search($query));
     }
 

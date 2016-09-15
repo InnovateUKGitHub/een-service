@@ -103,6 +103,12 @@ return [
                 'required'   => false,
                 'validators' => [],
                 'filters'    => [],
+                'name'       => 'type',
+            ],
+            [
+                'required'   => false,
+                'validators' => [],
+                'filters'    => [],
                 'name'       => 'search',
             ],
             [
