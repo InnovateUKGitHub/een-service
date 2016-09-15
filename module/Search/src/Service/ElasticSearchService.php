@@ -61,12 +61,12 @@ class ElasticSearchService
 
     private function buildTermSearch($search)
     {
-        $searches = explode(' ', trim($search));
-        foreach ($searches as $search) {
-            $this->query->mustFuzzy('title', $search . '~');
-            $this->query->mustFuzzy('summary', $search . '~');
-            $this->query->mustFuzzy('description', $search . '~');
-        }
+//        $searches = explode(' ', trim($search));
+//        foreach ($searches as $search) {
+            $this->query->shouldFuzzy('title', $search);
+            $this->query->shouldFuzzy('summary', $search);
+            $this->query->shouldFuzzy('description', $search);
+//        }
     }
 
     private function buildFullTextSearch($search)

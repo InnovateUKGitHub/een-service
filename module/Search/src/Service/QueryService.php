@@ -74,6 +74,15 @@ class QueryService
         ];
     }
 
+    public function shouldFuzzy($field, $search)
+    {
+        $this->should[] = [
+            'fuzzy' => [
+                $field => $search,
+            ],
+        ];
+    }
+
     public function shouldMatchPhrase($field, $search)
     {
         $this->should[] = [
