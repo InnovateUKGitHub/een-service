@@ -54,6 +54,9 @@ class ElasticSearchService
 
     private function buildPhraseMatching($search)
     {
+//        $searches = explode(' ', trim($search));
+
+//        $this->query->mustMatchPhrase(['title', 'summary', 'description'], $searches);
         $this->query->shouldMatchPhrase('title', $search);
         $this->query->shouldMatchPhrase('summary', $search);
         $this->query->shouldMatchPhrase('description', $search);
@@ -61,18 +64,15 @@ class ElasticSearchService
 
     private function buildTermSearch($search)
     {
-//        $searches = explode(' ', trim($search));
-//        foreach ($searches as $search) {
-            $this->query->shouldFuzzy('title', $search);
-            $this->query->shouldFuzzy('summary', $search);
-            $this->query->shouldFuzzy('description', $search);
-//        }
+        $searches = explode(' ', trim($search));
+
+        $this->query->mustFuzzy(['title^5', 'summary^2', 'description'], $searches);
     }
 
     private function buildFullTextSearch($search)
     {
         $searches = explode(' ', trim($search));
-        $this->query->mustQueryString(['title', 'summary', 'description'], $searches);
+        $this->query->mustQueryString(['title^5', 'summary^2', 'description'], $searches);
     }
 
     public function searchOpportunity($id)

@@ -65,20 +65,22 @@ class QueryService
         ];
     }
 
-    public function mustFuzzy($field, $search)
+    public function mustFuzzy($fields, $values, $operator = 'AND')
     {
         $this->must[] = [
-            'fuzzy' => [
-                $field => $search,
+            'query_string' => [
+                'fields' => $fields,
+                'query'  => implode('~ ' . $operator . ' ', $values) . '~',
             ],
         ];
     }
 
-    public function shouldFuzzy($field, $search)
+    public function shouldFuzzy($fields, $values, $operator = 'AND')
     {
         $this->should[] = [
-            'fuzzy' => [
-                $field => $search,
+            'query_string' => [
+                'fields'               => $fields,
+                'query'                => implode('~ ' . $operator . ' ', $values) . '~',
             ],
         ];
     }
@@ -91,6 +93,17 @@ class QueryService
                     'query' => $search,
                     'slop'  => 50,
                 ],
+            ],
+        ];
+    }
+
+    public function mustMatchPhrase($fields, $values)
+    {
+        $this->must[] = [
+            'query_string' => [
+                'fields'      => $fields,
+                'query'       => implode('~ ', $values) . '~',
+                'phrase_slop' => 50,
             ],
         ];
     }
