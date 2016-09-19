@@ -7,7 +7,7 @@ use Elasticsearch\Namespaces\IndicesNamespace;
 use Search\Service\QueryService;
 
 /**
- * @covers Search\Service\QueryService
+ * @covers \Search\Service\QueryService
  */
 class QueryServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -58,9 +58,7 @@ class QueryServiceTest extends \PHPUnit_Framework_TestCase
                 'size'    => $params['size'],
                 'body'    => [
                     'query' => [
-                        'bool' => [
-                            'must' => [],
-                        ],
+                        'bool' => [],
                     ],
                 ],
                 '_source' => $params['source'],

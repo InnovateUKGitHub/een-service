@@ -28,13 +28,51 @@ class ElasticSearchService
             return ['error' => 'Index not created'];
         }
 
-        $searches = explode(' ', trim($params['search']));
-        $this->query->buildQuery(['title', 'summary', 'description'], $searches);
+        if (empty($params['search'])) {
+            $this->buildFullTextSearch($params['search']);
+        } else {
+            switch ($params['type']) {
+                case 3:
+                    $this->buildPhraseMatching($params['search']);
+                    break;
+                case 2:
+                    $this->buildTermSearch($params['search']);
+                    break;
+                case 1:
+                default:
+                    $this->buildFullTextSearch($params['search']);
+                    break;
+            }
+        }
+
         if (empty($params['opportunity_type']) === false) {
-            $this->query->buildQuery(['type'], $params['opportunity_type'], 'OR');
+            $this->query->mustQueryString(['type'], $params['opportunity_type'], 'OR');
         }
 
         return $this->query->search($params, ES_INDEX_OPPORTUNITY, ES_TYPE_OPPORTUNITY);
+    }
+
+    private function buildPhraseMatching($search)
+    {
+//        $searches = explode(' ', trim($search));
+
+//        $this->query->mustMatchPhrase(['title', 'summary', 'description'], $searches);
+        $this->query->shouldMatchPhrase('title', $search);
+        $this->query->shouldMatchPhrase('summary', $search);
+        $this->query->shouldMatchPhrase('description', $search);
+    }
+
+    private function buildTermSearch($search)
+    {
+        $searches = explode(' ', trim($search));
+
+        $this->query->mustFuzzy(['title^5', 'summary^2', 'description'], $searches);
+    }
+
+    private function buildFullTextSearch($search)
+    {
+        $searches = explode(' ', trim($search));
+        $this->query->mustQueryString(['title^5', 'summary^2', 'description'], $searches);
     }
 
     public function searchOpportunity($id)
@@ -58,9 +96,9 @@ class ElasticSearchService
         }
 
         $searches = explode(' ', trim($params['search']));
-        $this->query->buildQuery(['title', 'description'], $searches);
-        $this->query->buildRangeQuery('end_date', 'now/d', 'gte');
-        $this->query->buildNotNullQuery(['url']);
+        $this->query->mustQueryString(['title', 'description'], $searches);
+        $this->query->mustRange('end_date', 'now/d', 'gte');
+        $this->query->mustExist(['url']);
 
         return $this->query->search($params, ES_INDEX_EVENT, ES_TYPE_EVENT);
     }

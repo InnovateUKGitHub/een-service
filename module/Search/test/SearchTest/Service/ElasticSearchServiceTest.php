@@ -6,7 +6,7 @@ use Search\Service\ElasticSearchService;
 use Search\Service\QueryService;
 
 /**
- * @covers Search\Service\ElasticSearchService
+ * @covers \Search\Service\ElasticSearchService
  */
 class ElasticSearchServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -15,10 +15,11 @@ class ElasticSearchServiceTest extends \PHPUnit_Framework_TestCase
     public function testSearchOpportunities()
     {
         $params = [
-            'from'   => 0,
-            'size'   => 10,
-            'search' => 'Some Search',
+            'from'             => 0,
+            'size'             => 10,
+            'search'           => 'Some Search',
             'opportunity_type' => [],
+            'type'             => 1,
         ];
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|QueryService $queryServiceMock */

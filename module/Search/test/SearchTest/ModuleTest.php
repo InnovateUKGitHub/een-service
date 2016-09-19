@@ -14,7 +14,7 @@ use Search\Service\QueryService;
 use Zend\Router\Http\Segment;
 
 /**
- * @covers Search\Module
+ * @covers \Search\Module
  */
 class ModuleTest extends \PHPUnit_Framework_TestCase
 {
@@ -133,6 +133,12 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
                         'validators' => [],
                         'filters'    => [],
                         'name'       => 'size',
+                    ],
+                    [
+                        'required'   => false,
+                        'validators' => [],
+                        'filters'    => [],
+                        'name'       => 'type',
                     ],
                     [
                         'required'   => false,

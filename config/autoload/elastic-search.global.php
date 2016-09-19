@@ -17,16 +17,18 @@ return [
                                 'type' => 'string',
                             ],
                             'type'               => [
-                                'type' => 'string',
+                                'type'                   => 'string',
                             ],
                             'title'              => [
                                 'type' => 'string',
                             ],
                             'summary'            => [
                                 'type' => 'string',
+                                'position_increment_gap' => 1,
                             ],
                             'description'        => [
                                 'type' => 'string',
+                                'position_increment_gap' => 2,
                             ],
                             'partner_expertise'  => [
                                 'type' => 'string',
@@ -102,7 +104,7 @@ return [
                             'closing_date'           => [
                                 'type' => 'date',
                             ],
-                            'url'     => [
+                            'url'                    => [
                                 'type' => 'string',
                             ],
                             'description'            => [
