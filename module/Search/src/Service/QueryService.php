@@ -8,10 +8,12 @@ class QueryService
 {
     /** @var Client */
     private $elasticSearch;
-    /** @var string */
+    /** @var array */
     private $must;
-    /** @var string */
+    /** @var array */
     private $should;
+    /** @var array */
+    private $highlight;
 
     /**
      * QueryService constructor.
@@ -79,8 +81,8 @@ class QueryService
     {
         $this->should[] = [
             'query_string' => [
-                'fields'               => $fields,
-                'query'                => implode('~ ' . $operator . ' ', $values) . '~',
+                'fields' => $fields,
+                'query'  => implode('~ ' . $operator . ' ', $values) . '~',
             ],
         ];
     }
@@ -106,6 +108,24 @@ class QueryService
                 'phrase_slop' => 50,
             ],
         ];
+    }
+
+    public function highlight($fields, $html = 'span')
+    {
+        $this->highlight = [
+            'pre_tags'            => ['<' . $html . '>'],
+            'post_tags'           => ['</' . $html . '>'],
+            'encoder'             => 'html',
+            'fields'              => [
+                'title'   => ['force_source' => true,],
+                'summary' => ['force_source' => true,],
+            ],
+            'require_field_match' => false,
+        ];
+
+        foreach ($fields as $field) {
+            $this->highlight['fields'][$field] = ['force_source' => true];
+        }
     }
 
     /**
@@ -135,6 +155,9 @@ class QueryService
         if (!empty($this->should)) {
             $query['body']['query']['bool']['minimum_should_match'] = 1;
             $query['body']['query']['bool']['should'] = $this->should;
+        }
+        if (!empty($this->highlight)) {
+            $query['body']['highlight'] = $this->highlight;
         }
         if (!empty($params['sort'])) {
             $query['body']['sort'] = $params['sort'];

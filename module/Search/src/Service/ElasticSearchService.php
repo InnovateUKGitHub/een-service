@@ -42,6 +42,20 @@ class ElasticSearchService
     }
 
     /**
+     * @param string $id
+     *
+     * @return array
+     */
+    public function getOpportunity($id)
+    {
+        if ($this->query->exists(ES_INDEX_OPPORTUNITY) === false) {
+            return ['error' => 'Index not created'];
+        }
+
+        return $this->query->getDocument($id, ES_INDEX_OPPORTUNITY, ES_TYPE_OPPORTUNITY);
+    }
+
+    /**
      * @param array $params
      */
     private function buildSearch($params)
@@ -61,11 +75,22 @@ class ElasticSearchService
                     $this->buildFullTextSearch($params['search']);
                     break;
             }
+
+            $this->query->highlight(['title', 'summary']);
         }
 
         if (empty($params['opportunity_type']) === false) {
             $this->query->mustQueryString(['type'], $params['opportunity_type'], 'OR');
         }
+    }
+
+    /**
+     * @param string $search
+     */
+    private function buildFullTextSearch($search)
+    {
+        $searches = explode(' ', trim($search));
+        $this->query->mustQueryString(['title^5', 'summary^2', 'description'], $searches);
     }
 
     /**
@@ -86,29 +111,6 @@ class ElasticSearchService
         $searches = explode(' ', trim($search));
 
         $this->query->mustFuzzy(['title^5', 'summary^2', 'description'], $searches);
-    }
-
-    /**
-     * @param string $search
-     */
-    private function buildFullTextSearch($search)
-    {
-        $searches = explode(' ', trim($search));
-        $this->query->mustQueryString(['title^5', 'summary^2', 'description'], $searches);
-    }
-
-    /**
-     * @param string $id
-     *
-     * @return array
-     */
-    public function getOpportunity($id)
-    {
-        if ($this->query->exists(ES_INDEX_OPPORTUNITY) === false) {
-            return ['error' => 'Index not created'];
-        }
-
-        return $this->query->getDocument($id, ES_INDEX_OPPORTUNITY, ES_TYPE_OPPORTUNITY);
     }
 
     /**
