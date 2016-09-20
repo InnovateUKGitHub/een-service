@@ -21,9 +21,9 @@ class ContactService
 
     public function create($params)
     {
-        $this->client->login();
-        var_dump($this->client->getServerTimestamp());
-        $this->client->logout();
+        $this->client->login('%%SALESFORCE_GLOBAL_USERNAME%%', '%%SALESFORCE_GLOBAL_PASSWORD%%');
+//        var_dump($this->client->getServerTimestamp());
+//        $this->client->logout();
         return $params;
     }
 
