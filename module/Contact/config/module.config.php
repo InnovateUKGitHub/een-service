@@ -1,11 +1,11 @@
 <?php
 
-namespace Search;
+namespace Contact;
 
-use Contact\Service\ContactService;
+use Contact\Controller\ContactController;
+use Contact\Factory\Controller\ContactControllerFactory;
 use Contact\Factory\Service\ContactServiceFactory;
-use Search\Controller\OpportunitiesController;
-use Search\Factory\Controller\OpportunitiesControllerFactory;
+use Contact\Service\ContactService;
 use Zend\Router\Http\Segment;
 
 return [
@@ -16,20 +16,20 @@ return [
     ],
     'controllers'            => [
         'factories' => [
-            OpportunitiesController::class => OpportunitiesControllerFactory::class,
+            ContactController::class => ContactControllerFactory::class,
         ],
     ],
     'router'                 => [
         'routes' => [
-            'een.opportunities' => [
+            'een.contact' => [
                 'type'    => Segment::class,
                 'options' => [
-                    'route'       => '/opportunities[/:id]',
+                    'route'       => '/contact[/:id]',
                     'constraints' => [
-                        'id' => '[\d\w]+',
+                        'id' => '[\d]+',
                     ],
                     'defaults'    => [
-                        'controller' => OpportunitiesController::class,
+                        'controller' => ContactController::class,
                     ],
                 ],
             ],
@@ -37,68 +37,32 @@ return [
     ],
     'zf-content-negotiation' => [
         'controllers'            => [
-            OpportunitiesController::class => 'Json',
+            ContactController::class => 'Json',
         ],
         'accept_whitelist'       => [
-            OpportunitiesController::class => [
+            ContactController::class => [
                 'application/json',
                 'application/*+json',
             ],
         ],
         'content_type_whitelist' => [
-            OpportunitiesController::class => [
+            ContactController::class => [
                 'application/json',
             ],
         ],
     ],
     'zf-content-validation'  => [
-        OpportunitiesController::class => [
-            'POST' => OpportunitiesController::class,
+        ContactController::class => [
+            'POST' => ContactController::class,
         ],
     ],
     'input_filter_specs'     => [
-        OpportunitiesController::class => [
+        ContactController::class => [
             [
                 'required'   => true,
                 'validators' => [],
                 'filters'    => [],
-                'name'       => 'from',
-            ],
-            [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'size',
-            ],
-            [
-                'required'   => false,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'type',
-            ],
-            [
-                'required'   => false,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'search',
-            ],
-            [
-                'required'   => false,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'opportunity_type',
-            ],
-            [
-                'required'   => false,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'sort',
-            ],
-            [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'source',
+                'name'       => 'name',
             ],
         ],
     ],

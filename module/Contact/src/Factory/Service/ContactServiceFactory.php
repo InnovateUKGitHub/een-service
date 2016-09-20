@@ -2,9 +2,9 @@
 
 namespace Contact\Factory\Service;
 
-use Console\Service\HttpService;
 use Contact\Service\ContactService;
 use Zend\ServiceManager\ServiceManager;
+use Zend\Soap\Client;
 
 final class ContactServiceFactory
 {
@@ -15,8 +15,8 @@ final class ContactServiceFactory
      */
     public function __invoke(ServiceManager $serviceManager)
     {
-        $query = $serviceManager->get(HttpService::class);
+        $soap = new Client(__DIR__ . '/../../../../../config/SF_EEN_Enterprise.wsdl');
 
-        return new ContactService($query);
+        return new ContactService($soap);
     }
 }

@@ -35,4 +35,14 @@ final class ContactController extends AbstractRestfulController
 
         return $this->service->create($params);
     }
+
+    /**
+     * @param string $id
+     *
+     * @return array
+     */
+    public function get($id)
+    {
+        return $this->service->get($id);
+    }
 }

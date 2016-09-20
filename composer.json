@@ -11,7 +11,7 @@
   "homepage": "http://aerian.com/",
   "support": {
     "email": "aerian@aerian.com",
-    "source": "https://devops.innovateuk.org/code-repository/projects/EEN/repos/een-elasticsearch/",
+    "source": "https://devops.innovateuk.org/code-repository/projects/EEN/repos/een-service/",
     "issues": "https://devops.innovateuk.org/issue-tracking/secure/Dashboard.jspa"
   },
   "minimum-stability": "dev",
