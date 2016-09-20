@@ -10,6 +10,7 @@ return [
     'ZF\ContentValidation',
     'Common',
     'Console',
+    'Contact',
     'Mail',
     'Search',
 ];
