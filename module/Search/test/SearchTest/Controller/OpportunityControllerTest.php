@@ -11,7 +11,7 @@ use Zend\Router\Http\RouteMatch;
 use ZF\ContentValidation\InputFilter\InputFilterPlugin;
 
 /**
- * @covers Search\Controller\OpportunitiesController
+ * @covers \Search\Controller\OpportunitiesController
  */
 class OpportunitiesControllerTest extends \PHPUnit_Framework_TestCase
 {
@@ -62,7 +62,7 @@ class OpportunitiesControllerTest extends \PHPUnit_Framework_TestCase
         $elasticSearchServiceMock = $this->createMock(ElasticSearchService::class);
 
         $elasticSearchServiceMock->expects(self::once())
-            ->method('searchOpportunity')
+            ->method('getOpportunity')
             ->with($id)
             ->willReturn(['found' => true]);
 

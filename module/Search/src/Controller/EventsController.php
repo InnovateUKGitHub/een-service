@@ -43,6 +43,6 @@ final class EventsController extends AbstractRestfulController
      */
     public function get($id)
     {
-        return $this->service->searchEvent($id);
+        return $this->service->getEvent($id);
     }
 }

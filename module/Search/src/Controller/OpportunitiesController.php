@@ -43,6 +43,6 @@ final class OpportunitiesController extends AbstractRestfulController
      */
     public function get($id)
     {
-        return $this->service->searchOpportunity($id);
+        return $this->service->getOpportunity($id);
     }
 }

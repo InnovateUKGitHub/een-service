@@ -24,10 +24,28 @@ class ElasticSearchService
      */
     public function searchOpportunities($params)
     {
-        if ($this->query->exists(ES_INDEX_OPPORTUNITY) === false) {
-            return ['error' => 'Index not created'];
+        if (!empty($params['search'])) {
+            try {
+                return $this->getOpportunity($params['search']);
+            } catch (\Exception $e) {
+                // Not Found move on to search
+            }
+        } else {
+            if ($this->query->exists(ES_INDEX_OPPORTUNITY) === false) {
+                return ['error' => 'Index not created'];
+            }
         }
 
+        $this->buildSearch($params);
+
+        return $this->query->search($params, ES_INDEX_OPPORTUNITY, ES_TYPE_OPPORTUNITY);
+    }
+
+    /**
+     * @param array $params
+     */
+    private function buildSearch($params)
+    {
         if (empty($params['search'])) {
             $this->buildFullTextSearch($params['search']);
         } else {
@@ -48,20 +66,21 @@ class ElasticSearchService
         if (empty($params['opportunity_type']) === false) {
             $this->query->mustQueryString(['type'], $params['opportunity_type'], 'OR');
         }
-
-        return $this->query->search($params, ES_INDEX_OPPORTUNITY, ES_TYPE_OPPORTUNITY);
     }
 
+    /**
+     * @param string $search
+     */
     private function buildPhraseMatching($search)
     {
-//        $searches = explode(' ', trim($search));
-
-//        $this->query->mustMatchPhrase(['title', 'summary', 'description'], $searches);
         $this->query->shouldMatchPhrase('title', $search);
         $this->query->shouldMatchPhrase('summary', $search);
         $this->query->shouldMatchPhrase('description', $search);
     }
 
+    /**
+     * @param string $search
+     */
     private function buildTermSearch($search)
     {
         $searches = explode(' ', trim($search));
@@ -69,13 +88,21 @@ class ElasticSearchService
         $this->query->mustFuzzy(['title^5', 'summary^2', 'description'], $searches);
     }
 
+    /**
+     * @param string $search
+     */
     private function buildFullTextSearch($search)
     {
         $searches = explode(' ', trim($search));
         $this->query->mustQueryString(['title^5', 'summary^2', 'description'], $searches);
     }
 
-    public function searchOpportunity($id)
+    /**
+     * @param string $id
+     *
+     * @return array
+     */
+    public function getOpportunity($id)
     {
         if ($this->query->exists(ES_INDEX_OPPORTUNITY) === false) {
             return ['error' => 'Index not created'];
@@ -103,7 +130,12 @@ class ElasticSearchService
         return $this->query->search($params, ES_INDEX_EVENT, ES_TYPE_EVENT);
     }
 
-    public function searchEvent($id)
+    /**
+     * @param string $id
+     *
+     * @return array
+     */
+    public function getEvent($id)
     {
         if ($this->query->exists(ES_INDEX_EVENT) === false) {
             return ['error' => 'Index not created'];

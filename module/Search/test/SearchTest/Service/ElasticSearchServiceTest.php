@@ -25,6 +25,10 @@ class ElasticSearchServiceTest extends \PHPUnit_Framework_TestCase
         /** @var \PHPUnit_Framework_MockObject_MockObject|QueryService $queryServiceMock */
         $queryServiceMock = $this->createMock(QueryService::class);
         $queryServiceMock->expects(self::once())
+            ->method('getDocument')
+            ->with($params['search'], ES_INDEX_OPPORTUNITY, ES_TYPE_OPPORTUNITY)
+            ->willThrowException(new \Exception());
+        $queryServiceMock->expects(self::once())
             ->method('search')
             ->with($params, ES_INDEX_OPPORTUNITY, ES_TYPE_OPPORTUNITY)
             ->willReturn(['success' => true]);
@@ -59,7 +63,7 @@ class ElasticSearchServiceTest extends \PHPUnit_Framework_TestCase
 
         $service = new ElasticSearchService($queryServiceMock);
 
-        self::assertEquals(['success' => true], $service->searchOpportunity(self::OPPORTUNITY_ID));
+        self::assertEquals(['success' => true], $service->getOpportunity(self::OPPORTUNITY_ID));
     }
 
     public function testGetOpportunityNoIndex()
@@ -73,6 +77,6 @@ class ElasticSearchServiceTest extends \PHPUnit_Framework_TestCase
 
         $service = new ElasticSearchService($queryServiceMock);
 
-        self::assertEquals(['error' => 'Index not created'], $service->searchOpportunity(self::OPPORTUNITY_ID));
+        self::assertEquals(['error' => 'Index not created'], $service->getOpportunity(self::OPPORTUNITY_ID));
     }
 }
