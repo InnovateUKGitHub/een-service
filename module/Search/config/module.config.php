@@ -2,6 +2,7 @@
 
 namespace Search;
 
+use Search\Controller\CountryController;
 use Search\Controller\EventsController;
 use Search\Controller\OpportunitiesController;
 use Search\Factory\Controller\EventsControllerFactory;
@@ -10,6 +11,7 @@ use Search\Factory\Service\ElasticSearchServiceFactory;
 use Search\Factory\Service\QueryServiceFactory;
 use Search\Service\ElasticSearchService;
 use Search\Service\QueryService;
+use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 
 return [
@@ -22,7 +24,7 @@ return [
     'controllers'            => [
         'factories' => [
             OpportunitiesController::class => OpportunitiesControllerFactory::class,
-            EventsController::class         => EventsControllerFactory::class,
+            EventsController::class        => EventsControllerFactory::class,
         ],
     ],
     'router'                 => [
@@ -51,19 +53,28 @@ return [
                     ],
                 ],
             ],
+            'een.countries'     => [
+                'type'    => Literal::class,
+                'options' => [
+                    'route'    => '/countries',
+                    'defaults' => [
+                        'controller' => CountryController::class,
+                    ],
+                ],
+            ],
         ],
     ],
     'zf-content-negotiation' => [
         'controllers'            => [
             OpportunitiesController::class => 'Json',
-            EventsController::class => 'Json',
+            EventsController::class        => 'Json',
         ],
         'accept_whitelist'       => [
             OpportunitiesController::class => [
                 'application/json',
                 'application/*+json',
             ],
-            EventsController::class => [
+            EventsController::class        => [
                 'application/json',
                 'application/*+json',
             ],
@@ -72,7 +83,7 @@ return [
             OpportunitiesController::class => [
                 'application/json',
             ],
-            EventsController::class => [
+            EventsController::class        => [
                 'application/json',
             ],
         ],
@@ -81,7 +92,7 @@ return [
         OpportunitiesController::class => [
             'POST' => OpportunitiesController::class,
         ],
-        EventsController::class => [
+        EventsController::class        => [
             'POST' => EventsController::class,
         ],
     ],
@@ -130,7 +141,7 @@ return [
                 'name'       => 'source',
             ],
         ],
-        EventsController::class => [
+        EventsController::class        => [
             [
                 'required'   => true,
                 'validators' => [],

@@ -145,4 +145,9 @@ class ElasticSearchService
 
         return $this->query->getDocument($id, ES_INDEX_EVENT, ES_TYPE_EVENT);
     }
+
+    public function getCountries()
+    {
+        return [];
+    }
 }
