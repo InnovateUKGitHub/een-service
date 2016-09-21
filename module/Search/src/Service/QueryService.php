@@ -152,15 +152,16 @@ class QueryService
             'pre_tags'            => ['<' . $html . '>'],
             'post_tags'           => ['</' . $html . '>'],
             'encoder'             => 'html',
-            'fields'              => [
-                'title'   => ['force_source' => true,],
-                'summary' => ['force_source' => true,],
-            ],
+            'fields'              => [],
             'require_field_match' => false,
         ];
 
         foreach ($fields as $field) {
-            $this->highlight['fields'][$field] = ['force_source' => true];
+            $this->highlight['fields'][$field] = [
+                'fragment_size'       => 0,
+                'number_of_fragments' => 0,
+                'force_source'        => true,
+            ];
         }
     }
 
