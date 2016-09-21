@@ -5,6 +5,7 @@ namespace Search;
 use Search\Controller\CountryController;
 use Search\Controller\EventsController;
 use Search\Controller\OpportunitiesController;
+use Search\Factory\Controller\CountryControllerFactory;
 use Search\Factory\Controller\EventsControllerFactory;
 use Search\Factory\Controller\OpportunitiesControllerFactory;
 use Search\Factory\Service\ElasticSearchServiceFactory;
@@ -23,21 +24,19 @@ return [
     ],
     'controllers'            => [
         'factories' => [
+            CountryController::class       => CountryControllerFactory::class,
             OpportunitiesController::class => OpportunitiesControllerFactory::class,
             EventsController::class        => EventsControllerFactory::class,
         ],
     ],
     'router'                 => [
         'routes' => [
-            'een.opportunities' => [
-                'type'    => Segment::class,
+            'een.countries'     => [
+                'type'    => Literal::class,
                 'options' => [
-                    'route'       => '/opportunities[/:id]',
-                    'constraints' => [
-                        'id' => '[\d\w]+',
-                    ],
-                    'defaults'    => [
-                        'controller' => OpportunitiesController::class,
+                    'route'    => '/countries',
+                    'defaults' => [
+                        'controller' => CountryController::class,
                     ],
                 ],
             ],
@@ -53,12 +52,15 @@ return [
                     ],
                 ],
             ],
-            'een.countries'     => [
-                'type'    => Literal::class,
+            'een.opportunities' => [
+                'type'    => Segment::class,
                 'options' => [
-                    'route'    => '/countries',
-                    'defaults' => [
-                        'controller' => CountryController::class,
+                    'route'       => '/opportunities[/:id]',
+                    'constraints' => [
+                        'id' => '[\d\w]+',
+                    ],
+                    'defaults'    => [
+                        'controller' => OpportunitiesController::class,
                     ],
                 ],
             ],
@@ -66,37 +68,77 @@ return [
     ],
     'zf-content-negotiation' => [
         'controllers'            => [
-            OpportunitiesController::class => 'Json',
+            CountryController::class       => 'Json',
             EventsController::class        => 'Json',
+            OpportunitiesController::class => 'Json',
         ],
         'accept_whitelist'       => [
-            OpportunitiesController::class => [
+            CountryController::class        => [
                 'application/json',
                 'application/*+json',
             ],
             EventsController::class        => [
+                'application/json',
+                'application/*+json',
+            ],
+            OpportunitiesController::class => [
                 'application/json',
                 'application/*+json',
             ],
         ],
         'content_type_whitelist' => [
-            OpportunitiesController::class => [
+            CountryController::class        => [
                 'application/json',
             ],
             EventsController::class        => [
                 'application/json',
             ],
+            OpportunitiesController::class => [
+                'application/json',
+            ],
         ],
     ],
     'zf-content-validation'  => [
-        OpportunitiesController::class => [
-            'POST' => OpportunitiesController::class,
-        ],
         EventsController::class        => [
             'POST' => EventsController::class,
         ],
+        OpportunitiesController::class => [
+            'POST' => OpportunitiesController::class,
+        ],
     ],
     'input_filter_specs'     => [
+        EventsController::class        => [
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'from',
+            ],
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'size',
+            ],
+            [
+                'required'   => false,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'search',
+            ],
+            [
+                'required'   => false,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'sort',
+            ],
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'source',
+            ],
+        ],
         OpportunitiesController::class => [
             [
                 'required'   => true,
@@ -132,33 +174,7 @@ return [
                 'required'   => false,
                 'validators' => [],
                 'filters'    => [],
-                'name'       => 'sort',
-            ],
-            [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'source',
-            ],
-        ],
-        EventsController::class        => [
-            [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'from',
-            ],
-            [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'size',
-            ],
-            [
-                'required'   => false,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'search',
+                'name'       => 'country',
             ],
             [
                 'required'   => false,

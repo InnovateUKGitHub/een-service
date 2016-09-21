@@ -196,4 +196,42 @@ class QueryService
 
         return $this->elasticSearch->get($params);
     }
+
+    public function getCountryList()
+    {
+        $query = [
+            'index' => ES_INDEX_OPPORTUNITY,
+            'type'  => ES_TYPE_OPPORTUNITY,
+            'size'  => 0,
+            'body'  => [
+                'aggs' => [
+                    'country'      => [
+                        'terms' => [
+                            'field' => 'country.raw',
+                        ],
+                    ],
+                    'country_code' => [
+                        'terms' => [
+                            'field' => 'country_code.raw',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        return $this->filterAggregation($this->elasticSearch->search($query));
+    }
+
+    private function filterAggregation($aggregations)
+    {
+        $result = [];
+
+        $i = 0;
+        foreach ($aggregations['aggregations']['country_code']['buckets'] as $countryCode) {
+            $result[$countryCode['key']] = $aggregations['aggregations']['country']['buckets'][$i++]['key'];
+        }
+
+        asort($result);
+        return $result;
+    }
 }

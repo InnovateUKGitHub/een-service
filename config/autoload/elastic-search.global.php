@@ -17,17 +17,17 @@ return [
                                 'type' => 'string',
                             ],
                             'type'               => [
-                                'type'                   => 'string',
+                                'type' => 'string',
                             ],
                             'title'              => [
                                 'type' => 'string',
                             ],
                             'summary'            => [
-                                'type' => 'string',
+                                'type'                   => 'string',
                                 'position_increment_gap' => 1,
                             ],
                             'description'        => [
-                                'type' => 'string',
+                                'type'                   => 'string',
                                 'position_increment_gap' => 2,
                             ],
                             'partner_expertise'  => [
@@ -43,10 +43,22 @@ return [
                                 'type' => 'string',
                             ],
                             'country_code'       => [
-                                'type' => 'string',
+                                'type'   => 'string',
+                                'fields' => [
+                                    'raw' => [
+                                        'type'  => 'string',
+                                        'index' => 'not_analyzed',
+                                    ],
+                                ],
                             ],
                             'country'            => [
                                 'type' => 'string',
+                                'fields' => [
+                                    'raw' => [
+                                        'type'  => 'string',
+                                        'index' => 'not_analyzed',
+                                    ],
+                                ],
                             ],
                             'date_create'        => [
                                 'type' => 'date',

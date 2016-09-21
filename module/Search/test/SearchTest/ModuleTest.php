@@ -2,8 +2,10 @@
 
 namespace SearchTest;
 
+use Search\Controller\CountryController;
 use Search\Controller\EventsController;
 use Search\Controller\OpportunitiesController;
+use Search\Factory\Controller\CountryControllerFactory;
 use Search\Factory\Controller\EventsControllerFactory;
 use Search\Factory\Controller\OpportunitiesControllerFactory;
 use Search\Factory\Service\ElasticSearchServiceFactory;
@@ -11,6 +13,7 @@ use Search\Factory\Service\QueryServiceFactory;
 use Search\Module;
 use Search\Service\ElasticSearchService;
 use Search\Service\QueryService;
+use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 
 /**
@@ -35,8 +38,8 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         self::assertEquals(
             [
                 'factories' => [
-                    ElasticSearchService::class => ElasticSearchServiceFactory::class,
                     QueryService::class         => QueryServiceFactory::class,
+                    ElasticSearchService::class => ElasticSearchServiceFactory::class,
                 ],
             ],
             $config['service_manager']
@@ -44,8 +47,9 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         self::assertEquals(
             [
                 'factories' => [
-                    OpportunitiesController::class => OpportunitiesControllerFactory::class,
+                    CountryController::class => CountryControllerFactory::class,
                     EventsController::class => EventsControllerFactory::class,
+                    OpportunitiesController::class => OpportunitiesControllerFactory::class,
                 ],
             ],
             $config['controllers']
@@ -53,15 +57,12 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         self::assertEquals(
             [
                 'routes' => [
-                    'een.opportunities' => [
-                        'type'    => Segment::class,
+                    'een.countries'     => [
+                        'type'    => Literal::class,
                         'options' => [
-                            'route'       => '/opportunities[/:id]',
-                            'constraints' => [
-                                'id' => '[\d\w]+',
-                            ],
-                            'defaults'    => [
-                                'controller' => OpportunitiesController::class,
+                            'route'    => '/countries',
+                            'defaults' => [
+                                'controller' => CountryController::class,
                             ],
                         ],
                     ],
@@ -77,6 +78,18 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
                             ],
                         ],
                     ],
+                    'een.opportunities' => [
+                        'type'    => Segment::class,
+                        'options' => [
+                            'route'       => '/opportunities[/:id]',
+                            'constraints' => [
+                                'id' => '[\d\w]+',
+                            ],
+                            'defaults'    => [
+                                'controller' => OpportunitiesController::class,
+                            ],
+                        ],
+                    ],
                 ],
             ],
             $config['router']
@@ -84,24 +97,32 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         self::assertEquals(
             [
                 'controllers'            => [
-                    OpportunitiesController::class => 'Json',
+                    CountryController::class => 'Json',
                     EventsController::class => 'Json',
+                    OpportunitiesController::class => 'Json',
                 ],
                 'accept_whitelist'       => [
-                    OpportunitiesController::class => [
+                    CountryController::class => [
                         'application/json',
                         'application/*+json',
                     ],
                     EventsController::class => [
+                        'application/json',
+                        'application/*+json',
+                    ],
+                    OpportunitiesController::class => [
                         'application/json',
                         'application/*+json',
                     ],
                 ],
                 'content_type_whitelist' => [
-                    OpportunitiesController::class => [
+                    CountryController::class => [
                         'application/json',
                     ],
                     EventsController::class => [
+                        'application/json',
+                    ],
+                    OpportunitiesController::class => [
                         'application/json',
                     ],
                 ],
@@ -110,17 +131,49 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         );
         self::assertEquals(
             [
-                OpportunitiesController::class => [
-                    'POST' => OpportunitiesController::class,
-                ],
                 EventsController::class => [
                     'POST' => EventsController::class,
+                ],
+                OpportunitiesController::class => [
+                    'POST' => OpportunitiesController::class,
                 ],
             ],
             $config['zf-content-validation']
         );
         self::assertEquals(
             [
+                EventsController::class => [
+                    [
+                        'required'   => true,
+                        'validators' => [],
+                        'filters'    => [],
+                        'name'       => 'from',
+                    ],
+                    [
+                        'required'   => true,
+                        'validators' => [],
+                        'filters'    => [],
+                        'name'       => 'size',
+                    ],
+                    [
+                        'required'   => false,
+                        'validators' => [],
+                        'filters'    => [],
+                        'name'       => 'search',
+                    ],
+                    [
+                        'required'   => false,
+                        'validators' => [],
+                        'filters'    => [],
+                        'name'       => 'sort',
+                    ],
+                    [
+                        'required'   => true,
+                        'validators' => [],
+                        'filters'    => [],
+                        'name'       => 'source',
+                    ],
+                ],
                 OpportunitiesController::class => [
                     [
                         'required'   => true,
@@ -156,33 +209,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
                         'required'   => false,
                         'validators' => [],
                         'filters'    => [],
-                        'name'       => 'sort',
-                    ],
-                    [
-                        'required'   => true,
-                        'validators' => [],
-                        'filters'    => [],
-                        'name'       => 'source',
-                    ],
-                ],
-                EventsController::class => [
-                    [
-                        'required'   => true,
-                        'validators' => [],
-                        'filters'    => [],
-                        'name'       => 'from',
-                    ],
-                    [
-                        'required'   => true,
-                        'validators' => [],
-                        'filters'    => [],
-                        'name'       => 'size',
-                    ],
-                    [
-                        'required'   => false,
-                        'validators' => [],
-                        'filters'    => [],
-                        'name'       => 'search',
+                        'name'       => 'country',
                     ],
                     [
                         'required'   => false,
