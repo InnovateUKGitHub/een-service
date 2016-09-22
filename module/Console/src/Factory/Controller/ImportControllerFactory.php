@@ -3,8 +3,8 @@
 namespace Console\Factory\Controller;
 
 use Console\Controller\ImportController;
-use Console\Service\Import\DeleteService;
-use Console\Service\Import\ImportService;
+use Console\Service\DeleteService;
+use Console\Service\ImportService;
 use Zend\ServiceManager\ServiceManager;
 
 final class ImportControllerFactory

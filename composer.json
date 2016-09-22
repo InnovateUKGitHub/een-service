@@ -26,14 +26,18 @@
   "autoload": {
     "psr-4": {
       "Application\\": "module/Application/src/",
+      "Common\\": "module/Common/src",
       "Console\\": "module/Console/src",
+      "Mail\\": "module/Mail/src",
       "Search\\": "module/Search/src"
     }
   },
   "autoload-dev": {
     "psr-4": {
       "ApplicationTest\\": "module/Application/test/",
+      "CommonTest\\": "module/Common/test",
       "ConsoleTest\\": "module/Console/test",
+      "MailTest\\": "module/Mail/test",
       "SearchTest\\": "module/Search/test"
     }
   },

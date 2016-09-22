@@ -7,7 +7,7 @@ use Elasticsearch\Client;
 use Elasticsearch\Namespaces\IndicesNamespace;
 
 /**
- * @covers Console\Service\PurgeService
+ * @covers \Console\Service\PurgeService
  */
 class PurgeServiceTest extends \PHPUnit_Framework_TestCase
 {

@@ -7,7 +7,7 @@ use Search\Service\QueryService;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * @covers Search\Factory\Service\QueryServiceFactory
+ * @covers \Search\Factory\Service\QueryServiceFactory
  */
 class QueryServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {

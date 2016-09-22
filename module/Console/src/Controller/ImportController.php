@@ -3,8 +3,8 @@
 namespace Console\Controller;
 
 use Console\Helper\Helper;
-use Console\Service\Import\DeleteService;
-use Console\Service\Import\ImportService;
+use Console\Service\DeleteService;
+use Console\Service\ImportService;
 use Zend\Console\Exception\BadMethodCallException;
 use Zend\Console\Exception\InvalidArgumentException;
 use Zend\Console\Request;

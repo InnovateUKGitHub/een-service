@@ -14,7 +14,7 @@ use Zend\Mvc\MvcEvent;
 use Zend\Router\RouteStackInterface;
 
 /**
- * @covers Console\Controller\GenerateController
+ * @covers \Console\Controller\GenerateController
  */
 class GenerateControllerTest extends \PHPUnit_Framework_TestCase
 {

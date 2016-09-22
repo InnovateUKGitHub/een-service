@@ -8,6 +8,8 @@ return [
     'ZF\ApiProblem',
     'ZF\ContentNegotiation',
     'ZF\ContentValidation',
+    'Common',
     'Console',
+    'Mail',
     'Search',
 ];

@@ -3,7 +3,6 @@
 namespace Search\Controller;
 
 use Search\Service\ElasticSearchService;
-use Zend\InputFilter\InputFilter;
 use Zend\Mvc\Controller\AbstractRestfulController;
 
 final class CountryController extends AbstractRestfulController

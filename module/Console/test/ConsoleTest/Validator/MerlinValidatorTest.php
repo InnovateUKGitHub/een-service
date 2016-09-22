@@ -6,7 +6,7 @@ use Console\Validator\MerlinValidator;
 use Zend\Log\Logger;
 
 /**
- * @covers Console\Validator\MerlinValidator
+ * @covers \Console\Validator\MerlinValidator
  */
 class MerlinValidatorTest extends \PHPUnit_Framework_TestCase
 {

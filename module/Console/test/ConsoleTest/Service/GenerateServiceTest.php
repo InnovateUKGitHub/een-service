@@ -6,7 +6,7 @@ use Console\Service\GenerateService;
 use Console\Service\IndexService;
 
 /**
- * @covers Console\Service\GenerateService
+ * @covers \Console\Service\GenerateService
  */
 class GenerateServiceTest extends \PHPUnit_Framework_TestCase
 {

@@ -8,7 +8,7 @@ use Zend\Log\Logger;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * @covers Console\Factory\Validator\MerlinValidatorFactory
+ * @covers \Console\Factory\Validator\MerlinValidatorFactory
  */
 class MerlinValidatorFactoryTest extends \PHPUnit_Framework_TestCase
 {

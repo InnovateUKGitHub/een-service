@@ -232,6 +232,7 @@ class QueryService
         }
 
         asort($result);
+
         return $result;
     }
 }

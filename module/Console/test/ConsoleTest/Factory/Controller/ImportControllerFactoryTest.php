@@ -4,12 +4,12 @@ namespace ConsoleTest\Factory\Controller;
 
 use Console\Controller\ImportController;
 use Console\Factory\Controller\ImportControllerFactory;
-use Console\Service\Import\DeleteService;
-use Console\Service\Import\ImportService;
+use Console\Service\DeleteService;
+use Console\Service\ImportService;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * @covers Console\Factory\Controller\ImportControllerFactory
+ * @covers \Console\Factory\Controller\ImportControllerFactory
  */
 class ImportControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {

@@ -8,7 +8,7 @@ use Zend\Log\Logger;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * @covers Console\Factory\Service\IndexServiceFactory
+ * @covers \Console\Factory\Service\IndexServiceFactory
  */
 class IndexServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {

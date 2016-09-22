@@ -9,7 +9,7 @@ use Console\Service\PurgeService;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * @covers Console\Factory\Controller\GenerateControllerFactory
+ * @covers \Console\Factory\Controller\GenerateControllerFactory
  */
 class GenerateControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {

@@ -10,19 +10,19 @@ use Console\Validator as Validator;
 return [
     'service_manager' => [
         'factories' => [
-            Service\PurgeService::class    => ServiceFactory\PurgeServiceFactory::class,
+            Service\DeleteService::class   => ServiceFactory\DeleteServiceFactory::class,
             Service\GenerateService::class => ServiceFactory\GenerateServiceFactory::class,
-            Service\HttpService::class     => ServiceFactory\HttpServiceFactory::class,
             Service\IndexService::class    => ServiceFactory\IndexServiceFactory::class,
+            Service\ImportService::class   => ServiceFactory\ImportServiceFactory::class,
+            Service\PurgeService::class    => ServiceFactory\PurgeServiceFactory::class,
 
-            Service\Import\ImportService::class      => ServiceFactory\Import\ImportServiceFactory::class,
-            Service\Import\DeleteService::class      => ServiceFactory\Import\DeleteServiceFactory::class,
-            Service\Import\OpportunityService::class => ServiceFactory\Import\OpportunityServiceFactory::class,
-            Service\Import\EventService::class       => ServiceFactory\Import\EventServiceFactory::class,
-            Service\Import\Event\MerlinIngest::class => ServiceFactory\Import\Event\MerlinIngestFactory::class,
-            Service\Import\Event\EventBrite::class   => ServiceFactory\Import\Event\EventBriteFactory::class,
-            Service\Merlin\OpportunityMerlin::class  => ServiceFactory\Merlin\OpportunityMerlinFactory::class,
-            Service\Merlin\EventMerlin::class        => ServiceFactory\Merlin\EventMerlinFactory::class,
+            Service\Event\EventBrite::class   => ServiceFactory\Event\EventBriteFactory::class,
+            Service\Event\EventMerlin::class  => ServiceFactory\Event\EventMerlinFactory::class,
+            Service\Event\EventService::class => ServiceFactory\Event\EventServiceFactory::class,
+            Service\Event\MerlinIngest::class => ServiceFactory\Event\MerlinIngestFactory::class,
+
+            Service\Opportunity\OpportunityMerlin::class  => ServiceFactory\Opportunity\OpportunityMerlinFactory::class,
+            Service\Opportunity\OpportunityService::class => ServiceFactory\Opportunity\OpportunityServiceFactory::class,
 
             Validator\MerlinValidator::class => ValidatorFactory\MerlinValidatorFactory::class,
         ],

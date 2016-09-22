@@ -3,8 +3,8 @@
 namespace ConsoleTest\Controller;
 
 use Console\Controller\ImportController;
-use Console\Service\Import\DeleteService;
-use Console\Service\Import\ImportService;
+use Console\Service\DeleteService;
+use Console\Service\ImportService;
 use ConsoleTest\Bootstrap;
 use Zend\Console\Exception\BadMethodCallException;
 use Zend\Console\Exception\InvalidArgumentException;
@@ -14,7 +14,7 @@ use Zend\Router\RouteMatch;
 use Zend\Router\RouteStackInterface;
 
 /**
- * @covers Console\Controller\ImportController
+ * @covers \Console\Controller\ImportController
  */
 class ImportControllerTest extends \PHPUnit_Framework_TestCase
 {

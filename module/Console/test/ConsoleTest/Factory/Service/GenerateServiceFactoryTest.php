@@ -8,7 +8,7 @@ use Console\Service\IndexService;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * @covers Console\Factory\Service\GenerateServiceFactory
+ * @covers \Console\Factory\Service\GenerateServiceFactory
  */
 class GenerateServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {

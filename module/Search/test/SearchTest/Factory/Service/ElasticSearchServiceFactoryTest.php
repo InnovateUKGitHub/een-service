@@ -8,7 +8,7 @@ use Search\Service\QueryService;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * @covers Search\Factory\Service\ElasticSearchServiceFactory
+ * @covers \Search\Factory\Service\ElasticSearchServiceFactory
  */
 class ElasticSearchServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {

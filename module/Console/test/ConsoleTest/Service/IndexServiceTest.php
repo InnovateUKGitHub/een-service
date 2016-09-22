@@ -8,7 +8,7 @@ use Elasticsearch\Namespaces\IndicesNamespace;
 use Zend\Log\Logger;
 
 /**
- * @covers Console\Service\IndexService
+ * @covers \Console\Service\IndexService
  */
 class IndexServiceTest extends \PHPUnit_Framework_TestCase
 {

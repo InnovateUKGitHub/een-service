@@ -8,7 +8,7 @@ use Search\Service\ElasticSearchService;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * @covers Search\Factory\Controller\OpportunitiesControllerFactory
+ * @covers \Search\Factory\Controller\OpportunitiesControllerFactory
  */
 class OpportunitiesControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {

@@ -73,7 +73,7 @@ return [
             OpportunitiesController::class => 'Json',
         ],
         'accept_whitelist'       => [
-            CountryController::class        => [
+            CountryController::class       => [
                 'application/json',
                 'application/*+json',
             ],
@@ -87,7 +87,7 @@ return [
             ],
         ],
         'content_type_whitelist' => [
-            CountryController::class        => [
+            CountryController::class       => [
                 'application/json',
             ],
             EventsController::class        => [

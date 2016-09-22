@@ -21,7 +21,7 @@ final class GenerateController extends AbstractActionController
      * GenerateController constructor.
      *
      * @param GenerateService $generateService
-     * @param PurgeService   $purgeService
+     * @param PurgeService    $purgeService
      */
     public function __construct(GenerateService $generateService, PurgeService $purgeService)
     {
