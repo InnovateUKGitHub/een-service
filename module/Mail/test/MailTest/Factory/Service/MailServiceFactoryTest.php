@@ -2,6 +2,7 @@
 
 namespace SearchTest\Factory\Service;
 
+use Common\Service\HttpService;
 use Mail\Factory\Service\MailServiceFactory;
 use Mail\Service\MailService;
 use Zend\ServiceManager\ServiceManager;
@@ -22,7 +23,11 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
         ];
 
         $serviceManager = $this->createMock(ServiceManager::class);
-        $serviceManager->expects(self::once())
+        $serviceManager->expects(self::at(0))
+            ->method('get')
+            ->with(HttpService::class)
+            ->willReturn($this->createMock(HttpService::class));
+        $serviceManager->expects(self::at(1))
             ->method('get')
             ->with('config')
             ->willReturn($config);

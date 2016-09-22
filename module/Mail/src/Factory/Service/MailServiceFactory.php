@@ -2,15 +2,14 @@
 
 namespace Mail\Factory\Service;
 
-use Common\Factory\HttpServiceFactory;
 use Common\Service\HttpService;
 use Mail\Service\MailService;
 use Zend\ServiceManager\ServiceManager;
 
 final class MailServiceFactory
 {
-    const CONFIG_SERVICE = 'config';
-    const CONFIG_TMS = 'gov-delivery';
+    const CONFIG = 'config';
+    const GOV_DELIVERY = 'gov-delivery';
     const SERVER = 'server';
     const SCHEME = 'scheme';
     const TOKEN = 'token';
@@ -23,17 +22,17 @@ final class MailServiceFactory
     public function __invoke(ServiceManager $serviceManager)
     {
         /** @var HttpService $query */
-        $client = (new HttpServiceFactory())->__invoke($serviceManager);
-        $config = $serviceManager->get(self::CONFIG_SERVICE);
+        $client = $serviceManager->get(HttpService::class);
+        $config = $serviceManager->get(self::CONFIG);
 
-        $client->setServer($config[self::CONFIG_TMS][self::SERVER]);
+        $client->setServer($config[self::GOV_DELIVERY][self::SERVER]);
 
         $client->setHeaders([
-            'X-AUTH-TOKEN' => $config[self::CONFIG_TMS][self::TOKEN],
+            'X-AUTH-TOKEN' => $config[self::GOV_DELIVERY][self::TOKEN],
             'Content-type' => 'application/json',
             'Accept'       => 'application/json',
         ]);
-        $client->setScheme($config[self::CONFIG_TMS][self::SCHEME]);
+        $client->setScheme($config[self::GOV_DELIVERY][self::SCHEME]);
 
         return new MailService($client);
     }

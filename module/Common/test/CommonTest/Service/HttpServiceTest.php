@@ -6,6 +6,8 @@ use Common\Service\HttpService;
 use Zend\Http\Client;
 use Zend\Http\Exception\InvalidArgumentException;
 use Zend\Http\Exception\RuntimeException;
+use Zend\Http\Header\ContentType;
+use Zend\Http\Headers;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Json\Server\Exception\HttpException;
@@ -89,9 +91,22 @@ class HttpServiceTest extends \PHPUnit_Framework_TestCase
             ->with(self::HTTP_SCHEME . '://' . self::SERVER . self::PATH_TO_SERVICE);
 
         $responseMock = $this->createMock(Response::class);
+        $headersMock = $this->createMock(Headers::class);
+        $contentTypeMock = $this->createMock(ContentType::class);
+        $responseMock->expects(self::once())
+            ->method('getHeaders')
+            ->willReturn($headersMock);
+        $headersMock->expects(self::once())
+            ->method('get')
+            ->willReturn($contentTypeMock);
+        $contentTypeMock->expects(self::once())
+            ->method('getFieldValue')
+            ->willReturn('text');
+
         $responseMock->expects(self::once())
             ->method('getContent')
             ->willReturn('{"success": 1}');
+
         $this->clientMock
             ->expects(self::once())
             ->method('send')

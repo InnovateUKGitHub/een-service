@@ -10,8 +10,8 @@ use Zend\ServiceManager\ServiceManager;
 
 final class OpportunityMerlinFactory
 {
-    const CONFIG_SERVICE = 'config';
-    const CONFIG_MERLIN = 'merlin';
+    const CONFIG = 'config';
+    const MERLIN = 'merlin';
     const SERVER = 'server';
 
     /**
@@ -21,11 +21,11 @@ final class OpportunityMerlinFactory
      */
     public function __invoke(ServiceManager $serviceManager)
     {
-        $config = $serviceManager->get(self::CONFIG_SERVICE);
+        $config = $serviceManager->get(self::CONFIG);
         $this->checkRequiredConfig($config);
 
         $client = (new HttpServiceFactory())->__invoke($serviceManager);
-        $client->setServer($config[self::CONFIG_MERLIN][self::SERVER]);
+        $client->setServer($config[self::MERLIN][self::SERVER]);
         $client->setHeaders([
             'Content-type' => 'application/xml',
             'Accept'       => 'application/xml',
@@ -33,25 +33,25 @@ final class OpportunityMerlinFactory
 
         $logger = $serviceManager->get(Logger::class);
 
-        return new OpportunityMerlin($client, $logger, $config[self::CONFIG_MERLIN]);
+        return new OpportunityMerlin($client, $logger, $config[self::MERLIN]);
     }
 
     private function checkRequiredConfig($config)
     {
-        if (array_key_exists(self::CONFIG_MERLIN, $config) === false) {
+        if (array_key_exists(self::MERLIN, $config) === false) {
             throw new InvalidArgumentException('The config file is incorrect. Please specify the merlin information');
         }
-        if (array_key_exists(self::SERVER, $config[self::CONFIG_MERLIN]) === false) {
+        if (array_key_exists(self::SERVER, $config[self::MERLIN]) === false) {
             throw new InvalidArgumentException('The config file is incorrect. Please specify the server');
         }
 
-        if (array_key_exists(OpportunityMerlin::PATH_GET_PROFILE, $config[self::CONFIG_MERLIN]) === false) {
+        if (array_key_exists(OpportunityMerlin::PATH_GET_PROFILE, $config[self::MERLIN]) === false) {
             throw new InvalidArgumentException('The config file is incorrect. Please specify the path_get_profile');
         }
-        if (array_key_exists(OpportunityMerlin::USERNAME, $config[self::CONFIG_MERLIN]) === false) {
+        if (array_key_exists(OpportunityMerlin::USERNAME, $config[self::MERLIN]) === false) {
             throw new InvalidArgumentException('The config file is incorrect. Please specify the username');
         }
-        if (array_key_exists(OpportunityMerlin::PASSWORD, $config[self::CONFIG_MERLIN]) === false) {
+        if (array_key_exists(OpportunityMerlin::PASSWORD, $config[self::MERLIN]) === false) {
             throw new InvalidArgumentException('The config file is incorrect. Please specify the password');
         }
     }

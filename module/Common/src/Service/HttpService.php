@@ -181,11 +181,10 @@ class HttpService
      * @param string $path
      * @param array  $params
      * @param array  $body
-     * @param bool   $json
      *
      * @return string json
      */
-    public function execute($request, $path, $params = [], $body = [], $json = false)
+    public function execute($request, $path, $params = [], $body = [])
     {
         $this->setHttpMethod($request);
         $this->setPathToService($path);
@@ -205,11 +204,16 @@ class HttpService
             throw new HttpException($e->getMessage());
         }
 
-        if ($json) {
-            return json_decode($response->getBody(), true);
+        // Return the good content in funtion of his type (at the moment we use only text and json)
+        switch ($response->getHeaders()->get('Content-Type')->getFieldValue()) {
+            case 'application/json; charset=utf-16':
+            case 'application/json; charset=utf-8':
+            case 'application/json':
+                return json_decode($response->getBody(), true);
+            case 'text':
+            default:
+                return $response->getContent();
         }
-
-        return $response->getContent();
     }
 
     /**
