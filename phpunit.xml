@@ -14,19 +14,13 @@
 >
     <testsuites>
         <testsuite name="ElasticSearch">
-            <directory>module/Common/test</directory>
-            <directory>module/Console/test</directory>
-            <directory>module/Mail/test</directory>
-            <directory>module/Search/test</directory>
+            <directory>module/*/test</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist processUncoveredFilesFromWhintitelist="true">
-            <directory suffix=".php">module/Common/src</directory>
-            <directory suffix=".php">module/Console/src</directory>
-            <directory suffix=".php">module/Mail/src</directory>
-            <directory suffix=".php">module/Search/src</directory>
+            <directory suffix=".php">module/*/src</directory>
         </whitelist>
     </filter>
 
