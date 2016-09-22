@@ -82,6 +82,9 @@ class ElasticSearchService
         if (empty($params['opportunity_type']) === false) {
             $this->query->mustQueryString(['type'], $params['opportunity_type'], 'OR');
         }
+        if (empty($params['country']) === false) {
+            $this->query->mustQueryString(['country_code'], $params['country'], 'OR');
+        }
     }
 
     /**
@@ -144,5 +147,10 @@ class ElasticSearchService
         }
 
         return $this->query->getDocument($id, ES_INDEX_EVENT, ES_TYPE_EVENT);
+    }
+
+    public function getCountries()
+    {
+        return $this->query->getCountryList();
     }
 }
