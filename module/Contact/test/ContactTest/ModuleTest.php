@@ -2,15 +2,13 @@
 
 namespace ContactTest;
 
-use Search\Controller\EventsController;
-use Search\Controller\OpportunitiesController;
-use Search\Factory\Controller\EventsControllerFactory;
-use Search\Factory\Controller\OpportunitiesControllerFactory;
-use Search\Factory\Service\ElasticSearchServiceFactory;
-use Search\Factory\Service\QueryServiceFactory;
-use Search\Module;
-use Search\Service\ElasticSearchService;
-use Search\Service\QueryService;
+use Contact\Controller\ContactController;
+use Contact\Factory\Controller\ContactControllerFactory;
+use Contact\Factory\Service\ContactServiceFactory;
+use Contact\Factory\Service\SalesForceServiceFactory;
+use Contact\Module;
+use Contact\Service\ContactService;
+use Contact\Service\SalesForceService;
 use Zend\Router\Http\Segment;
 
 /**
@@ -35,8 +33,8 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         self::assertEquals(
             [
                 'factories' => [
-                    ElasticSearchService::class => ElasticSearchServiceFactory::class,
-                    QueryService::class         => QueryServiceFactory::class,
+                    ContactService::class    => ContactServiceFactory::class,
+                    SalesForceService::class => SalesForceServiceFactory::class,
                 ],
             ],
             $config['service_manager']
@@ -44,8 +42,7 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         self::assertEquals(
             [
                 'factories' => [
-                    OpportunitiesController::class => OpportunitiesControllerFactory::class,
-                    EventsController::class => EventsControllerFactory::class,
+                    ContactController::class => ContactControllerFactory::class,
                 ],
             ],
             $config['controllers']
@@ -53,27 +50,15 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         self::assertEquals(
             [
                 'routes' => [
-                    'een.opportunities' => [
+                    'een.contact' => [
                         'type'    => Segment::class,
                         'options' => [
-                            'route'       => '/opportunities[/:id]',
+                            'route'       => '/contact[/:id]',
                             'constraints' => [
-                                'id' => '[\d\w]+',
+                                'id' => '[\d]+',
                             ],
                             'defaults'    => [
-                                'controller' => OpportunitiesController::class,
-                            ],
-                        ],
-                    ],
-                    'een.events' => [
-                        'type'    => Segment::class,
-                        'options' => [
-                            'route'       => '/events[/:id]',
-                            'constraints' => [
-                                'id' => '[\d]+\.[\d]+',
-                            ],
-                            'defaults'    => [
-                                'controller' => EventsController::class,
+                                'controller' => ContactController::class,
                             ],
                         ],
                     ],
@@ -84,24 +69,16 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         self::assertEquals(
             [
                 'controllers'            => [
-                    OpportunitiesController::class => 'Json',
-                    EventsController::class => 'Json',
+                    ContactController::class => 'Json',
                 ],
                 'accept_whitelist'       => [
-                    OpportunitiesController::class => [
-                        'application/json',
-                        'application/*+json',
-                    ],
-                    EventsController::class => [
+                    ContactController::class => [
                         'application/json',
                         'application/*+json',
                     ],
                 ],
                 'content_type_whitelist' => [
-                    OpportunitiesController::class => [
-                        'application/json',
-                    ],
-                    EventsController::class => [
+                    ContactController::class => [
                         'application/json',
                     ],
                 ],
@@ -110,91 +87,20 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         );
         self::assertEquals(
             [
-                OpportunitiesController::class => [
-                    'POST' => OpportunitiesController::class,
-                ],
-                EventsController::class => [
-                    'POST' => EventsController::class,
+                ContactController::class => [
+                    'POST' => ContactController::class,
                 ],
             ],
             $config['zf-content-validation']
         );
         self::assertEquals(
             [
-                OpportunitiesController::class => [
+                ContactController::class => [
                     [
                         'required'   => true,
                         'validators' => [],
                         'filters'    => [],
-                        'name'       => 'from',
-                    ],
-                    [
-                        'required'   => true,
-                        'validators' => [],
-                        'filters'    => [],
-                        'name'       => 'size',
-                    ],
-                    [
-                        'required'   => false,
-                        'validators' => [],
-                        'filters'    => [],
-                        'name'       => 'type',
-                    ],
-                    [
-                        'required'   => false,
-                        'validators' => [],
-                        'filters'    => [],
-                        'name'       => 'search',
-                    ],
-                    [
-                        'required'   => false,
-                        'validators' => [],
-                        'filters'    => [],
-                        'name'       => 'opportunity_type',
-                    ],
-                    [
-                        'required'   => false,
-                        'validators' => [],
-                        'filters'    => [],
-                        'name'       => 'sort',
-                    ],
-                    [
-                        'required'   => true,
-                        'validators' => [],
-                        'filters'    => [],
-                        'name'       => 'source',
-                    ],
-                ],
-                EventsController::class => [
-                    [
-                        'required'   => true,
-                        'validators' => [],
-                        'filters'    => [],
-                        'name'       => 'from',
-                    ],
-                    [
-                        'required'   => true,
-                        'validators' => [],
-                        'filters'    => [],
-                        'name'       => 'size',
-                    ],
-                    [
-                        'required'   => false,
-                        'validators' => [],
-                        'filters'    => [],
-                        'name'       => 'search',
-                    ],
-                    [
-                        'required'   => false,
-                        'validators' => [],
-                        'filters'    => [],
-                        'name'       => 'sort',
-                    ],
-                    [
-                        'required'   => true,
-                        'validators' => [],
-                        'filters'    => [],
-                        'name'       => 'source',
+                        'name'       => 'name',
                     ],
                 ],
             ],
@@ -218,6 +124,6 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
 
         self::assertArrayHasKey('Zend\Loader\StandardAutoloader', $result);
         self::assertArrayHasKey('namespaces', $result['Zend\Loader\StandardAutoloader']);
-        self::assertArrayHasKey('Search', $result['Zend\Loader\StandardAutoloader']['namespaces']);
+        self::assertArrayHasKey('Contact', $result['Zend\Loader\StandardAutoloader']['namespaces']);
     }
 }

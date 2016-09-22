@@ -2,29 +2,24 @@
 
 namespace Contact\Service;
 
-use Zend\Soap\Client;
-
 class ContactService
 {
-    /** @var Client */
-    private $client;
+    /** @var SalesForceService */
+    private $salesForce;
 
     /**
      * MailService constructor.
      *
-     * @param Client $client
+     * @param SalesForceService $salesForce
      */
-    public function __construct(Client $client)
+    public function __construct(SalesForceService $salesForce)
     {
-        $this->client = $client;
+        $this->salesForce = $salesForce;
     }
 
     public function create($params)
     {
-        $this->client->login('%%SALESFORCE_GLOBAL_USERNAME%%', '%%SALESFORCE_GLOBAL_PASSWORD%%');
-//        var_dump($this->client->getServerTimestamp());
-//        $this->client->logout();
-        return $params;
+        return $this->salesForce->getUserInfo();
     }
 
     public function get($id)

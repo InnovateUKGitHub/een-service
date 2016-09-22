@@ -4,6 +4,7 @@ namespace ContactTest\Factory\Service;
 
 use Contact\Factory\Service\ContactServiceFactory;
 use Contact\Service\ContactService;
+use Contact\Service\SalesForceService;
 use Zend\ServiceManager\ServiceManager;
 
 /**
@@ -17,10 +18,8 @@ class ContactServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager = $this->createMock(ServiceManager::class);
         $serviceManager->expects(self::once())
             ->method('get')
-            ->with('config')
-            ->willReturn([
-                'url' => 'https://cs87.salesforce.com',
-            ]);
+            ->with(SalesForceService::class)
+            ->willReturn($this->createMock(SalesForceService::class));
 
         self::assertInstanceOf(
             ContactService::class,

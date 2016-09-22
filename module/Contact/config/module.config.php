@@ -5,13 +5,16 @@ namespace Contact;
 use Contact\Controller\ContactController;
 use Contact\Factory\Controller\ContactControllerFactory;
 use Contact\Factory\Service\ContactServiceFactory;
+use Contact\Factory\Service\SalesForceServiceFactory;
 use Contact\Service\ContactService;
+use Contact\Service\SalesForceService;
 use Zend\Router\Http\Segment;
 
 return [
     'service_manager'        => [
         'factories' => [
-            ContactService::class => ContactServiceFactory::class,
+            ContactService::class    => ContactServiceFactory::class,
+            SalesForceService::class => SalesForceServiceFactory::class,
         ],
     ],
     'controllers'            => [
