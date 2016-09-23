@@ -2,21 +2,8 @@
 
 namespace Contact\Service;
 
-class LeadService
+class LeadService extends AbstractEntity
 {
-    /** @var SalesForceService */
-    private $salesForce;
-
-    /**
-     * SalesForceService constructor.
-     *
-     * @param SalesForceService $salesForce
-     */
-    public function __construct(SalesForceService $salesForce)
-    {
-        $this->salesForce = $salesForce;
-    }
-
     /**
      * @param array $lead
      *
@@ -24,19 +11,16 @@ class LeadService
      */
     public function create($lead)
     {
-        $newLead = new \stdClass();
-        $newLead->Email = $lead['email'];
+        $lead = new \stdClass();
+        $lead->Email = $lead['email'];
 
         if (isset($lead['lastname'])) {
-            $newLead->LastName = $lead['lastname'];
+            $lead->LastName = $lead['lastname'];
         }
         if (isset($lead['company'])) {
-            $newLead->Company = $lead['company'];
+            $lead->Company = $lead['company'];
         }
 
-        $sObject = new \SoapVar($newLead, SOAP_ENC_OBJECT, 'Lead', $this->salesForce->getNamespace());
-        $sObject = new \SoapParam([$sObject], 'sObjects');
-
-        return $this->salesForce->create($sObject);
+        return $this->createEntity($lead, 'Lead');
     }
 }
