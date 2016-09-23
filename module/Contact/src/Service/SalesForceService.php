@@ -2,7 +2,10 @@
 
 namespace Contact\Service;
 
+use Zend\Http\Response;
 use Zend\Soap\Client;
+use ZF\ApiProblem\ApiProblem;
+use ZF\ApiProblem\ApiProblemResponse;
 
 class SalesForceService
 {
@@ -33,6 +36,26 @@ class SalesForceService
         $this->username = $config[self::USERNAME];
         $this->password = $config[self::PASSWORD] . $config[self::TOKEN];
         $this->namespace = $config[self::SF_NAMESPACE];
+    }
+
+    /**
+     * @return string
+     */
+    public function getNamespace()
+    {
+        return $this->namespace;
+    }
+
+    /**
+     * @return array
+     */
+    public function getUserInfo()
+    {
+        $this->login();
+        $info = $this->client->call('getUserInfo', ['getUserInfo' => []]);
+        $this->logout();
+
+        return json_decode(json_encode($info), true);
     }
 
     public function login()
@@ -66,14 +89,55 @@ class SalesForceService
     }
 
     /**
-     * @return array
+     * @param \SoapParam $object
+     *
+     * @return array|ApiProblemResponse
      */
-    public function getUserInfo()
+    public function create(\SoapParam $object)
     {
         $this->login();
-        $info = $this->client->call('getUserInfo', ['getUserInfo' => []]);
+
+        $response = $this->client->call(
+            'create',
+            ['create' => $object]
+        );
+
         $this->logout();
 
-        return json_decode(json_encode($info), true);
+        if ($response->result->success === false) {
+            return $this->buildValidationErrors($response->result->errors);
+        }
+        $id = $response->result->id;
+
+        return ['id' => $id];
+    }
+
+    public function buildValidationErrors($errors)
+    {
+        $validationMessages = [];
+
+        if (is_array($errors->fields)) {
+            foreach ($errors->fields as $field) {
+                $validationMessages[strtolower($field)] = [
+                    'isEmpty' => 'Value is required and can\'t be empty',
+                ];
+            }
+        } else {
+            $validationMessages[strtolower($errors->fields)] = [
+                'isEmpty' => 'Value is required and can\'t be empty',
+            ];
+        }
+
+        return new ApiProblemResponse(
+            new ApiProblem(
+                Response::STATUS_CODE_422,
+                'Failed Validation',
+                null,
+                null,
+                [
+                    'validation_messages' => $validationMessages,
+                ]
+            )
+        );
     }
 }

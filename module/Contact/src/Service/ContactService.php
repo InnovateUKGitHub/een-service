@@ -8,7 +8,7 @@ class ContactService
     private $salesForce;
 
     /**
-     * MailService constructor.
+     * SalesForceService constructor.
      *
      * @param SalesForceService $salesForce
      */
@@ -17,13 +17,29 @@ class ContactService
         $this->salesForce = $salesForce;
     }
 
-    public function create($params)
+    /**
+     * @param array $account
+     *
+     * @return array
+     */
+    public function create($account)
     {
-        return $this->salesForce->getUserInfo();
-    }
+        $object = new \stdClass();
+        $object->FirstName = $account['firstname'];
+        $object->LastName = $account['lastname'];
+        $object->Email = $account['email'];
+        $object->Phone = $account['phone'];
+        $object->MobilePhone = $account['mobile'];
+        $object->Company = $account['company'];
+        $object->CompanyNumber = $account['company-number'];
+        $object->CompanyPostcode = $account['company-postcode'];
+        $object->CompanyAddress = $account['company-address'];
+        $object->CompanyPhone = $account['company-phone'];
+        $object->CompanyWebsite = $account['company-website'];
 
-    public function get($id)
-    {
-        return $id;
+        $object = new \SoapVar($object, SOAP_ENC_OBJECT, 'Contact', $this->salesForce->getNamespace());
+        $object = new \SoapParam([$object], 'sObjects');
+
+        return $this->salesForce->create($object);
     }
 }

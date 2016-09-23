@@ -2,24 +2,24 @@
 
 namespace Contact\Controller;
 
-use Contact\Service\ContactService;
+use Contact\Service\LeadService;
 use Zend\InputFilter\InputFilter;
 use Zend\Mvc\Controller\AbstractRestfulController;
 
 /**
  * @method InputFilter getInputFilter()
  */
-final class ContactController extends AbstractRestfulController
+final class LeadController extends AbstractRestfulController
 {
-    /** @var ContactService */
+    /** @var LeadService */
     private $service;
 
     /**
-     * ContactController constructor.
+     * LeadController constructor.
      *
-     * @param ContactService $service
+     * @param LeadService $service
      */
-    public function __construct(ContactService $service)
+    public function __construct(LeadService $service)
     {
         $this->service = $service;
     }
