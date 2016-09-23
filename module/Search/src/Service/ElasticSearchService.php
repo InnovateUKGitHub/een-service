@@ -2,6 +2,8 @@
 
 namespace Search\Service;
 
+use Common\Constant\EEN;
+
 class ElasticSearchService
 {
     /** @var QueryService */
@@ -31,14 +33,14 @@ class ElasticSearchService
                 // Not Found move on to search
             }
         } else {
-            if ($this->query->exists(ES_INDEX_OPPORTUNITY) === false) {
+            if ($this->query->exists(EEN::ES_INDEX_OPPORTUNITY) === false) {
                 return ['error' => 'Index not created'];
             }
         }
 
         $this->buildSearch($params);
 
-        return $this->query->search($params, ES_INDEX_OPPORTUNITY, ES_TYPE_OPPORTUNITY);
+        return $this->query->search($params, EEN::ES_INDEX_OPPORTUNITY, EEN::ES_TYPE_OPPORTUNITY);
     }
 
     /**
@@ -48,11 +50,11 @@ class ElasticSearchService
      */
     public function getOpportunity($id)
     {
-        if ($this->query->exists(ES_INDEX_OPPORTUNITY) === false) {
+        if ($this->query->exists(EEN::ES_INDEX_OPPORTUNITY) === false) {
             return ['error' => 'Index not created'];
         }
 
-        return $this->query->getDocument($id, ES_INDEX_OPPORTUNITY, ES_TYPE_OPPORTUNITY);
+        return $this->query->getDocument($id, EEN::ES_INDEX_OPPORTUNITY, EEN::ES_TYPE_OPPORTUNITY);
     }
 
     /**
@@ -123,7 +125,7 @@ class ElasticSearchService
      */
     public function searchEvents($params)
     {
-        if ($this->query->exists(ES_INDEX_EVENT) === false) {
+        if ($this->query->exists(EEN::ES_INDEX_EVENT) === false) {
             return ['error' => 'Index not created'];
         }
 
@@ -132,7 +134,7 @@ class ElasticSearchService
         $this->query->mustRange('end_date', 'now/d', 'gte');
         $this->query->mustExist(['url']);
 
-        return $this->query->search($params, ES_INDEX_EVENT, ES_TYPE_EVENT);
+        return $this->query->search($params, EEN::ES_INDEX_EVENT, EEN::ES_TYPE_EVENT);
     }
 
     /**
@@ -142,13 +144,16 @@ class ElasticSearchService
      */
     public function getEvent($id)
     {
-        if ($this->query->exists(ES_INDEX_EVENT) === false) {
+        if ($this->query->exists(EEN::ES_INDEX_EVENT) === false) {
             return ['error' => 'Index not created'];
         }
 
-        return $this->query->getDocument($id, ES_INDEX_EVENT, ES_TYPE_EVENT);
+        return $this->query->getDocument($id, EEN::ES_INDEX_EVENT, EEN::ES_TYPE_EVENT);
     }
 
+    /**
+     * @return array
+     */
     public function getCountries()
     {
         return $this->query->getCountryList();

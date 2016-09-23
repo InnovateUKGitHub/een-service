@@ -15,7 +15,6 @@ final class OpportunitiesControllerFactory
      */
     public function __invoke(ServiceManager $serviceManager)
     {
-        /** @var ElasticSearchService $service */
         $service = $serviceManager->get(ElasticSearchService::class);
 
         return new OpportunitiesController($service);

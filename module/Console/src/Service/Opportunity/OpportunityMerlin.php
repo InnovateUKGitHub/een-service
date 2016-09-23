@@ -9,10 +9,6 @@ use Zend\Log\Logger;
 
 class OpportunityMerlin
 {
-    const USERNAME = 'username';
-    const PASSWORD = 'password';
-    const PATH_GET_PROFILE = 'path-get-profile';
-
     /** @var string */
     private $username;
     /** @var string */
@@ -25,13 +21,23 @@ class OpportunityMerlin
     /** @var Logger */
     private $logger;
 
-    public function __construct(HttpService $client, Logger $logger, $config)
+    /**
+     * EventMerlin constructor.
+     *
+     * @param HttpService $client
+     * @param Logger      $logger
+     * @param string      $username
+     * @param string      $password
+     * @param string      $path
+     */
+    public function __construct(HttpService $client, Logger $logger, $username, $password, $path)
     {
         $this->client = $client;
-        $this->username = $config[self::USERNAME];
-        $this->password = $config[self::PASSWORD];
-        $this->path = $config[self::PATH_GET_PROFILE];
         $this->logger = $logger;
+
+        $this->username = $username;
+        $this->password = $password;
+        $this->path = $path;
     }
 
     /**

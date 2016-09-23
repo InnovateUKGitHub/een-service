@@ -2,6 +2,7 @@
 
 namespace ConsoleTest\Service;
 
+use Common\Constant\EEN;
 use Console\Service\IndexService;
 use Elasticsearch\Client;
 use Elasticsearch\Namespaces\IndicesNamespace;
@@ -35,7 +36,7 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
 
         $indicesMock->expects(self::once())
             ->method('exists')
-            ->with(['index' => ES_INDEX_OPPORTUNITY])
+            ->with(['index' => EEN::ES_INDEX_OPPORTUNITY])
             ->willReturn(false);
 
         $indicesMock->expects(self::once())
@@ -44,7 +45,7 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
                 'Some Index Information' => '',
             ]);
 
-        $this->service->createIndex(ES_INDEX_OPPORTUNITY);
+        $this->service->createIndex(EEN::ES_INDEX_OPPORTUNITY);
     }
 
     public function testCreateIndexAlreadyCreated()
@@ -57,10 +58,10 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
 
         $indicesMock->expects(self::once())
             ->method('exists')
-            ->with(['index' => ES_INDEX_OPPORTUNITY])
+            ->with(['index' => EEN::ES_INDEX_OPPORTUNITY])
             ->willReturn(true);
 
-        $this->service->createIndex(ES_INDEX_OPPORTUNITY);
+        $this->service->createIndex(EEN::ES_INDEX_OPPORTUNITY);
     }
 
     /**
@@ -77,10 +78,10 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
 
         $indicesMock->expects(self::once())
             ->method('exists')
-            ->with(['index' => ES_INDEX_OPPORTUNITY])
+            ->with(['index' => EEN::ES_INDEX_OPPORTUNITY])
             ->willThrowException(new \Exception());
 
-        $this->service->createIndex(ES_INDEX_OPPORTUNITY);
+        $this->service->createIndex(EEN::ES_INDEX_OPPORTUNITY);
     }
 
     /**
@@ -97,7 +98,7 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
 
         $indicesMock->expects(self::once())
             ->method('exists')
-            ->with(['index' => ES_INDEX_OPPORTUNITY])
+            ->with(['index' => EEN::ES_INDEX_OPPORTUNITY])
             ->willReturn(false);
 
         $indicesMock->expects(self::once())
@@ -107,7 +108,7 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
             ])
             ->willThrowException(new \Exception());
 
-        $this->service->createIndex(ES_INDEX_OPPORTUNITY);
+        $this->service->createIndex(EEN::ES_INDEX_OPPORTUNITY);
     }
 
     public function testIndex()
@@ -116,8 +117,8 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
             ->method('index')
             ->with([
                 'body'  => 'body',
-                'index' => ES_INDEX_OPPORTUNITY,
-                'type'  => ES_TYPE_OPPORTUNITY,
+                'index' => EEN::ES_INDEX_OPPORTUNITY,
+                'type'  => EEN::ES_TYPE_OPPORTUNITY,
                 'id'    => 1,
             ])
             ->willReturn(true);
@@ -126,8 +127,8 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
             $this->service->index(
                 'body',
                 1,
-                ES_INDEX_OPPORTUNITY,
-                ES_TYPE_OPPORTUNITY
+                EEN::ES_INDEX_OPPORTUNITY,
+                EEN::ES_TYPE_OPPORTUNITY
             )
         );
     }
@@ -142,8 +143,8 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
             ->method('index')
             ->with([
                 'body'  => 'body',
-                'index' => ES_INDEX_OPPORTUNITY,
-                'type'  => ES_TYPE_OPPORTUNITY,
+                'index' => EEN::ES_INDEX_OPPORTUNITY,
+                'type'  => EEN::ES_TYPE_OPPORTUNITY,
                 'id'    => 1,
             ])
             ->willThrowException(new \Exception());
@@ -151,8 +152,8 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
         $this->service->index(
             'body',
             1,
-            ES_INDEX_OPPORTUNITY,
-            ES_TYPE_OPPORTUNITY
+            EEN::ES_INDEX_OPPORTUNITY,
+            EEN::ES_TYPE_OPPORTUNITY
         );
     }
 
@@ -161,8 +162,8 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
         $this->clientMock->expects(self::at(0))
             ->method('search')
             ->with([
-                'index'   => ES_INDEX_OPPORTUNITY,
-                'type'    => ES_TYPE_OPPORTUNITY,
+                'index'   => EEN::ES_INDEX_OPPORTUNITY,
+                'type'    => EEN::ES_TYPE_OPPORTUNITY,
                 'from'    => 0,
                 'size'    => 100,
                 '_source' => ['date', 'deadline', 'date_import'],
@@ -172,8 +173,8 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
         $this->clientMock->expects(self::at(1))
             ->method('search')
             ->with([
-                'index'   => ES_INDEX_OPPORTUNITY,
-                'type'    => ES_TYPE_OPPORTUNITY,
+                'index'   => EEN::ES_INDEX_OPPORTUNITY,
+                'type'    => EEN::ES_TYPE_OPPORTUNITY,
                 'from'    => 100,
                 'size'    => 100,
                 '_source' => ['date', 'deadline', 'date_import'],
@@ -183,8 +184,8 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
         self::assertEquals(
             ['hits' => ['hits' => ['A hit']]],
             $this->service->getAll(
-                ES_INDEX_OPPORTUNITY,
-                ES_TYPE_OPPORTUNITY,
+                EEN::ES_INDEX_OPPORTUNITY,
+                EEN::ES_TYPE_OPPORTUNITY,
                 ['date', 'deadline', 'date_import']
             )
         );
@@ -199,8 +200,8 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
         $this->clientMock->expects(self::once())
             ->method('search')
             ->with([
-                'index'   => ES_INDEX_OPPORTUNITY,
-                'type'    => ES_TYPE_OPPORTUNITY,
+                'index'   => EEN::ES_INDEX_OPPORTUNITY,
+                'type'    => EEN::ES_TYPE_OPPORTUNITY,
                 'from'    => 0,
                 'size'    => 100,
                 '_source' => ['date', 'deadline', 'date_import'],
@@ -208,8 +209,8 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
             ->willThrowException(new \Exception());
 
         $this->service->getAll(
-            ES_INDEX_OPPORTUNITY,
-            ES_TYPE_OPPORTUNITY,
+            EEN::ES_INDEX_OPPORTUNITY,
+            EEN::ES_TYPE_OPPORTUNITY,
             ['date', 'deadline', 'date_import']
         );
     }
@@ -240,7 +241,7 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
     protected function Setup()
     {
         $config = [
-            ES_INDEX_OPPORTUNITY => [
+            EEN::ES_INDEX_OPPORTUNITY => [
                 'Some Index Information' => '',
             ],
         ];

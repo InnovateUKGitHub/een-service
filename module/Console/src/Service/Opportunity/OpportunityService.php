@@ -2,6 +2,7 @@
 
 namespace Console\Service\Opportunity;
 
+use Common\Constant\EEN;
 use Console\Service\IndexService;
 use Console\Validator\MerlinValidator;
 
@@ -44,8 +45,8 @@ class OpportunityService
     public function delete($since, \DateTime $now)
     {
         $results = $this->indexService->getAll(
-            ES_INDEX_OPPORTUNITY,
-            ES_TYPE_OPPORTUNITY,
+            EEN::ES_INDEX_OPPORTUNITY,
+            EEN::ES_TYPE_OPPORTUNITY,
             ['date', 'deadline', 'date_import']
         );
 
@@ -58,8 +59,8 @@ class OpportunityService
             ) {
                 $body['body'][] = [
                     'delete' => [
-                        '_index' => ES_INDEX_OPPORTUNITY,
-                        '_type'  => ES_TYPE_OPPORTUNITY,
+                        '_index' => EEN::ES_INDEX_OPPORTUNITY,
+                        '_type'  => EEN::ES_TYPE_OPPORTUNITY,
                         '_id'    => $document['_id'],
                     ],
                 ];
@@ -73,11 +74,15 @@ class OpportunityService
         $this->indexService->delete($body);
     }
 
+    /**
+     * @param string $month
+     * @param string $type
+     */
     public function import($month, $type)
     {
         $results = $this->merlinData->getList($month, $type);
 
-        $this->indexService->createIndex(ES_INDEX_OPPORTUNITY);
+        $this->indexService->createIndex(EEN::ES_INDEX_OPPORTUNITY);
 
         $this->merlinValidator->checkProfilesExists($results);
 
@@ -122,8 +127,8 @@ class OpportunityService
             $this->indexService->index(
                 $params,
                 $id,
-                ES_INDEX_OPPORTUNITY,
-                ES_TYPE_OPPORTUNITY
+                EEN::ES_INDEX_OPPORTUNITY,
+                EEN::ES_TYPE_OPPORTUNITY
             );
         }
     }

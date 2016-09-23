@@ -12,7 +12,6 @@ return [
         ],
     ],
     'curl-opt'     => [
-        'encoding'         => 'deflate',
         'max-connection'   => 3,
         'fresh-connection' => true,
         'timeout'          => 300,

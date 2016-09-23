@@ -15,7 +15,6 @@ final class ElasticSearchServiceFactory
      */
     public function __invoke(ServiceManager $serviceManager)
     {
-        /** @var QueryService $query */
         $query = $serviceManager->get(QueryService::class);
 
         return new ElasticSearchService($query);

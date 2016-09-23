@@ -9,8 +9,6 @@ use Zend\Log\Logger;
 
 class EventBrite
 {
-    const EVENTS_PATH = 'events-path';
-
     /** @var HttpService */
     private $client;
     /** @var IndexService */
@@ -18,18 +16,29 @@ class EventBrite
     /** @var Logger */
     private $logger;
 
-    public function __construct(HttpService $client, IndexService $indexService, Logger $logger, $config)
+    /**
+     * EventBrite constructor.
+     *
+     * @param HttpService  $client
+     * @param IndexService $indexService
+     * @param Logger       $logger
+     * @param string       $eventPath
+     */
+    public function __construct(HttpService $client, IndexService $indexService, Logger $logger, $eventPath)
     {
         $this->client = $client;
         $this->indexService = $indexService;
         $this->logger = $logger;
 
-        $this->eventsPath = $config[self::EVENTS_PATH];
+        $this->eventsPath = $eventPath;
     }
 
+    /**
+     * @param string $dateImport
+     */
     public function import($dateImport)
     {
-        $results = $content = json_decode($this->client->execute(Request::METHOD_GET, $this->eventsPath), true);
+        $results = $content = $this->client->execute(Request::METHOD_GET, $this->eventsPath);
 
         foreach ($results['events'] as $event) {
             $params = [

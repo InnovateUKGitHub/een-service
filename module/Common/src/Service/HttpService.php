@@ -212,7 +212,7 @@ class HttpService
                 return json_decode($response->getBody(), true);
             case 'text':
             default:
-                return $response->getContent();
+                return $response->getBody();
         }
     }
 

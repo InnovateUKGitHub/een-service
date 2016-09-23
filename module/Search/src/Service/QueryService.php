@@ -2,6 +2,7 @@
 
 namespace Search\Service;
 
+use Common\Constant\EEN;
 use Elasticsearch\Client;
 
 class QueryService
@@ -37,6 +38,11 @@ class QueryService
         return $this->elasticSearch->indices()->exists(['index' => $index]);
     }
 
+    /**
+     * @param array  $fields
+     * @param array  $values
+     * @param string $operator
+     */
     public function mustQueryString($fields, $values, $operator = 'AND')
     {
         $this->must[] = [
@@ -47,6 +53,11 @@ class QueryService
         ];
     }
 
+    /**
+     * @param string $field
+     * @param string $value
+     * @param string $operator
+     */
     public function mustRange($field, $value, $operator)
     {
         $this->must[] = [
@@ -58,6 +69,9 @@ class QueryService
         ];
     }
 
+    /**
+     * @param string $field
+     */
     public function mustExist($field)
     {
         $this->must[] = [
@@ -67,6 +81,11 @@ class QueryService
         ];
     }
 
+    /**
+     * @param array  $fields
+     * @param array  $values
+     * @param string $operator
+     */
     public function mustFuzzy($fields, $values, $operator = 'AND')
     {
         $this->must[] = [
@@ -77,6 +96,11 @@ class QueryService
         ];
     }
 
+    /**
+     * @param array  $fields
+     * @param array  $values
+     * @param string $operator
+     */
     public function shouldFuzzy($fields, $values, $operator = 'AND')
     {
         $this->should[] = [
@@ -87,6 +111,10 @@ class QueryService
         ];
     }
 
+    /**
+     * @param string $field
+     * @param string $search
+     */
     public function shouldMatchPhrase($field, $search)
     {
         $this->should[] = [
@@ -99,6 +127,10 @@ class QueryService
         ];
     }
 
+    /**
+     * @param array $fields
+     * @param array $values
+     */
     public function mustMatchPhrase($fields, $values)
     {
         $this->must[] = [
@@ -110,6 +142,10 @@ class QueryService
         ];
     }
 
+    /**
+     * @param array  $fields
+     * @param string $html
+     */
     public function highlight($fields, $html = 'span')
     {
         $this->highlight = [
@@ -197,11 +233,14 @@ class QueryService
         return $this->elasticSearch->get($params);
     }
 
+    /**
+     * @return array
+     */
     public function getCountryList()
     {
         $query = [
-            'index' => ES_INDEX_OPPORTUNITY,
-            'type'  => ES_TYPE_OPPORTUNITY,
+            'index' => EEN::ES_INDEX_OPPORTUNITY,
+            'type'  => EEN::ES_TYPE_OPPORTUNITY,
             'size'  => 0,
             'body'  => [
                 'aggs' => [
@@ -222,6 +261,11 @@ class QueryService
         return $this->filterAggregation($this->elasticSearch->search($query));
     }
 
+    /**
+     * @param array $aggregations
+     *
+     * @return array
+     */
     private function filterAggregation($aggregations)
     {
         $result = [];

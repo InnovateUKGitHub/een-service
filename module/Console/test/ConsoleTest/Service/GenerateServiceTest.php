@@ -2,6 +2,7 @@
 
 namespace ConsoleTest\Service;
 
+use Common\Constant\EEN;
 use Console\Service\GenerateService;
 use Console\Service\IndexService;
 
@@ -45,7 +46,7 @@ class GenerateServiceTest extends \PHPUnit_Framework_TestCase
             ->method('index')
             ->willReturn([]);
 
-        $service->generate(ES_INDEX_OPPORTUNITY, 1);
+        $service->generate(EEN::ES_INDEX_OPPORTUNITY, 1);
     }
 
     public function testGenerateEvent()
@@ -62,7 +63,7 @@ class GenerateServiceTest extends \PHPUnit_Framework_TestCase
             ->method('index')
             ->willReturn([]);
 
-        $service->generate(GenerateService::EVENT, 1);
+        $service->generate(EEN::ES_INDEX_EVENT, 1);
     }
 
     public function testGenerateNoIndexSpecified()

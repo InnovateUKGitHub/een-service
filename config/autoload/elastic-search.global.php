@@ -1,17 +1,14 @@
 <?php
 
-const ES_INDEX_OPPORTUNITY = 'opportunity';
-const ES_TYPE_OPPORTUNITY = 'opportunity';
-const ES_INDEX_EVENT = 'event';
-const ES_TYPE_EVENT = 'event';
+use Common\Constant\EEN;
 
 return [
     'elastic-search-indexes' => [
-        ES_INDEX_OPPORTUNITY => [
-            'index' => ES_INDEX_OPPORTUNITY,
+        EEN::ES_INDEX_OPPORTUNITY => [
+            'index' => EEN::ES_INDEX_OPPORTUNITY,
             'body'  => [
                 'mappings' => [
-                    ES_TYPE_OPPORTUNITY => [
+                    EEN::ES_TYPE_OPPORTUNITY => [
                         'properties' => [
                             'id'                 => [
                                 'type' => 'string',
@@ -98,11 +95,11 @@ return [
                 ],
             ],
         ],
-        ES_INDEX_EVENT       => [
-            'index' => ES_INDEX_EVENT,
+        EEN::ES_INDEX_EVENT       => [
+            'index' => EEN::ES_INDEX_EVENT,
             'body'  => [
                 'mappings' => [
-                    ES_TYPE_EVENT => [
+                    EEN::ES_TYPE_EVENT => [
                         'properties' => [
                             'title'                  => [
                                 'type' => 'string',

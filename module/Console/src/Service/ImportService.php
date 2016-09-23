@@ -1,6 +1,7 @@
 <?php
 namespace Console\Service;
 
+use Common\Constant\EEN;
 use Console\Service\Event\EventService;
 use Console\Service\Opportunity\OpportunityService;
 
@@ -31,10 +32,10 @@ class ImportService
     public function import($index, $month, $type)
     {
         switch ($index) {
-            case ES_INDEX_OPPORTUNITY:
+            case EEN::ES_INDEX_OPPORTUNITY:
                 $this->opportunityService->import($month, $type);
                 break;
-            case ES_INDEX_EVENT:
+            case EEN::ES_INDEX_EVENT:
                 $this->eventService->import();
                 break;
         }

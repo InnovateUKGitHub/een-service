@@ -20,6 +20,11 @@ class MailService
         $this->client = $client;
     }
 
+    /**
+     * @param array $data
+     *
+     * @return string
+     */
     public function send($data)
     {
         return $this->client->execute(Request::METHOD_POST, '/messages/email', [], $data);

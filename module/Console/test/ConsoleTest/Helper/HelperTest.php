@@ -2,6 +2,7 @@
 
 namespace ConsoleTest\Helper;
 
+use Common\Constant\EEN;
 use Console\Helper\Helper;
 
 /**
@@ -11,7 +12,7 @@ class HelperTest extends \PHPUnit_Framework_TestCase
 {
     public function testTypeValid()
     {
-        self::assertTrue(Helper::checkValidType(ES_INDEX_OPPORTUNITY));
+        self::assertTrue(Helper::checkValidType(EEN::ES_INDEX_OPPORTUNITY));
         self::assertTrue(Helper::checkValidType('event'));
         self::assertTrue(Helper::checkValidType('all'));
     }

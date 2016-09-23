@@ -2,6 +2,7 @@
 
 namespace Console\Factory\Service;
 
+use Common\Constant\EEN;
 use Console\Service\IndexService;
 use Elasticsearch\ClientBuilder;
 use Zend\Log\Logger;
@@ -9,9 +10,6 @@ use Zend\ServiceManager\ServiceManager;
 
 final class IndexServiceFactory
 {
-    const CONFIG = 'config';
-    const ELASTIC_SEARCH = 'elastic-search-indexes';
-
     /**
      * @param ServiceManager $serviceManager
      *
@@ -21,15 +19,23 @@ final class IndexServiceFactory
     {
         $elasticSearch = ClientBuilder::create()->build();
 
-        /** @var Logger $logger */
         $logger = $serviceManager->get(Logger::class);
+        $config = $serviceManager->get(EEN::CONFIG);
 
-        $config = $serviceManager->get(self::CONFIG);
+        $this->checkRequiredConfig($config);
 
-        if (array_key_exists(self::ELASTIC_SEARCH, $config) === false) {
-            throw new \InvalidArgumentException('The config file is incorrect. Please specify the elastic-search information');
+        return new IndexService($elasticSearch, $logger, $config[EEN::ELASTIC_SEARCH_INDEXES]);
+    }
+
+    /**
+     * @param array $config
+     */
+    private function checkRequiredConfig($config)
+    {
+        if (array_key_exists(EEN::ELASTIC_SEARCH_INDEXES, $config) === false) {
+            throw new \InvalidArgumentException(
+                'The config file is incorrect. Please specify the elastic-search indexes information'
+            );
         }
-
-        return new IndexService($elasticSearch, $logger, $config[self::ELASTIC_SEARCH]);
     }
 }

@@ -46,6 +46,9 @@ class EventService
         $this->eventBrite->import($dateImport);
     }
 
+    /**
+     * @param \DateTime $now
+     */
     public function delete(\DateTime $now)
     {
         $results = $this->indexService->getAll(

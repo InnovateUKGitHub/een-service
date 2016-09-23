@@ -36,6 +36,11 @@ class IndexService
         $this->create($index);
     }
 
+    /**
+     * @param string $index
+     *
+     * @return bool
+     */
     private function exists($index)
     {
         try {

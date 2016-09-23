@@ -2,11 +2,11 @@
 
 namespace Console\Service;
 
+use Common\Constant\EEN;
 use Faker\Generator;
 
 class GenerateService
 {
-    const EVENT = 'event';
     const ALL = 'all';
 
     /** @var IndexService */
@@ -33,10 +33,10 @@ class GenerateService
     public function generate($index, $number)
     {
         switch ($index) {
-            case ES_INDEX_OPPORTUNITY:
+            case EEN::ES_INDEX_OPPORTUNITY:
                 $this->generateOpportunities($number);
                 break;
-            case self::EVENT:
+            case EEN::ES_INDEX_EVENT:
                 $this->generateEvents($number);
                 break;
             case self::ALL:
@@ -51,7 +51,7 @@ class GenerateService
      */
     private function generateOpportunities($number)
     {
-        $this->indexService->createIndex(ES_INDEX_OPPORTUNITY);
+        $this->indexService->createIndex(EEN::ES_INDEX_OPPORTUNITY);
 
         for ($i = 0; $i < $number; $i++) {
             $params = [
@@ -79,8 +79,8 @@ class GenerateService
             $this->indexService->index(
                 $params,
                 $params['id'],
-                ES_INDEX_OPPORTUNITY,
-                ES_TYPE_OPPORTUNITY
+                EEN::ES_INDEX_OPPORTUNITY,
+                EEN::ES_TYPE_OPPORTUNITY
             );
         }
     }
@@ -114,7 +114,7 @@ class GenerateService
      */
     private function generateEvents($number)
     {
-        $this->indexService->createIndex(self::EVENT);
+        $this->indexService->createIndex(EEN::ES_INDEX_EVENT);
 
         for ($i = 0; $i < $number; $i++) {
             $params = [
@@ -137,8 +137,8 @@ class GenerateService
             $this->indexService->index(
                 $params,
                 $params['id'],
-                self::EVENT,
-                self::EVENT
+                EEN::ES_INDEX_EVENT,
+                EEN::ES_INDEX_EVENT
             );
         }
     }

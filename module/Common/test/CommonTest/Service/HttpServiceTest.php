@@ -104,7 +104,7 @@ class HttpServiceTest extends \PHPUnit_Framework_TestCase
             ->willReturn('text');
 
         $responseMock->expects(self::once())
-            ->method('getContent')
+            ->method('getBody')
             ->willReturn('{"success": 1}');
 
         $this->clientMock

@@ -2,6 +2,7 @@
 
 namespace ConsoleTest\Service\Import;
 
+use Common\Constant\EEN;
 use Console\Service\Event\EventService;
 use Console\Service\ImportService;
 use Console\Service\Opportunity\OpportunityService;
@@ -28,7 +29,7 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
         $this->eventServiceMock->expects(self::never())
             ->method('import');
 
-        $this->service->import(ES_INDEX_OPPORTUNITY, self::MONTH, 's');
+        $this->service->import(EEN::ES_INDEX_OPPORTUNITY, self::MONTH, 's');
     }
 
     public function testImportEvent()
@@ -38,7 +39,7 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
         $this->opportunityServiceMock->expects(self::never())
             ->method('import');
 
-        $this->service->import(ES_INDEX_EVENT, self::MONTH, 's');
+        $this->service->import(EEN::ES_INDEX_EVENT, self::MONTH, 's');
     }
 
     protected function Setup()

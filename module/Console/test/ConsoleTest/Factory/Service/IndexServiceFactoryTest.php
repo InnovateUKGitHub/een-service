@@ -2,6 +2,7 @@
 
 namespace ConsoleTest\Factory\Service;
 
+use Common\Constant\EEN;
 use Console\Factory\Service\IndexServiceFactory;
 use Console\Service\IndexService;
 use Zend\Log\Logger;
@@ -15,7 +16,7 @@ class IndexServiceFactoryTest extends \PHPUnit_Framework_TestCase
     public function testFactory()
     {
         $config = [
-            IndexServiceFactory::ELASTIC_SEARCH => '',
+            EEN::ELASTIC_SEARCH_INDEXES => '',
         ];
 
         /* @var \PHPUnit_Framework_MockObject_MockObject|ServiceManager $serviceManager */
@@ -29,7 +30,7 @@ class IndexServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager
             ->expects(self::at(1))
             ->method('get')
-            ->with(IndexServiceFactory::CONFIG)
+            ->with(EEN::CONFIG)
             ->willReturn($config);
 
         self::assertInstanceOf(
@@ -40,7 +41,7 @@ class IndexServiceFactoryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The config file is incorrect. Please specify the elastic-search information
+     * @expectedExceptionMessage The config file is incorrect. Please specify the elastic-search indexes information
      */
     public function testFactoryThrowException()
     {
@@ -57,7 +58,7 @@ class IndexServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $serviceManager
             ->expects(self::at(1))
             ->method('get')
-            ->with(IndexServiceFactory::CONFIG)
+            ->with(EEN::CONFIG)
             ->willReturn($config);
 
         (new IndexServiceFactory())->__invoke($serviceManager);

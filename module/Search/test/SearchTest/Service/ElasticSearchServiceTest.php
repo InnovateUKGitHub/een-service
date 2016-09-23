@@ -2,6 +2,7 @@
 
 namespace SearchTest\Service;
 
+use Common\Constant\EEN;
 use Search\Service\ElasticSearchService;
 use Search\Service\QueryService;
 
@@ -26,11 +27,11 @@ class ElasticSearchServiceTest extends \PHPUnit_Framework_TestCase
         $queryServiceMock = $this->createMock(QueryService::class);
         $queryServiceMock->expects(self::once())
             ->method('getDocument')
-            ->with($params['search'], ES_INDEX_OPPORTUNITY, ES_TYPE_OPPORTUNITY)
+            ->with($params['search'], EEN::ES_INDEX_OPPORTUNITY, EEN::ES_TYPE_OPPORTUNITY)
             ->willThrowException(new \Exception());
         $queryServiceMock->expects(self::once())
             ->method('search')
-            ->with($params, ES_INDEX_OPPORTUNITY, ES_TYPE_OPPORTUNITY)
+            ->with($params, EEN::ES_INDEX_OPPORTUNITY, EEN::ES_TYPE_OPPORTUNITY)
             ->willReturn(['success' => true]);
 
         $service = new ElasticSearchService($queryServiceMock);
@@ -44,7 +45,7 @@ class ElasticSearchServiceTest extends \PHPUnit_Framework_TestCase
         $queryServiceMock = $this->createMock(QueryService::class);
         $queryServiceMock->expects(self::once())
             ->method('exists')
-            ->with(ES_INDEX_OPPORTUNITY)
+            ->with(EEN::ES_INDEX_OPPORTUNITY)
             ->willReturn(false);
 
         $service = new ElasticSearchService($queryServiceMock);
@@ -58,7 +59,7 @@ class ElasticSearchServiceTest extends \PHPUnit_Framework_TestCase
         $queryServiceMock = $this->createMock(QueryService::class);
         $queryServiceMock->expects(self::once())
             ->method('getDocument')
-            ->with(self::OPPORTUNITY_ID, ES_INDEX_OPPORTUNITY, ES_TYPE_OPPORTUNITY)
+            ->with(self::OPPORTUNITY_ID, EEN::ES_INDEX_OPPORTUNITY, EEN::ES_TYPE_OPPORTUNITY)
             ->willReturn(['success' => true]);
 
         $service = new ElasticSearchService($queryServiceMock);
@@ -72,7 +73,7 @@ class ElasticSearchServiceTest extends \PHPUnit_Framework_TestCase
         $queryServiceMock = $this->createMock(QueryService::class);
         $queryServiceMock->expects(self::once())
             ->method('exists')
-            ->with(ES_INDEX_OPPORTUNITY)
+            ->with(EEN::ES_INDEX_OPPORTUNITY)
             ->willReturn(false);
 
         $service = new ElasticSearchService($queryServiceMock);

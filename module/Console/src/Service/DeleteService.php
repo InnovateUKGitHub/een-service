@@ -2,6 +2,7 @@
 
 namespace Console\Service;
 
+use Common\Constant\EEN;
 use Console\Service\Event\EventService;
 use Console\Service\Opportunity\OpportunityService;
 
@@ -24,13 +25,17 @@ class DeleteService
         $this->eventService = $eventService;
     }
 
+    /**
+     * @param string $index
+     * @param string $since
+     */
     public function deleteOutOfDate($index, $since)
     {
         switch ($index) {
-            case ES_INDEX_OPPORTUNITY:
+            case EEN::ES_INDEX_OPPORTUNITY:
                 $this->opportunityService->delete($since, new \DateTime());
                 break;
-            case ES_INDEX_EVENT:
+            case EEN::ES_INDEX_EVENT:
                 $this->eventService->delete(new \DateTime());
                 break;
         }

@@ -15,7 +15,6 @@ final class MailControllerFactory
      */
     public function __invoke(ServiceManager $serviceManager)
     {
-        /** @var MailService $service */
         $service = $serviceManager->get(MailService::class);
 
         return new MailController($service);
