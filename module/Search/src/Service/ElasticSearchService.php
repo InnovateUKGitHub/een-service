@@ -78,7 +78,16 @@ class ElasticSearchService
                     break;
             }
 
-            $this->query->highlight(['title', 'summary']);
+            $this->query->highlight([
+                'title' => [
+                    'fragment_size' => 0,
+                    'number_of_fragments' => 0,
+                ],
+                'summary' => [
+                    'fragment_size' => 240,
+                    'number_of_fragments' => 1,
+                ]
+            ]);
         }
 
         if (empty($params['opportunity_type']) === false) {

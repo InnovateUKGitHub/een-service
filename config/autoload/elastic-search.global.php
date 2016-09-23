@@ -20,12 +20,11 @@ return [
                                 'type' => 'string',
                             ],
                             'summary'            => [
-                                'type'                   => 'string',
-                                'position_increment_gap' => 1,
+                                'type'          => 'string',
+                                'index_options' => 'offsets',
                             ],
                             'description'        => [
-                                'type'                   => 'string',
-                                'position_increment_gap' => 2,
+                                'type' => 'string',
                             ],
                             'partner_expertise'  => [
                                 'type' => 'string',
@@ -49,7 +48,7 @@ return [
                                 ],
                             ],
                             'country'            => [
-                                'type' => 'string',
+                                'type'   => 'string',
                                 'fields' => [
                                     'raw' => [
                                         'type'  => 'string',
