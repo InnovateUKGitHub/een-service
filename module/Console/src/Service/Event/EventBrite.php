@@ -2,6 +2,7 @@
 
 namespace Console\Service\Event;
 
+use Common\Constant\EEN;
 use Common\Service\HttpService;
 use Console\Service\IndexService;
 use Zend\Http\Request;
@@ -59,8 +60,8 @@ class EventBrite
             $this->indexService->index(
                 $params,
                 $event['id'],
-                ES_INDEX_EVENT,
-                ES_TYPE_EVENT
+                EEN::ES_INDEX_EVENT,
+                EEN::ES_TYPE_EVENT
             );
         }
     }

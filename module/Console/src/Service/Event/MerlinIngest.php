@@ -2,6 +2,7 @@
 
 namespace Console\Service\Event;
 
+use Common\Constant\EEN;
 use Console\Service\IndexService;
 use Console\Validator\MerlinValidator;
 
@@ -85,8 +86,8 @@ class MerlinIngest
             $this->indexService->index(
                 $params,
                 $id,
-                ES_INDEX_EVENT,
-                ES_TYPE_EVENT
+                EEN::ES_INDEX_EVENT,
+                EEN::ES_TYPE_EVENT
             );
         }
     }

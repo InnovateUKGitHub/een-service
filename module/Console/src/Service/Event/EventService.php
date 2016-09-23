@@ -2,6 +2,7 @@
 
 namespace Console\Service\Event;
 
+use Common\Constant\EEN;
 use Console\Service\IndexService;
 
 class EventService
@@ -38,7 +39,7 @@ class EventService
 
     public function import()
     {
-        $this->indexService->createIndex(ES_INDEX_EVENT);
+        $this->indexService->createIndex(EEN::ES_INDEX_EVENT);
 
         $dateImport = (new \DateTime())->format('Ymd');
 
@@ -52,8 +53,8 @@ class EventService
     public function delete(\DateTime $now)
     {
         $results = $this->indexService->getAll(
-            ES_INDEX_EVENT,
-            ES_TYPE_EVENT,
+            EEN::ES_INDEX_EVENT,
+            EEN::ES_TYPE_EVENT,
             ['date_import']
         );
 
@@ -63,8 +64,8 @@ class EventService
             if ($document['_source']['date_import'] < $dateImport) {
                 $body['body'][] = [
                     'delete' => [
-                        '_index' => ES_INDEX_EVENT,
-                        '_type'  => ES_TYPE_EVENT,
+                        '_index' => EEN::ES_INDEX_EVENT,
+                        '_type'  => EEN::ES_TYPE_EVENT,
                         '_id'    => $document['_id'],
                     ],
                 ];
