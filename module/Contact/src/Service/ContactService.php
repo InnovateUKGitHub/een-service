@@ -2,6 +2,8 @@
 
 namespace Contact\Service;
 
+use ZF\ApiProblem\ApiProblemResponse;
+
 class ContactService extends AbstractEntity
 {
     /**
@@ -11,19 +13,7 @@ class ContactService extends AbstractEntity
      */
     public function create($data)
     {
-        $accountReference = new \stdClass();
-        $accountReference->MyExtID__c = 'SAP111111';
-
-        $contact = new \stdClass();
-        $contact->FirstName = $data['firstname'];
-        $contact->LastName = $data['lastname'];
-        $contact->Email = $data['email'];
-        $contact->Phone = $data['phone'];
-        $contact->MobilePhone = $data['mobile'];
-        $contact->Account = $accountReference;
-
         $account = new \stdClass();
-        $account->MyExtID__c = 'SAP111111';
         $account->Name = $data['company-name'];
         $account->Phone = $data['company-phone'];
         $account->Company_Registration_Number__c = $data['company-number'];
@@ -33,9 +23,27 @@ class ContactService extends AbstractEntity
         $account->BillingCountry = $data['company-country'];
         $account->Website = $data['website'];
 
-        $contact = $this->createObject($contact, 'Contact');
-        $account = $this->createObject($account, 'Account');
+        $accountId = $this->createEntity($account, 'Account');
+        if ($accountId instanceof ApiProblemResponse) {
+            return $accountId;
+        }
 
-        return $this->createEntities([$account, $contact]);
+        $contact = new \stdClass();
+        $contact->FirstName = $data['firstname'];
+        $contact->LastName = $data['lastname'];
+        $contact->Email = $data['email'];
+        $contact->Phone = $data['phone'];
+        $contact->MobilePhone = $data['mobile'];
+        $contact->AccountId = $accountId;
+
+        $contactId = $this->createEntity($contact, 'Contact');
+        if ($accountId instanceof ApiProblemResponse) {
+            return $accountId;
+        }
+
+        return [
+            'accountId' => $accountId,
+            'contactId' => $contactId,
+        ];
     }
 }

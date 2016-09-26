@@ -24,6 +24,9 @@ class SalesForceService
     /** @var string */
     private $namespace;
 
+    /** @var string */
+    private $sessionId;
+
     /**
      * MailService constructor.
      *
@@ -53,13 +56,16 @@ class SalesForceService
     {
         $this->login();
         $info = $this->client->call('getUserInfo', ['getUserInfo' => []]);
-        $this->logout();
 
         return json_decode(json_encode($info), true);
     }
 
     public function login()
     {
+        if ($this->sessionId) {
+            return;
+        }
+
         $loginResult = $this->client->call(
             'login',
             [
@@ -75,10 +81,11 @@ class SalesForceService
         $this->client->setLocation($loginResult->result->serverUrl);
 
         // attach the session id to the soap client
+        $this->sessionId = $loginResult->result->sessionId;
         $header = new \SoapHeader(
             $this->namespace,
             'SessionHeader',
-            ['sessionId' => $loginResult->result->sessionId]
+            ['sessionId' => $this->sessionId]
         );
         $this->client->addSoapInputHeader($header, true);
     }
@@ -102,8 +109,6 @@ class SalesForceService
             ['describeSObject' => $object]
         );
 
-        $this->logout();
-        print_r($response); die;
         return $response;
     }
 
@@ -122,15 +127,11 @@ class SalesForceService
         );
         // TODO Log failing error to logger
 
-        $this->logout();
-
-        print_r($response); die;
         if ($response->result->success === false) {
             return $this->buildValidationErrors($response->result->errors);
         }
-        $id = $response->result->id;
 
-        return ['id' => $id];
+        return $response->result->id;
     }
 
     public function buildValidationErrors($errors)
