@@ -88,6 +88,25 @@ class SalesForceService
         $this->client->call('logout', ['logout' => []]);
     }
 
+    public function describesObject($type)
+    {
+        $this->login();
+
+        $data = new \stdClass();
+        $data->sObjectType = $type;
+        $object = new \SoapVar($data, SOAP_ENC_OBJECT, $type, $this->namespace);
+        $object = new \SoapParam($object, 'sObjectType');
+
+        $response = $this->client->call(
+            'describeSObject',
+            ['describeSObject' => $object]
+        );
+
+        $this->logout();
+        print_r($response); die;
+        return $response;
+    }
+
     /**
      * @param \SoapParam $object
      *
@@ -101,9 +120,11 @@ class SalesForceService
             'create',
             ['create' => $object]
         );
+        // TODO Log failing error to logger
 
         $this->logout();
 
+        print_r($response); die;
         if ($response->result->success === false) {
             return $this->buildValidationErrors($response->result->errors);
         }
@@ -115,7 +136,6 @@ class SalesForceService
     public function buildValidationErrors($errors)
     {
         $validationMessages = [];
-
         if (is_array($errors->fields)) {
             foreach ($errors->fields as $field) {
                 $validationMessages[strtolower($field)] = [

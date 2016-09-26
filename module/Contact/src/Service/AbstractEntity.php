@@ -19,15 +19,29 @@ abstract class AbstractEntity
      * @param \stdClass $object
      * @param string    $type
      *
+     * @return \SoapVar
+     */
+    public function createObject(\stdClass $object, $type)
+    {
+        return new \SoapVar($object, SOAP_ENC_OBJECT, $type, $this->salesForce->getNamespace());
+    }
+
+    /**
+     * @param \stdClass[] $objects
+     *
      * @return array
      */
-    public function createEntity(\stdClass $object, $type)
+    public function createEntities($objects)
     {
-        $object = new \SoapVar($object, SOAP_ENC_OBJECT, $type, $this->salesForce->getNamespace());
-        $object = new \SoapParam([$object], 'sObjects');
+        $object = new \SoapParam($objects, 'sObjects');
 
         return $this->salesForce->create($object);
     }
 
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
     abstract function create($data);
 }

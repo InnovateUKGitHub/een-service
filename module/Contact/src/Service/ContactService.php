@@ -5,25 +5,37 @@ namespace Contact\Service;
 class ContactService extends AbstractEntity
 {
     /**
-     * @param array $account
+     * @param array $data
      *
      * @return array
      */
-    public function create($account)
+    public function create($data)
     {
-        $contact = new \stdClass();
-        $contact->FirstName = $account['firstname'];
-        $contact->LastName = $account['lastname'];
-        $contact->Email = $account['email'];
-        $contact->Phone = $account['phone'];
-        $contact->MobilePhone = $account['mobile'];
-        $contact->Company = $account['company'];
-        $contact->CompanyNumber = $account['company-number'];
-        $contact->CompanyPostcode = $account['company-postcode'];
-        $contact->CompanyAddress = $account['company-address'];
-        $contact->CompanyPhone = $account['company-phone'];
-        $contact->CompanyWebsite = $account['company-website'];
+        $accountReference = new \stdClass();
+        $accountReference->MyExtID__c = 'SAP111111';
 
-        return $this->createEntity($contact, 'Contact');
+        $contact = new \stdClass();
+        $contact->FirstName = $data['firstname'];
+        $contact->LastName = $data['lastname'];
+        $contact->Email = $data['email'];
+        $contact->Phone = $data['phone'];
+        $contact->MobilePhone = $data['mobile'];
+        $contact->Account = $accountReference;
+
+        $account = new \stdClass();
+        $account->MyExtID__c = 'SAP111111';
+        $account->Name = $data['company-name'];
+        $account->Phone = $data['company-phone'];
+        $account->Company_Registration_Number__c = $data['company-number'];
+        $account->BillingStreet = $data['company-address'];
+        $account->BillingPostalCode = $data['company-postcode'];
+        $account->BillingCity = $data['company-city'];
+        $account->BillingCountry = $data['company-country'];
+        $account->Website = $data['website'];
+
+        $contact = $this->createObject($contact, 'Contact');
+        $account = $this->createObject($account, 'Account');
+
+        return $this->createEntities([$account, $contact]);
     }
 }
