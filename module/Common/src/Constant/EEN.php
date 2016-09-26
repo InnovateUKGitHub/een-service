@@ -4,6 +4,7 @@ namespace Common\Constant;
 class EEN
 {
     const CONFIG = 'config';
+    const SETTINGS = 'settings';
 
     //CURL
     const CURL = 'curl-opt';
