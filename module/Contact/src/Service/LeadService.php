@@ -5,22 +5,19 @@ namespace Contact\Service;
 class LeadService extends AbstractEntity
 {
     /**
-     * @param array $lead
+     * @param array $data
      *
      * @return array
      */
-    public function create($lead)
+    public function create($data)
     {
         $lead = new \stdClass();
-        $lead->Email = $lead['email'];
+        $lead->Email = $data['email'];
 
-        if (isset($lead['lastname'])) {
-            $lead->LastName = $lead['lastname'];
-        }
-        if (isset($lead['company'])) {
-            $lead->Company = $lead['company'];
+        if (isset($data['lastname'])) {
+            $lead->LastName = $data['lastname'];
         }
 
-        return $this->createEntity($lead, 'Lead');
+        return $this->createEntity($lead, 'Contact');
     }
 }

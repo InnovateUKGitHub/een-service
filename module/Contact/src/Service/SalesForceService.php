@@ -75,6 +75,7 @@ class SalesForceService
                 ],
             ]
         );
+        // TODO Log failing error to logger
 
         // Set new Url retrieve from the login
         $this->client->setUri($loginResult->result->serverUrl);
@@ -90,11 +91,17 @@ class SalesForceService
         $this->client->addSoapInputHeader($header, true);
     }
 
-    private function logout()
+    public function logout()
     {
         $this->client->call('logout', ['logout' => []]);
+        // TODO Log failing error to logger
     }
 
+    /**
+     * @param string $type
+     *
+     * @return mixed
+     */
     public function describesObject($type)
     {
         $this->login();
@@ -113,6 +120,20 @@ class SalesForceService
     }
 
     /**
+     * @param array $ids
+     */
+    public function delete($ids)
+    {
+        $this->login();
+
+        $this->client->call(
+            'delete',
+            ['delete' => $ids]
+        );
+        // TODO Log failing error to logger
+    }
+
+    /**
      * @param \SoapParam $object
      *
      * @return array|ApiProblemResponse
@@ -126,27 +147,27 @@ class SalesForceService
             ['create' => $object]
         );
         // TODO Log failing error to logger
-
-        if ($response->result->success === false) {
+        if ($response->result->success == false && isset($response->result->errors)) {
             return $this->buildValidationErrors($response->result->errors);
         }
 
-        return $response->result->id;
+        return ['id' => $response->result->id];
     }
 
+    /**
+     * @param \stdClass $errors
+     *
+     * @return ApiProblemResponse
+     */
     public function buildValidationErrors($errors)
     {
         $validationMessages = [];
         if (is_array($errors->fields)) {
             foreach ($errors->fields as $field) {
-                $validationMessages[strtolower($field)] = [
-                    'isEmpty' => 'Value is required and can\'t be empty',
-                ];
+                $validationMessages[strtolower($field)] = [$errors->message];
             }
         } else {
-            $validationMessages[strtolower($errors->fields)] = [
-                'isEmpty' => 'Value is required and can\'t be empty',
-            ];
+            $validationMessages[strtolower($errors->fields)] = [$errors->message];
         }
 
         return new ApiProblemResponse(

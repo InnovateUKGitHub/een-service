@@ -13,6 +13,7 @@ use Contact\Service\ContactService;
 use Contact\Service\LeadService;
 use Contact\Service\SalesForceService;
 use Zend\Router\Http\Segment;
+use Zend\Validator\EmailAddress;
 
 return [
     'service_manager'        => [
@@ -102,12 +103,6 @@ return [
                 'filters'    => [],
                 'name'       => 'lastname',
             ],
-            [
-                'required'   => false,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'company',
-            ],
         ],
         ContactController::class => [
             [
@@ -124,7 +119,11 @@ return [
             ],
             [
                 'required'   => true,
-                'validators' => [],
+                'validators' => [
+                    [
+                        'name' => EmailAddress::class,
+                    ],
+                ],
                 'filters'    => [],
                 'name'       => 'email',
             ],
@@ -188,11 +187,6 @@ return [
                 'filters'    => [],
                 'name'       => 'website',
             ],
-        ],
-    ],
-    'view_manager'           => [
-        'strategies' => [
-            'ViewJsonStrategy',
         ],
     ],
 ];
