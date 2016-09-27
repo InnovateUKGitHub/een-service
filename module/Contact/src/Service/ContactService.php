@@ -30,9 +30,9 @@ class ContactService extends AbstractEntity
         $account->ShippingCity = $data['company-city'];
         $account->ShippingCountry = $data['company-country'];
 
-        $accountId = $this->createEntity($account, 'Account');
-        if ($accountId instanceof ApiProblemResponse) {
-            return $accountId;
+        $accountResponse = $this->createEntity($account, 'Account');
+        if ($accountResponse instanceof ApiProblemResponse) {
+            return $accountResponse;
         }
 
         // Step2 Create Contact
@@ -43,19 +43,19 @@ class ContactService extends AbstractEntity
         $contact->Email = $data['email'];
         $contact->Phone = $data['phone'];
         $contact->MobilePhone = $data['mobile'];
-        $contact->AccountId = $accountId;
+        $contact->AccountId = $accountResponse['id'];
 
-        $contactId = $this->createEntity($contact, 'Contact');
-        if ($contactId instanceof ApiProblemResponse) {
+        $contactResponse = $this->createEntity($contact, 'Contact');
+        if ($contactResponse instanceof ApiProblemResponse) {
             // If problem during contact creation delete account
-            $this->salesForce->delete([$accountId]);
+            $this->salesForce->delete([$accountResponse['id']]);
 
-            return $contactId;
+            return $contactResponse;
         }
 
         return [
-            'account' => $accountId,
-            'contact' => $contactId,
+            'account' => $accountResponse['id'],
+            'contact' => $contactResponse['id'],
         ];
     }
 }

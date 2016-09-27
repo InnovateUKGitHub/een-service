@@ -60,22 +60,29 @@ class SalesForceService
         return json_decode(json_encode($info), true);
     }
 
+    /**
+     * @return bool
+     */
     public function login()
     {
         if ($this->sessionId) {
-            return;
+            return true;
         }
 
-        $loginResult = $this->client->call(
-            'login',
-            [
-                'login' => [
-                    'username' => $this->username,
-                    'password' => $this->password,
-                ],
-            ]
-        );
-        // TODO Log failing error to logger
+        try {
+            $loginResult = $this->client->call(
+                'login',
+                [
+                    'login' => [
+                        'username' => $this->username,
+                        'password' => $this->password,
+                    ],
+                ]
+            );
+        } catch (\Exception $e) {
+            // TODO Log failing error to logger
+            return false;
+        }
 
         // Set new Url retrieve from the login
         $this->client->setUri($loginResult->result->serverUrl);
@@ -89,12 +96,21 @@ class SalesForceService
             ['sessionId' => $this->sessionId]
         );
         $this->client->addSoapInputHeader($header, true);
+        return true;
     }
 
+    /**
+     * @return bool
+     */
     public function logout()
     {
-        $this->client->call('logout', ['logout' => []]);
-        // TODO Log failing error to logger
+        try {
+            $this->client->call('logout', ['logout' => []]);
+        } catch (\Exception $e) {
+            // TODO Log failing error to logger
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -126,11 +142,14 @@ class SalesForceService
     {
         $this->login();
 
-        $this->client->call(
-            'delete',
-            ['delete' => $ids]
-        );
-        // TODO Log failing error to logger
+        try {
+            $this->client->call(
+                'delete',
+                ['delete' => $ids]
+            );
+        } catch (\Exception $e) {
+            // TODO Log failing error to logger
+        }
     }
 
     /**
@@ -142,10 +161,27 @@ class SalesForceService
     {
         $this->login();
 
-        $response = $this->client->call(
-            'create',
-            ['create' => $object]
-        );
+        try {
+            $response = $this->client->call(
+                'create',
+                ['create' => $object]
+            );
+        } catch (\Exception $e) {
+            return new ApiProblemResponse(
+                new ApiProblem(
+                    Response::STATUS_CODE_500,
+                    'Invalid Soap answer',
+                    null,
+                    null,
+                    [
+                        'code'      => $e->getCode(),
+                        'exception' => $e->getMessage(),
+                        'request'   => $this->client->getLastRequest(),
+                        'response'  => $this->client->getLastResponse(),
+                    ]
+                )
+            );
+        }
         // TODO Log failing error to logger
         if ($response->result->success == false && isset($response->result->errors)) {
             return $this->buildValidationErrors($response->result->errors);
