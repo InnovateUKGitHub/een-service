@@ -29,4 +29,9 @@ class MailService
     {
         return $this->client->execute(Request::METHOD_POST, '/messages/email', [], $data);
     }
+
+    public function get($id)
+    {
+        return $this->client->execute(Request::METHOD_GET, '/messages/email/' . $id);
+    }
 }

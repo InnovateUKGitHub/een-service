@@ -6,7 +6,7 @@ use Mail\Controller\MailController;
 use Mail\Factory\Controller\MailControllerFactory;
 use Mail\Factory\Service\MailServiceFactory;
 use Mail\Service\MailService;
-use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
 
 return [
     'service_manager'        => [
@@ -22,10 +22,13 @@ return [
     'router'                 => [
         'routes' => [
             'een.mail' => [
-                'type'    => Literal::class,
+                'type'    => Segment::class,
                 'options' => [
-                    'route'    => '/mail',
-                    'defaults' => [
+                    'route'       => '/mail[/:id]',
+                    'constraints' => [
+                        'id' => '[\d]+',
+                    ],
+                    'defaults'    => [
                         'controller' => MailController::class,
                     ],
                 ],
