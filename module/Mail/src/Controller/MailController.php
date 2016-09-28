@@ -35,4 +35,9 @@ final class MailController extends AbstractRestfulController
 
         return $this->service->send($params);
     }
+
+    public function get($id)
+    {
+        return $this->service->get($id);
+    }
 }
