@@ -31,6 +31,7 @@ return [
         'factories' => [
             Controller\GenerateController::class => ControllerFactory\GenerateControllerFactory::class,
             Controller\ImportController::class   => ControllerFactory\ImportControllerFactory::class,
+            Controller\IndexController::class    => ControllerFactory\IndexControllerFactory::class,
         ],
     ],
     'console'         => [
@@ -84,6 +85,15 @@ return [
                         'defaults'    => [
                             'controller' => Controller\GenerateController::class,
                             'action'     => 'delete',
+                        ],
+                    ],
+                ],
+                'index'         => [
+                    'options' => [
+                        'route'    => 'index',
+                        'defaults' => [
+                            'controller' => Controller\IndexController::class,
+                            'action'     => 'index',
                         ],
                     ],
                 ],

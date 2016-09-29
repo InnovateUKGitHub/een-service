@@ -112,32 +112,32 @@ class QueryService
     }
 
     /**
-     * @param string $field
-     * @param string $search
+     * @param string[] $fields
+     * @param string   $search
      */
-    public function shouldMatchPhrase($field, $search)
+    public function shouldMatchPhrase($fields, $search)
     {
         $this->should[] = [
-            'match_phrase' => [
-                $field => [
-                    'query' => $search,
-                    'slop'  => 50,
-                ],
+            'query_string' => [
+                'fields'      => $fields,
+                'query'       => $search,
+                'phrase_slop' => 50,
             ],
         ];
     }
 
     /**
      * @param array $fields
-     * @param array $values
+     * @param array $value
      */
-    public function mustMatchPhrase($fields, $values)
+    public function mustMatchPhrase($fields, $value)
     {
         $this->must[] = [
             'query_string' => [
                 'fields'      => $fields,
-                'query'       => implode('~ ', $values) . '~',
+                'query'       => $value,
                 'phrase_slop' => 50,
+                'analyzer'    => 'my_analyzer',
             ],
         ];
     }

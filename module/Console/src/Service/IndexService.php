@@ -1,6 +1,7 @@
 <?php
 namespace Console\Service;
 
+use Common\Constant\EEN;
 use Elasticsearch\Client;
 use Zend\Log\Logger;
 
@@ -23,6 +24,20 @@ class IndexService
         $this->elasticSearch = $elasticSearch;
         $this->logger = $logger;
         $this->config = $config;
+    }
+
+    public function createSettings($index)
+    {
+        $params = [
+            'index' => $index,
+            'body' => $this->config[$index]['body']['settings']
+        ];
+
+        $params['body']['number_of_shards'] = null;
+        $params['body']['number_of_replicas'] = null;
+        $this->elasticSearch->indices()->close(['index' => $index]);
+        $this->elasticSearch->indices()->putSettings($params);
+        $this->elasticSearch->indices()->open(['index' => $index]);
     }
 
     /**
