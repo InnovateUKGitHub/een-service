@@ -128,15 +128,16 @@ class QueryService
 
     /**
      * @param array $fields
-     * @param array $values
+     * @param array $value
      */
-    public function mustMatchPhrase($fields, $values)
+    public function mustMatchPhrase($fields, $value)
     {
         $this->must[] = [
             'query_string' => [
                 'fields'      => $fields,
-                'query'       => implode('~ ', $values) . '~',
+                'query'       => $value,
                 'phrase_slop' => 50,
+                'analyzer'    => 'my_analyzer',
             ],
         ];
     }
