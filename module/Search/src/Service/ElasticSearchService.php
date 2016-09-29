@@ -65,18 +65,18 @@ class ElasticSearchService
         if (empty($params['search'])) {
             $this->buildFullTextSearch($params['search']);
         } else {
-            switch ($params['type']) {
-                case 3:
+//            switch ($params['type']) {
+//                case 3:
                     $this->buildPhraseMatching($params['search']);
-                    break;
-                case 2:
-                    $this->buildTermSearch($params['search']);
-                    break;
-                case 1:
-                default:
-                    $this->buildFullTextSearch($params['search']);
-                    break;
-            }
+//                    break;
+//                case 2:
+//                    $this->buildTermSearch($params['search']);
+//                    break;
+//                case 1:
+//                default:
+//                    $this->buildFullTextSearch($params['search']);
+//                    break;
+//            }
 
             $this->query->highlight([
                 'title' => [
@@ -112,9 +112,11 @@ class ElasticSearchService
      */
     private function buildPhraseMatching($search)
     {
-        $this->query->shouldMatchPhrase('title', $search);
-        $this->query->shouldMatchPhrase('summary', $search);
-        $this->query->shouldMatchPhrase('description', $search);
+        $searches = explode(' ', trim($search));
+        $search = implode('~ ', $searches) . '~';
+        $this->query->shouldMatchPhrase(['title^5', 'summary^2', 'description'], $search);
+//        $this->query->shouldMatchPhrase('summary', $search);
+//        $this->query->shouldMatchPhrase('description', $search);
     }
 
     /**

@@ -112,17 +112,16 @@ class QueryService
     }
 
     /**
-     * @param string $field
-     * @param string $search
+     * @param string[] $fields
+     * @param string   $search
      */
-    public function shouldMatchPhrase($field, $search)
+    public function shouldMatchPhrase($fields, $search)
     {
         $this->should[] = [
-            'match_phrase' => [
-                $field => [
-                    'query' => $search,
-                    'slop'  => 50,
-                ],
+            'query_string' => [
+                'fields'      => $fields,
+                'query'       => $search,
+                'phrase_slop' => 50,
             ],
         ];
     }
