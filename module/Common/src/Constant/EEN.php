@@ -37,4 +37,5 @@ class EEN
     const ES_INDEX_COUNTRY = 'country';
     const ES_TYPE_COUNTRY = 'country';
     const DATE_FORMAT_IMPORT = 'Ymd';
+    const ES_INDEX_WORDS = '_words';
 }

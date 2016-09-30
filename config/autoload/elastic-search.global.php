@@ -25,7 +25,25 @@ return [
                 ],
             ],
         ],
-        EEN::ES_INDEX_OPPORTUNITY => [
+        EEN::ES_INDEX_OPPORTUNITY . EEN::ES_INDEX_WORDS => [
+            'index' => EEN::ES_INDEX_OPPORTUNITY . EEN::ES_INDEX_WORDS,
+            'body'  => [
+                'settings' => [
+                    'number_of_shards'   => 1,
+                    'number_of_replicas' => 0,
+                ],
+                'mappings' => [
+                    EEN::ES_TYPE_OPPORTUNITY . EEN::ES_INDEX_WORDS => [
+                        'properties' => [
+                            'word' => [
+                                'type' => 'string',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        EEN::ES_INDEX_OPPORTUNITY                       => [
             'index' => EEN::ES_INDEX_OPPORTUNITY,
             'body'  => [
                 'settings' => [
@@ -96,7 +114,25 @@ return [
                 ],
             ],
         ],
-        EEN::ES_INDEX_EVENT       => [
+        EEN::ES_INDEX_EVENT . EEN::ES_INDEX_WORDS       => [
+            'index' => EEN::ES_INDEX_EVENT . EEN::ES_INDEX_WORDS,
+            'body'  => [
+                'settings' => [
+                    'number_of_shards'   => 1,
+                    'number_of_replicas' => 0,
+                ],
+                'mappings' => [
+                    EEN::ES_INDEX_EVENT . EEN::ES_INDEX_WORDS => [
+                        'properties' => [
+                            'word' => [
+                                'type' => 'string',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        EEN::ES_INDEX_EVENT                             => [
             'index' => EEN::ES_INDEX_EVENT,
             'body'  => [
                 'settings' => [
