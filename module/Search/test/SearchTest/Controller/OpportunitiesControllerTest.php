@@ -3,7 +3,7 @@
 namespace SearchTest\Controller;
 
 use Search\Controller\OpportunitiesController;
-use Search\Service\ElasticSearchService;
+use Search\Service\OpportunitiesService;
 use Zend\Http\Request;
 use Zend\InputFilter\InputFilter;
 use Zend\Mvc\MvcEvent;
@@ -17,8 +17,7 @@ class OpportunitiesControllerTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreate()
     {
-        /** @var \PHPUnit_Framework_MockObject_MockObject|ElasticSearchService $elasticSearchServiceMock */
-        $elasticSearchServiceMock = $this->createMock(ElasticSearchService::class);
+        $service = $this->createMock(OpportunitiesService::class);
 
         $inputFilterMock = $this->createMock(InputFilter::class);
         $inputFilterPluginMock = $this->createMock(InputFilterPlugin::class);
@@ -26,8 +25,8 @@ class OpportunitiesControllerTest extends \PHPUnit_Framework_TestCase
             ->method('__invoke')
             ->willReturn($inputFilterMock);
 
-        $elasticSearchServiceMock->expects(self::once())
-            ->method('searchOpportunities')
+        $service->expects(self::once())
+            ->method('search')
             ->with(['params' => 'myParams'])
             ->willReturn(['success' => true]);
 
@@ -35,7 +34,7 @@ class OpportunitiesControllerTest extends \PHPUnit_Framework_TestCase
             ->method('getValues')
             ->willReturn(['params' => 'myParams']);
 
-        $controller = new OpportunitiesController($elasticSearchServiceMock);
+        $controller = new OpportunitiesController($service);
         $routeMatch = new RouteMatch([]);
 
         $event = new MvcEvent();
@@ -54,19 +53,56 @@ class OpportunitiesControllerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testCount()
+    {
+        $service = $this->createMock(OpportunitiesService::class);
+
+        $inputFilterMock = $this->createMock(InputFilter::class);
+        $inputFilterPluginMock = $this->createMock(InputFilterPlugin::class);
+        $inputFilterPluginMock->expects(self::once())
+            ->method('__invoke')
+            ->willReturn($inputFilterMock);
+
+        $service->expects(self::once())
+            ->method('count')
+            ->with(['count' => true])
+            ->willReturn(['count' => 0]);
+
+        $inputFilterMock->expects(self::once())
+            ->method('getValues')
+            ->willReturn(['count' => true]);
+
+        $controller = new OpportunitiesController($service);
+        $routeMatch = new RouteMatch([]);
+
+        $event = new MvcEvent();
+        $event->setParam(InputFilter::class, $inputFilterMock);
+        $event->setRouteMatch($routeMatch);
+
+        $controller->setEvent($event);
+        $controller->getPluginManager()->setService('getInputFilter', $inputFilterPluginMock);
+
+        $request = new Request();
+        $request->setMethod(Request::METHOD_POST);
+
+        self::assertEquals(
+            ['total' => 0],
+            $controller->dispatch($request)
+        );
+    }
+
     public function testGet()
     {
         $id = 'myOpportunityId';
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|ElasticSearchService $elasticSearchServiceMock */
-        $elasticSearchServiceMock = $this->createMock(ElasticSearchService::class);
+        $service = $this->createMock(OpportunitiesService::class);
 
-        $elasticSearchServiceMock->expects(self::once())
-            ->method('getOpportunity')
+        $service->expects(self::once())
+            ->method('get')
             ->with($id)
             ->willReturn(['found' => true]);
 
-        $controller = new OpportunitiesController($elasticSearchServiceMock);
+        $controller = new OpportunitiesController($service);
         $routeMatch = new RouteMatch(['id' => $id]);
 
         $event = new MvcEvent();
@@ -81,5 +117,4 @@ class OpportunitiesControllerTest extends \PHPUnit_Framework_TestCase
             $controller->dispatch($request)
         );
     }
-
 }

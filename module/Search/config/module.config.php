@@ -8,9 +8,11 @@ use Search\Controller\OpportunitiesController;
 use Search\Factory\Controller\CountryControllerFactory;
 use Search\Factory\Controller\EventsControllerFactory;
 use Search\Factory\Controller\OpportunitiesControllerFactory;
-use Search\Factory\Service\ElasticSearchServiceFactory;
+use Search\Factory\Service\EventsServiceFactory;
+use Search\Factory\Service\OpportunitiesServiceFactory;
 use Search\Factory\Service\QueryServiceFactory;
-use Search\Service\ElasticSearchService;
+use Search\Service\EventsService;
+use Search\Service\OpportunitiesService;
 use Search\Service\QueryService;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
@@ -18,7 +20,8 @@ use Zend\Router\Http\Segment;
 return [
     'service_manager'        => [
         'factories' => [
-            ElasticSearchService::class => ElasticSearchServiceFactory::class,
+            EventsService::class        => EventsServiceFactory::class,
+            OpportunitiesService::class => OpportunitiesServiceFactory::class,
             QueryService::class         => QueryServiceFactory::class,
         ],
     ],

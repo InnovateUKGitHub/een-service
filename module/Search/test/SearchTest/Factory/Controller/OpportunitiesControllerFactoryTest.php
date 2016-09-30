@@ -4,7 +4,7 @@ namespace SearchTest\Factory\Controller;
 
 use Search\Controller\OpportunitiesController;
 use Search\Factory\Controller\OpportunitiesControllerFactory;
-use Search\Service\ElasticSearchService;
+use Search\Service\OpportunitiesService;
 use Zend\ServiceManager\ServiceManager;
 
 /**
@@ -14,13 +14,11 @@ class OpportunitiesControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
-        $elasticSearchMock = $this->createMock(ElasticSearchService::class);
-
         $serviceManagerMock = $this->createMock(ServiceManager::class);
         $serviceManagerMock->expects(self::once())
             ->method('get')
-            ->with(ElasticSearchService::class)
-            ->willReturn($elasticSearchMock);
+            ->with(OpportunitiesService::class)
+            ->willReturn($this->createMock(OpportunitiesService::class));
 
         self::assertInstanceOf(
             OpportunitiesController::class,

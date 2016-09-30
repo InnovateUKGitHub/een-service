@@ -4,28 +4,23 @@ namespace Search\Service;
 
 use Common\Constant\EEN;
 use Elasticsearch\Client;
+use Search\Service\Query\MustQuery;
 
-class QueryService
+class QueryService extends MustQuery
 {
     /** @var Client */
-    private $elasticSearch;
+    private $elastic;
     /** @var array */
-    private $must;
-    /** @var array */
-    private $should;
-    /** @var array */
-    private $highlight;
+    private $highlight = [];
 
     /**
      * QueryService constructor.
      *
-     * @param Client $elasticSearch
+     * @param Client $elastic
      */
-    public function __construct(Client $elasticSearch)
+    public function __construct(Client $elastic)
     {
-        $this->elasticSearch = $elasticSearch;
-        $this->must = [];
-        $this->should = [];
+        $this->elastic = $elastic;
     }
 
     /**
@@ -35,110 +30,7 @@ class QueryService
      */
     public function exists($index)
     {
-        return $this->elasticSearch->indices()->exists(['index' => $index]);
-    }
-
-    /**
-     * @param array  $fields
-     * @param array  $values
-     * @param string $operator
-     */
-    public function mustQueryString($fields, $values, $operator = 'AND')
-    {
-        $this->must[] = [
-            'query_string' => [
-                'fields' => $fields,
-                'query'  => implode('* ' . $operator . ' ', $values) . '*',
-            ],
-        ];
-    }
-
-    /**
-     * @param string $field
-     * @param string $value
-     * @param string $operator
-     */
-    public function mustRange($field, $value, $operator)
-    {
-        $this->must[] = [
-            'range' => [
-                $field => [
-                    $operator => $value,
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * @param string $field
-     */
-    public function mustExist($field)
-    {
-        $this->must[] = [
-            'exists' => [
-                'field' => $field,
-            ],
-        ];
-    }
-
-    /**
-     * @param array  $fields
-     * @param array  $values
-     * @param string $operator
-     */
-    public function mustFuzzy($fields, $values, $operator = 'AND')
-    {
-        $this->must[] = [
-            'query_string' => [
-                'fields' => $fields,
-                'query'  => implode('~ ' . $operator . ' ', $values) . '~',
-            ],
-        ];
-    }
-
-    /**
-     * @param array  $fields
-     * @param array  $values
-     * @param string $operator
-     */
-    public function shouldFuzzy($fields, $values, $operator = 'AND')
-    {
-        $this->should[] = [
-            'query_string' => [
-                'fields' => $fields,
-                'query'  => implode('~ ' . $operator . ' ', $values) . '~',
-            ],
-        ];
-    }
-
-    /**
-     * @param string[] $fields
-     * @param string   $search
-     */
-    public function shouldMatchPhrase($fields, $search)
-    {
-        $this->should[] = [
-            'query_string' => [
-                'fields'      => $fields,
-                'query'       => $search,
-                'phrase_slop' => 50,
-            ],
-        ];
-    }
-
-    /**
-     * @param array $fields
-     * @param array $value
-     */
-    public function mustMatchPhrase($fields, $value)
-    {
-        $this->must[] = [
-            'query_string' => [
-                'fields'      => $fields,
-                'query'       => $value,
-                'phrase_slop' => 50,
-            ],
-        ];
+        return $this->elastic->indices()->exists(['index' => $index]);
     }
 
     /**
@@ -165,28 +57,25 @@ class QueryService
     }
 
     /**
-     * @param array  $params
      * @param string $index
      * @param string $type
      *
      * @return array
      */
-    public function count($params, $index, $type)
+    public function count($index, $type)
     {
-        $query = $this->buildSearch($params, $index, $type, true);
+        $query = $this->buildQuery($index, $type);
 
-        return $this->elasticSearch->count($query);
+        return $this->elastic->count($query);
     }
 
     /**
-     * @param array  $params
      * @param string $index
      * @param string $type
-     * @param bool   $isCount
      *
      * @return array
      */
-    private function buildSearch($params, $index, $type, $isCount = false)
+    private function buildQuery($index, $type)
     {
         $query = [
             'index' => $index,
@@ -206,18 +95,6 @@ class QueryService
             $query['body']['query']['bool']['should'] = $this->should;
         }
 
-        if ($isCount === false) {
-            $query['from'] = $params['from'];
-            $query['size'] = $params['size'];
-            $query['_source'] = $params['source'];
-            if (!empty($this->highlight)) {
-                $query['body']['highlight'] = $this->highlight;
-            }
-            if (!empty($params['sort'])) {
-                $query['body']['sort'] = $params['sort'];
-            }
-        }
-
         return $query;
     }
 
@@ -230,9 +107,19 @@ class QueryService
      */
     public function search($params, $index, $type)
     {
-        $query = $this->buildSearch($params, $index, $type);
+        $query = $this->buildQuery($index, $type);
 
-        return $this->convertResult($this->elasticSearch->search($query));
+        $query['from'] = $params['from'];
+        $query['size'] = $params['size'];
+        $query['_source'] = $params['source'];
+        if (!empty($this->highlight)) {
+            $query['body']['highlight'] = $this->highlight;
+        }
+        if (!empty($params['sort'])) {
+            $query['body']['sort'] = $params['sort'];
+        }
+
+        return $this->convertResult($this->elastic->search($query));
     }
 
     /**
@@ -263,7 +150,7 @@ class QueryService
             'id'    => $id,
         ];
 
-        return $this->elasticSearch->get($params);
+        return $this->elastic->get($params);
     }
 
     /**
@@ -291,7 +178,7 @@ class QueryService
             ],
         ];
 
-        return $this->filterAggregation($this->elasticSearch->search($query));
+        return $this->filterAggregation($this->elastic->search($query));
     }
 
     /**
