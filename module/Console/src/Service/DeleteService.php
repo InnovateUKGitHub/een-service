@@ -27,13 +27,12 @@ class DeleteService
 
     /**
      * @param string $index
-     * @param string $since
      */
-    public function deleteOutOfDate($index, $since)
+    public function deleteOutOfDate($index)
     {
         switch ($index) {
             case EEN::ES_INDEX_OPPORTUNITY:
-                $this->opportunityService->delete($since, new \DateTime());
+                $this->opportunityService->delete(new \DateTime());
                 break;
             case EEN::ES_INDEX_EVENT:
                 $this->eventService->delete(new \DateTime());

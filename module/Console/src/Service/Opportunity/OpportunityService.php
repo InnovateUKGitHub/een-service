@@ -39,24 +39,20 @@ class OpportunityService
     }
 
     /**
-     * @param string    $since
      * @param \DateTime $now
      */
-    public function delete($since, \DateTime $now)
+    public function delete(\DateTime $now)
     {
         $results = $this->indexService->getAll(
             EEN::ES_INDEX_OPPORTUNITY,
             EEN::ES_TYPE_OPPORTUNITY,
-            ['date', 'deadline', 'date_import']
+            ['date_import']
         );
 
-        $dateImport = $now->format('Ymd');
-        $dateSince = $now->sub(new \DateInterval('P' . $since . 'M'))->format('Ymd');
+        $dateImport = $now->format(EEN::DATE_FORMAT_IMPORT);
         $body = [];
         foreach ($results['hits']['hits'] as $document) {
-            if ($document['_source']['date_import'] < $dateImport ||
-                $document['_source']['date'] < $dateSince
-            ) {
+            if ($document['_source']['date_import'] < $dateImport) {
                 $body['body'][] = [
                     'delete' => [
                         '_index' => EEN::ES_INDEX_OPPORTUNITY,
@@ -86,7 +82,7 @@ class OpportunityService
 
         $this->merlinValidator->checkProfilesExists($results);
 
-        $dateImport = (new \DateTime())->format('Ymd');
+        $dateImport = (new \DateTime())->format(EEN::DATE_FORMAT_IMPORT);
         foreach ($results->{'profile'} as $profile) {
             $this->merlinValidator->checkDataExists($profile, $this->structure);
 

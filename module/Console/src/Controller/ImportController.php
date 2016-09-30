@@ -61,13 +61,8 @@ final class ImportController extends AbstractActionController
         }
 
         $index = (string)$this->params('index', 'opportunity');
-        $since = (int)$this->params('since', 12);
 
-        if ($since <= 0) {
-            throw new InvalidArgumentException('The month enter is not valid');
-        }
-
-        $this->deleteService->deleteOutOfDate($index, $since);
+        $this->deleteService->deleteOutOfDate($index);
 
         return ['success' => true];
     }

@@ -89,18 +89,6 @@ class ImportControllerTest extends \PHPUnit_Framework_TestCase
         $controller->dispatch($controller->getRequest());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage The month enter is not valid
-     */
-    public function testDeleteActionInvalidMonth()
-    {
-        $controller = $this->buildController(['since' => 'invalidSince', 'action' => 'delete']);
-
-        $request = new Request();
-        $controller->dispatch($request);
-    }
-
     public function testDeleteAction()
     {
         $controller = $this->buildController(['action' => 'delete']);

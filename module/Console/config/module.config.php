@@ -53,10 +53,9 @@ return [
                 ],
                 'delete-data'   => [
                     'options' => [
-                        'route'       => 'delete [--index=<index>] [--since=<since>]',
+                        'route'       => 'delete [--index=<index>]',
                         'constraints' => [
                             'index' => '[opportunity|event]',
-                            'since' => '[\d]+',
                         ],
                         'defaults'    => [
                             'controller' => Controller\ImportController::class,
