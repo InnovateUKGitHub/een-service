@@ -33,6 +33,10 @@ final class OpportunitiesController extends AbstractRestfulController
     {
         $params = $this->getInputFilter()->getValues();
 
+        if (array_key_exists('count', $params) === true && $params['count'] === true) {
+            return ['count' => $this->service->searchOpportunitiesCount($params)['count']];
+        }
+
         return $this->service->searchOpportunities($params);
     }
 

@@ -137,7 +137,6 @@ class QueryService
                 'fields'      => $fields,
                 'query'       => $value,
                 'phrase_slop' => 50,
-                'analyzer'    => 'my_analyzer',
             ],
         ];
     }
@@ -172,20 +171,33 @@ class QueryService
      *
      * @return array
      */
-    public function search($params, $index, $type)
+    public function count($params, $index, $type)
+    {
+        $query = $this->buildSearch($params, $index, $type, true);
+
+        return $this->elasticSearch->count($query);
+    }
+
+    /**
+     * @param array  $params
+     * @param string $index
+     * @param string $type
+     * @param bool   $isCount
+     *
+     * @return array
+     */
+    private function buildSearch($params, $index, $type, $isCount = false)
     {
         $query = [
-            'index'   => $index,
-            'type'    => $type,
-            'from'    => $params['from'],
-            'size'    => $params['size'],
-            'body'    => [
+            'index' => $index,
+            'type'  => $type,
+            'body'  => [
                 'query' => [
                     'bool' => [],
                 ],
             ],
-            '_source' => $params['source'],
         ];
+
         if (!empty($this->must)) {
             $query['body']['query']['bool']['must'] = $this->must;
         }
@@ -193,12 +205,32 @@ class QueryService
             $query['body']['query']['bool']['minimum_should_match'] = 1;
             $query['body']['query']['bool']['should'] = $this->should;
         }
-        if (!empty($this->highlight)) {
-            $query['body']['highlight'] = $this->highlight;
+
+        if ($isCount === false) {
+            $query['from'] = $params['from'];
+            $query['size'] = $params['size'];
+            $query['_source'] = $params['source'];
+            if (!empty($this->highlight)) {
+                $query['body']['highlight'] = $this->highlight;
+            }
+            if (!empty($params['sort'])) {
+                $query['body']['sort'] = $params['sort'];
+            }
         }
-        if (!empty($params['sort'])) {
-            $query['body']['sort'] = $params['sort'];
-        }
+
+        return $query;
+    }
+
+    /**
+     * @param array  $params
+     * @param string $index
+     * @param string $type
+     *
+     * @return array
+     */
+    public function search($params, $index, $type)
+    {
+        $query = $this->buildSearch($params, $index, $type);
 
         return $this->convertResult($this->elasticSearch->search($query));
     }

@@ -24,6 +24,19 @@ class ElasticSearchService
      *
      * @return array
      */
+    public function searchOpportunitiesCount($params)
+    {
+        $this->buildSearch($params);
+
+        return $this->query->count($params, EEN::ES_INDEX_OPPORTUNITY, EEN::ES_TYPE_OPPORTUNITY);
+
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return array
+     */
     public function searchOpportunities($params)
     {
         if (!empty($params['search'])) {

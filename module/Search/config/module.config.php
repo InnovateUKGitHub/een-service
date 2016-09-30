@@ -141,13 +141,13 @@ return [
         ],
         OpportunitiesController::class => [
             [
-                'required'   => true,
+                'required'   => false,
                 'validators' => [],
                 'filters'    => [],
                 'name'       => 'from',
             ],
             [
-                'required'   => true,
+                'required'   => false,
                 'validators' => [],
                 'filters'    => [],
                 'name'       => 'size',
@@ -183,10 +183,16 @@ return [
                 'name'       => 'sort',
             ],
             [
-                'required'   => true,
+                'required'   => false,
                 'validators' => [],
                 'filters'    => [],
                 'name'       => 'source',
+            ],
+            [
+                'required'   => false,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'count',
             ],
         ],
     ],
