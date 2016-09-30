@@ -3,7 +3,7 @@
 namespace Search\Factory\Controller;
 
 use Search\Controller\OpportunitiesController;
-use Search\Service\ElasticSearchService;
+use Search\Service\OpportunitiesService;
 use Zend\ServiceManager\ServiceManager;
 
 final class OpportunitiesControllerFactory
@@ -15,7 +15,7 @@ final class OpportunitiesControllerFactory
      */
     public function __invoke(ServiceManager $serviceManager)
     {
-        $service = $serviceManager->get(ElasticSearchService::class);
+        $service = $serviceManager->get(OpportunitiesService::class);
 
         return new OpportunitiesController($service);
     }

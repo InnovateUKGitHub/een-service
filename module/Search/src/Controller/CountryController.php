@@ -2,20 +2,20 @@
 
 namespace Search\Controller;
 
-use Search\Service\ElasticSearchService;
+use Search\Service\QueryService;
 use Zend\Mvc\Controller\AbstractRestfulController;
 
 final class CountryController extends AbstractRestfulController
 {
-    /** @var ElasticSearchService */
+    /** @var QueryService */
     private $service;
 
     /**
      * CountryController constructor.
      *
-     * @param ElasticSearchService $service
+     * @param QueryService $service
      */
-    public function __construct(ElasticSearchService $service)
+    public function __construct(QueryService $service)
     {
         $this->service = $service;
     }
@@ -25,6 +25,6 @@ final class CountryController extends AbstractRestfulController
      */
     public function getList()
     {
-        return $this->service->getCountries();
+        return $this->service->getCountryList();
     }
 }

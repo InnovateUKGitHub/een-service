@@ -3,7 +3,7 @@
 namespace Search\Factory\Controller;
 
 use Search\Controller\EventsController;
-use Search\Service\ElasticSearchService;
+use Search\Service\EventsService;
 use Zend\ServiceManager\ServiceManager;
 
 final class EventsControllerFactory
@@ -15,7 +15,7 @@ final class EventsControllerFactory
      */
     public function __invoke(ServiceManager $serviceManager)
     {
-        $service = $serviceManager->get(ElasticSearchService::class);
+        $service = $serviceManager->get(EventsService::class);
 
         return new EventsController($service);
     }

@@ -3,17 +3,18 @@
 namespace SearchTest\Service;
 
 use Common\Constant\EEN;
-use Search\Service\ElasticSearchService;
+use Search\Service\OpportunitiesService;
 use Search\Service\QueryService;
 
 /**
- * @covers \Search\Service\ElasticSearchService
+ * @covers \Search\Service\AbstractSearchService
+ * @covers \Search\Service\OpportunitiesService
  */
-class ElasticSearchServiceTest extends \PHPUnit_Framework_TestCase
+class OpportunitiesServiceTest extends \PHPUnit_Framework_TestCase
 {
-    const OPPORTUNITY_ID = 'myId';
+    const ID = 'id';
 
-    public function testSearchOpportunities()
+    public function testSearch()
     {
         $params = [
             'from'             => 0,
@@ -34,12 +35,12 @@ class ElasticSearchServiceTest extends \PHPUnit_Framework_TestCase
             ->with($params, EEN::ES_INDEX_OPPORTUNITY, EEN::ES_TYPE_OPPORTUNITY)
             ->willReturn(['success' => true]);
 
-        $service = new ElasticSearchService($queryServiceMock);
+        $service = new OpportunitiesService($queryServiceMock);
 
-        self::assertEquals(['success' => true], $service->searchOpportunities($params));
+        self::assertEquals(['success' => true], $service->search($params));
     }
 
-    public function testSearchOpportunitiesNoIndex()
+    public function testSearchNoIndex()
     {
         /** @var \PHPUnit_Framework_MockObject_MockObject|QueryService $queryServiceMock */
         $queryServiceMock = $this->createMock(QueryService::class);
@@ -48,26 +49,26 @@ class ElasticSearchServiceTest extends \PHPUnit_Framework_TestCase
             ->with(EEN::ES_INDEX_OPPORTUNITY)
             ->willReturn(false);
 
-        $service = new ElasticSearchService($queryServiceMock);
+        $service = new OpportunitiesService($queryServiceMock);
 
-        self::assertEquals(['error' => 'Index not created'], $service->searchOpportunities([]));
+        self::assertEquals(['total' => 0], $service->search([]));
     }
 
-    public function testGetOpportunity()
+    public function testGet()
     {
         /** @var \PHPUnit_Framework_MockObject_MockObject|QueryService $queryServiceMock */
         $queryServiceMock = $this->createMock(QueryService::class);
         $queryServiceMock->expects(self::once())
             ->method('getDocument')
-            ->with(self::OPPORTUNITY_ID, EEN::ES_INDEX_OPPORTUNITY, EEN::ES_TYPE_OPPORTUNITY)
+            ->with(self::ID, EEN::ES_INDEX_OPPORTUNITY, EEN::ES_TYPE_OPPORTUNITY)
             ->willReturn(['success' => true]);
 
-        $service = new ElasticSearchService($queryServiceMock);
+        $service = new OpportunitiesService($queryServiceMock);
 
-        self::assertEquals(['success' => true], $service->getOpportunity(self::OPPORTUNITY_ID));
+        self::assertEquals(['success' => true], $service->get(self::ID));
     }
 
-    public function testGetOpportunityNoIndex()
+    public function testGetNoIndex()
     {
         /** @var \PHPUnit_Framework_MockObject_MockObject|QueryService $queryServiceMock */
         $queryServiceMock = $this->createMock(QueryService::class);
@@ -76,8 +77,8 @@ class ElasticSearchServiceTest extends \PHPUnit_Framework_TestCase
             ->with(EEN::ES_INDEX_OPPORTUNITY)
             ->willReturn(false);
 
-        $service = new ElasticSearchService($queryServiceMock);
+        $service = new OpportunitiesService($queryServiceMock);
 
-        self::assertEquals(['error' => 'Index not created'], $service->getOpportunity(self::OPPORTUNITY_ID));
+        self::assertEquals(['total' => 0], $service->get(self::ID));
     }
 }
