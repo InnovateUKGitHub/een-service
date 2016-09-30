@@ -158,6 +158,10 @@ class QueryService extends MustQuery
      */
     public function getCountryList()
     {
+        if ($this->exists(EEN::ES_INDEX_OPPORTUNITY) === false) {
+            return ['total' => 0];
+        }
+
         $query = [
             'index' => EEN::ES_INDEX_OPPORTUNITY,
             'type'  => EEN::ES_TYPE_OPPORTUNITY,
