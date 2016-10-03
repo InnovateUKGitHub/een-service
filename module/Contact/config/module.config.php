@@ -3,8 +3,10 @@
 namespace Contact;
 
 use Contact\Controller\ContactController;
+use Contact\Controller\EmailController;
 use Contact\Controller\LeadController;
 use Contact\Factory\Controller\ContactControllerFactory;
+use Contact\Factory\Controller\EmailControllerFactory;
 use Contact\Factory\Controller\LeadControllerFactory;
 use Contact\Factory\Service\ContactServiceFactory;
 use Contact\Factory\Service\LeadServiceFactory;
@@ -27,11 +29,12 @@ return [
         'factories' => [
             ContactController::class => ContactControllerFactory::class,
             LeadController::class    => LeadControllerFactory::class,
+            EmailController::class   => EmailControllerFactory::class,
         ],
     ],
     'router'                 => [
         'routes' => [
-            'een.contact' => [
+            'een.contact'      => [
                 'type'    => Segment::class,
                 'options' => [
                     'route'       => '/contact[/:id]',
@@ -43,7 +46,7 @@ return [
                     ],
                 ],
             ],
-            'een.lead'    => [
+            'een.lead'         => [
                 'type'    => Segment::class,
                 'options' => [
                     'route'       => '/lead[/:id]',
@@ -55,12 +58,22 @@ return [
                     ],
                 ],
             ],
+            'een.email.verification' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/email-verification',
+                    'defaults' => [
+                        'controller' => EmailController::class,
+                    ],
+                ],
+            ],
         ],
     ],
     'zf-content-negotiation' => [
         'controllers'            => [
             ContactController::class => 'Json',
             LeadController::class    => 'Json',
+            EmailController::class   => 'Json',
         ],
         'accept_whitelist'       => [
             ContactController::class => [
@@ -68,6 +81,10 @@ return [
                 'application/*+json',
             ],
             LeadController::class    => [
+                'application/json',
+                'application/*+json',
+            ],
+            EmailController::class   => [
                 'application/json',
                 'application/*+json',
             ],
@@ -79,6 +96,9 @@ return [
             LeadController::class    => [
                 'application/json',
             ],
+            EmailController::class   => [
+                'application/json',
+            ],
         ],
     ],
     'zf-content-validation'  => [
@@ -87,6 +107,9 @@ return [
         ],
         LeadController::class    => [
             'POST' => LeadController::class,
+        ],
+        EmailController::class   => [
+            'POST' => EmailController::class,
         ],
     ],
     'input_filter_specs'     => [
@@ -186,6 +209,20 @@ return [
                 'validators' => [],
                 'filters'    => [],
                 'name'       => 'website',
+            ],
+        ],
+        EmailController::class   => [
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'email',
+            ],
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'url',
             ],
         ],
     ],
