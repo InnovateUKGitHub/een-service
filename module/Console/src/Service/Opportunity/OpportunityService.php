@@ -43,20 +43,39 @@ class OpportunityService
      */
     public function delete(\DateTime $now)
     {
+        $dateImport = $now->format(EEN::DATE_FORMAT_IMPORT);
+        $body = [];
+
+        // Get all the out of date opportunities
         $results = $this->indexService->getAll(
             EEN::ES_INDEX_OPPORTUNITY,
             EEN::ES_TYPE_OPPORTUNITY,
             ['date_import']
         );
-
-        $dateImport = $now->format(EEN::DATE_FORMAT_IMPORT);
-        $body = [];
         foreach ($results['hits']['hits'] as $document) {
             if ($document['_source']['date_import'] < $dateImport) {
                 $body['body'][] = [
                     'delete' => [
                         '_index' => EEN::ES_INDEX_OPPORTUNITY,
                         '_type'  => EEN::ES_TYPE_OPPORTUNITY,
+                        '_id'    => $document['_id'],
+                    ],
+                ];
+            }
+        }
+
+        // Get all the out of date country
+        $results = $this->indexService->getAll(
+            EEN::ES_INDEX_COUNTRY,
+            EEN::ES_TYPE_COUNTRY,
+            ['date_import']
+        );
+        foreach ($results['hits']['hits'] as $document) {
+            if ($document['_source']['date_import'] < $dateImport) {
+                $body['body'][] = [
+                    'delete' => [
+                        '_index' => EEN::ES_INDEX_COUNTRY,
+                        '_type'  => EEN::ES_TYPE_COUNTRY,
                         '_id'    => $document['_id'],
                     ],
                 ];
@@ -79,6 +98,7 @@ class OpportunityService
         $results = $this->merlinData->getList($month, $type);
 
         $this->indexService->createIndex(EEN::ES_INDEX_OPPORTUNITY);
+        $this->indexService->createIndex(EEN::ES_INDEX_COUNTRY);
 
         $this->merlinValidator->checkProfilesExists($results);
 
@@ -120,11 +140,23 @@ class OpportunityService
                 'date_import'        => $dateImport,
             ];
 
+            // Import opportunities
             $this->indexService->index(
                 $params,
                 $id,
                 EEN::ES_INDEX_OPPORTUNITY,
                 EEN::ES_TYPE_OPPORTUNITY
+            );
+
+            // Import countries
+            $this->indexService->index(
+                [
+                    'name'        => $params['country'],
+                    'date_import' => $dateImport,
+                ],
+                $params['country_code'],
+                EEN::ES_INDEX_COUNTRY,
+                EEN::ES_TYPE_COUNTRY
             );
         }
     }

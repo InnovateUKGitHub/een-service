@@ -24,16 +24,6 @@ class QueryService extends MustQuery
     }
 
     /**
-     * @param string $index
-     *
-     * @return bool
-     */
-    public function exists($index)
-    {
-        return $this->elastic->indices()->exists(['index' => $index]);
-    }
-
-    /**
      * @param array  $fields
      * @param string $html
      */
@@ -163,44 +153,37 @@ class QueryService extends MustQuery
         }
 
         $query = [
-            'index' => EEN::ES_INDEX_OPPORTUNITY,
-            'type'  => EEN::ES_TYPE_OPPORTUNITY,
-            'size'  => 0,
-            'body'  => [
-                'aggs' => [
-                    'country'      => [
-                        'terms' => [
-                            'field' => 'country.raw',
-                        ],
-                    ],
-                    'country_code' => [
-                        'terms' => [
-                            'field' => 'country_code.raw',
-                        ],
-                    ],
+            'index'   => EEN::ES_INDEX_COUNTRY,
+            'type'    => EEN::ES_TYPE_COUNTRY,
+            'size'    => 1000,
+            'body'    => [
+                'sort' => [
+                    ['name' => 'asc'],
                 ],
             ],
+            '_source' => ['name'],
+
         ];
 
-        return $this->filterAggregation($this->elastic->search($query));
+        return $this->convertToAssociatedArray($this->elastic->search($query));
+    }
+
+    private function convertToAssociatedArray($results)
+    {
+        $response = [];
+        foreach ($results['hits']['hits'] as $result) {
+            $response[$result['_id']] = $result['_source']['name'];
+        }
+        return $response;
     }
 
     /**
-     * @param array $aggregations
+     * @param string $index
      *
-     * @return array
+     * @return bool
      */
-    private function filterAggregation($aggregations)
+    public function exists($index)
     {
-        $result = [];
-
-        $i = 0;
-        foreach ($aggregations['aggregations']['country_code']['buckets'] as $countryCode) {
-            $result[$countryCode['key']] = $aggregations['aggregations']['country']['buckets'][$i++]['key'];
-        }
-
-        asort($result);
-
-        return $result;
+        return $this->elastic->indices()->exists(['index' => $index]);
     }
 }

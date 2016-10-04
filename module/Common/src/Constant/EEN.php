@@ -34,5 +34,7 @@ class EEN
     const ES_TYPE_OPPORTUNITY = 'opportunity';
     const ES_INDEX_EVENT = 'event';
     const ES_TYPE_EVENT = 'event';
+    const ES_INDEX_COUNTRY = 'country';
+    const ES_TYPE_COUNTRY = 'country';
     const DATE_FORMAT_IMPORT = 'Ymd';
 }

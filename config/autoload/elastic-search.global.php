@@ -4,6 +4,27 @@ use Common\Constant\EEN;
 
 return [
     'elastic-search-indexes' => [
+        EEN::ES_INDEX_COUNTRY     => [
+            'index' => EEN::ES_INDEX_COUNTRY,
+            'body'  => [
+                'settings' => [
+                    'number_of_shards'   => 1,
+                    'number_of_replicas' => 0,
+                ],
+                'mappings' => [
+                    EEN::ES_TYPE_COUNTRY => [
+                        'properties' => [
+                            'name'        => [
+                                'type' => 'string',
+                            ],
+                            'date_import' => [
+                                'type' => 'date',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
         EEN::ES_INDEX_OPPORTUNITY => [
             'index' => EEN::ES_INDEX_OPPORTUNITY,
             'body'  => [
