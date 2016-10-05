@@ -58,4 +58,9 @@ class ContactService extends AbstractEntity
             'contact' => $contactResponse['id'],
         ];
     }
+
+    public function describe($type)
+    {
+        return $this->salesForce->describesObject($type);
+    }
 }

@@ -96,6 +96,7 @@ class SalesForceService
             ['sessionId' => $this->sessionId]
         );
         $this->client->addSoapInputHeader($header, true);
+
         return true;
     }
 
@@ -110,6 +111,7 @@ class SalesForceService
             // TODO Log failing error to logger
             return false;
         }
+
         return true;
     }
 
@@ -132,7 +134,15 @@ class SalesForceService
             ['describeSObject' => $object]
         );
 
-        return $response;
+        $results = [];
+        foreach ($response->result->fields as $field) {
+            $results[$field->name] = [
+                'soapType' => $field->soapType,
+                'type'     => $field->type,
+            ];
+        }
+
+        return $results;
     }
 
     /**
@@ -155,7 +165,7 @@ class SalesForceService
     /**
      * @param \SoapParam $object
      *
-     * @return array|ApiProblemResponse
+     * @return string|ApiProblemResponse
      */
     public function create(\SoapParam $object)
     {
@@ -187,7 +197,7 @@ class SalesForceService
             return $this->buildValidationErrors($response->result->errors);
         }
 
-        return ['id' => $response->result->id];
+        return $response->result->id;
     }
 
     /**
@@ -217,5 +227,34 @@ class SalesForceService
                 ]
             )
         );
+    }
+
+    public function query($query)
+    {
+        $this->login();
+
+        try {
+            $response = $this->client->call(
+                'query',
+                ['query' => $query]
+            );
+        } catch (\Exception $e) {
+            return new ApiProblemResponse(
+                new ApiProblem(
+                    Response::STATUS_CODE_500,
+                    'Invalid Soap answer',
+                    null,
+                    null,
+                    [
+                        'code'      => $e->getCode(),
+                        'exception' => $e->getMessage(),
+                        'request'   => $this->client->getLastRequest(),
+                        'response'  => $this->client->getLastResponse(),
+                    ]
+                )
+            );
+        }
+
+        return $response->result;
     }
 }

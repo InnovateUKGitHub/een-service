@@ -3,9 +3,11 @@
 namespace Contact;
 
 use Contact\Controller\ContactController;
+use Contact\Controller\DescribeController;
 use Contact\Controller\EmailController;
 use Contact\Controller\LeadController;
 use Contact\Factory\Controller\ContactControllerFactory;
+use Contact\Factory\Controller\DescribeControllerFactory;
 use Contact\Factory\Controller\EmailControllerFactory;
 use Contact\Factory\Controller\LeadControllerFactory;
 use Contact\Factory\Service\ContactServiceFactory;
@@ -27,14 +29,27 @@ return [
     ],
     'controllers'            => [
         'factories' => [
-            ContactController::class => ContactControllerFactory::class,
-            LeadController::class    => LeadControllerFactory::class,
-            EmailController::class   => EmailControllerFactory::class,
+            ContactController::class  => ContactControllerFactory::class,
+            DescribeController::class => DescribeControllerFactory::class,
+            LeadController::class     => LeadControllerFactory::class,
+            EmailController::class    => EmailControllerFactory::class,
         ],
     ],
     'router'                 => [
         'routes' => [
-            'een.contact'      => [
+            'een.describe'           => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'       => '/describe[/:id]',
+                    'constraints' => [
+                        'id' => '[a-zA-Z]+',
+                    ],
+                    'defaults'    => [
+                        'controller' => DescribeController::class,
+                    ],
+                ],
+            ],
+            'een.contact'            => [
                 'type'    => Segment::class,
                 'options' => [
                     'route'       => '/contact[/:id]',
@@ -46,7 +61,7 @@ return [
                     ],
                 ],
             ],
-            'een.lead'         => [
+            'een.lead'               => [
                 'type'    => Segment::class,
                 'options' => [
                     'route'       => '/lead[/:id]',
@@ -71,32 +86,40 @@ return [
     ],
     'zf-content-negotiation' => [
         'controllers'            => [
-            ContactController::class => 'Json',
-            LeadController::class    => 'Json',
-            EmailController::class   => 'Json',
+            DescribeController::class => 'Json',
+            ContactController::class  => 'Json',
+            LeadController::class     => 'Json',
+            EmailController::class    => 'Json',
         ],
         'accept_whitelist'       => [
-            ContactController::class => [
+            DescribeController::class => [
                 'application/json',
                 'application/*+json',
             ],
-            LeadController::class    => [
+            ContactController::class  => [
                 'application/json',
                 'application/*+json',
             ],
-            EmailController::class   => [
+            LeadController::class     => [
+                'application/json',
+                'application/*+json',
+            ],
+            EmailController::class    => [
                 'application/json',
                 'application/*+json',
             ],
         ],
         'content_type_whitelist' => [
-            ContactController::class => [
+            DescribeController::class => [
                 'application/json',
             ],
-            LeadController::class    => [
+            ContactController::class  => [
                 'application/json',
             ],
-            EmailController::class   => [
+            LeadController::class     => [
+                'application/json',
+            ],
+            EmailController::class    => [
                 'application/json',
             ],
         ],
