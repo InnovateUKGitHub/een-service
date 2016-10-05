@@ -153,6 +153,51 @@ return [
         ContactController::class => [
             [
                 'required'   => true,
+                'validators' => [
+                    [
+                        'name' => EmailAddress::class,
+                    ],
+                ],
+                'filters'    => [],
+                'name'       => 'other_email',
+            ],
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'description',
+            ],
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'interest',
+            ],
+            [
+                'required'   => false,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'more',
+            ],
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'phone',
+            ],
+            [
+                'required'   => true,
+                'validators' => [
+                    [
+                        'name' => EmailAddress::class,
+                    ],
+                ],
+                'filters'    => [],
+                'name'       => 'email',
+            ],
+
+            [
+                'required'   => true,
                 'validators' => [],
                 'filters'    => [],
                 'name'       => 'firstname',
@@ -171,67 +216,75 @@ return [
                     ],
                 ],
                 'filters'    => [],
-                'name'       => 'email',
+                'name'       => 'contact_email',
             ],
             [
                 'required'   => true,
                 'validators' => [],
                 'filters'    => [],
-                'name'       => 'phone',
+                'name'       => 'contact_phone',
+            ],
+            [
+                'required'   => false,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'newsletter',
+            ],
+
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'company_name',
             ],
             [
                 'required'   => true,
                 'validators' => [],
                 'filters'    => [],
-                'name'       => 'mobile',
-            ],
-            [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'company-name',
-            ],
-            [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'company-phone',
-            ],
-            [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'company-number',
-            ],
-            [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'company-address',
-            ],
-            [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'company-postcode',
-            ],
-            [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'company-city',
-            ],
-            [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'company-country',
+                'name'       => 'company_number',
             ],
             [
                 'required'   => true,
                 'validators' => [],
                 'filters'    => [],
                 'name'       => 'website',
+            ],
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'company_phone',
+            ],
+
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'postcode',
+            ],
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'addressone',
+            ],
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'addresstwo',
+            ],
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'city',
+            ],
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'county',
             ],
         ],
         EmailController::class   => [

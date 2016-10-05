@@ -208,12 +208,18 @@ class SalesForceService
     public function buildValidationErrors($errors)
     {
         $validationMessages = [];
-        if (is_array($errors->fields)) {
-            foreach ($errors->fields as $field) {
-                $validationMessages[strtolower($field)] = [$errors->message];
+        if (is_array($errors)) {
+            foreach ($errors as $field) {
+                $validationMessages[strtolower($field->fields)] = [$field->message];
             }
         } else {
-            $validationMessages[strtolower($errors->fields)] = [$errors->message];
+            if (is_array($errors->fields)) {
+                foreach ($errors->fields as $field) {
+                    $validationMessages[strtolower($field)] = [$errors->message];
+                }
+            } else {
+                $validationMessages[strtolower($errors->fields)] = [$errors->message];
+            }
         }
 
         return new ApiProblemResponse(
