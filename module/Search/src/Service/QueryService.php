@@ -42,6 +42,11 @@ class QueryService extends MustQuery
             $this->highlight['fields'][$field] = [
                 'fragment_size'       => $args['fragment_size'],
                 'number_of_fragments' => $args['number_of_fragments'],
+                'highlight_query'     => [
+                    'bool' => [
+                        'must' => $this->must[0],
+                    ],
+                ],
             ];
         }
     }
@@ -109,6 +114,7 @@ class QueryService extends MustQuery
             $query['body']['sort'] = $params['sort'];
         }
 
+//print_r($query); die;
         return $this->convertResult($this->elastic->search($query));
     }
 
@@ -168,15 +174,6 @@ class QueryService extends MustQuery
         return $this->convertToAssociatedArray($this->elastic->search($query));
     }
 
-    private function convertToAssociatedArray($results)
-    {
-        $response = [];
-        foreach ($results['hits']['hits'] as $result) {
-            $response[$result['_id']] = $result['_source']['name'];
-        }
-        return $response;
-    }
-
     /**
      * @param string $index
      *
@@ -185,5 +182,15 @@ class QueryService extends MustQuery
     public function exists($index)
     {
         return $this->elastic->indices()->exists(['index' => $index]);
+    }
+
+    private function convertToAssociatedArray($results)
+    {
+        $response = [];
+        foreach ($results['hits']['hits'] as $result) {
+            $response[$result['_id']] = $result['_source']['name'];
+        }
+
+        return $response;
     }
 }
