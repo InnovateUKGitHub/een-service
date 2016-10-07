@@ -21,24 +21,50 @@ class ContactService extends AbstractEntity
      */
     public function create($data)
     {
-        $contact = $this->isContactExists($data['email']);
+        $contact = $this->getContact($data['email']);
+        $contactId = isset($contact['records']) ? $contact['records']->Id : null;
+        $accountId = (isset($contact['records']) && isset($contact['records']->Account)
+            ? $contact['records']->Account->Id
+            : null);
 
-        if ($contact['type'] === 'Lead') {
-            return $this->updateContact($contact['id'], $data);
-        }
-        return $contact;
+        return $this->createUser(
+            $data,
+            $contactId,
+            $accountId
+        );
     }
 
     /**
-     * @param string $id
      * @param string $data
+     * @param string $contactId
+     * @param string $accountId
      *
      * @return array
      */
-    public function updateContact($id, $data)
+    public function createUser($data, $contactId, $accountId)
     {
-        // Step1 Create Account
+        $accountResponse = $this->createAccount($data, $accountId);
+        if ($accountResponse instanceof ApiProblemResponse) {
+            return $accountResponse;
+        }
+
+        $contactResponse = $this->createContact($data, $contactId, $accountResponse);
+        if ($contactResponse instanceof ApiProblemResponse) {
+            // If problem during contact creation delete account
+            $this->salesForce->delete([$accountResponse]);
+
+            return $contactResponse;
+        }
+
+        return $this->getContact($data['email']);
+    }
+
+    private function createAccount($data, $accountId)
+    {
         $account = new \stdClass();
+        if ($accountId !== null) {
+            $account->Id = $accountId;
+        }
         $account->Name = $data['company_name'];
         $account->Phone = $data['company_phone'];
         $account->Website = $data['website'];
@@ -52,19 +78,25 @@ class ContactService extends AbstractEntity
         $account->ShippingPostalCode = $data['postcode'];
         $account->ShippingCity = $data['city'];
 
-        $accountResponse = $this->createEntity($account, 'Account');
-        if ($accountResponse instanceof ApiProblemResponse) {
-            return $accountResponse;
+        if ($accountId === null) {
+            return $this->createEntity($account, 'Account');
         }
 
-        // Step2 Update Contact
+        return $this->updateEntity($account, 'Account');
+    }
+
+    private function createContact($data, $contactId, $accountId)
+    {
         $contact = new \stdClass();
-        $contact->Id = $id;
+        if ($contactId !== null) {
+            $contact->Id = $contactId;
+        }
+        $contact->Id = $contactId;
         $contact->FirstName = $data['firstname'];
         $contact->LastName = $data['lastname'];
         $contact->Phone = $data['phone'];
         $contact->MobilePhone = $data['contact_phone'];
-        $contact->Email1__c = $data['contact_email'];
+        $contact->Email = $data['contact_email'];
         $contact->Email_Address_2__c = $data['other_email'];
 
         $contact->MailingStreet = $data['addressone'] . ' ' . $data['addresstwo'];
@@ -74,21 +106,16 @@ class ContactService extends AbstractEntity
         if (!empty($data['newsletter'])) {
             $contact->Email_Newsletter__c = true;
         }
-        $contact->AccountId = $accountResponse;
+        $contact->AccountId = $accountId;
         $contact->Contact_Status__c = 'Client';
 
-        $contactResponse = $this->updateEntity($contact, 'Contact');
-        if ($contactResponse instanceof ApiProblemResponse) {
-            // If problem during contact creation delete account
-            $this->salesForce->delete([$accountResponse]);
+        if ($contactId === null) {
+            $contact->Email1__c = $data['email'];
 
-            return $contactResponse;
+            return $this->createEntity($contact, 'Contact');
         }
 
-        return [
-            'account' => $accountResponse,
-            'contact' => $contactResponse,
-        ];
+        return $this->updateEntity($contact, 'Contact');
     }
 
     /**

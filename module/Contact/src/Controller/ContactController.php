@@ -35,4 +35,9 @@ final class ContactController extends AbstractRestfulController
 
         return $this->service->create($params);
     }
+
+    public function get($email)
+    {
+        return $this->service->getContact($email);
+    }
 }

@@ -54,7 +54,7 @@ return [
                 'options' => [
                     'route'       => '/contact[/:id]',
                     'constraints' => [
-                        'id' => '[\d]+',
+                        'id' => '[\w\d_\-\.@]+',
                     ],
                     'defaults'    => [
                         'controller' => ContactController::class,

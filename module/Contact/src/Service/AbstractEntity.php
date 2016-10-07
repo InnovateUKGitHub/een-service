@@ -48,17 +48,17 @@ abstract class AbstractEntity
     /**
      * @param string $email
      *
-     * @return array|bool|\ZF\ApiProblem\ApiProblemResponse
+     * @return array|\ZF\ApiProblem\ApiProblemResponse
      */
-    protected function isContactExists($email)
+    public function getContact($email)
     {
         $query = new \stdClass();
         $query->queryString = '
-SELECT c.Id, c.Email, c.Contact_Status__c, c.FirstName, c.LastName, c.Phone, c.MobilePhone, c.Email1__c,
+SELECT c.Id, c.Email, c.Contact_Status__c, c.FirstName, c.LastName, c.Phone, c.MobilePhone,
 c.Email_Address_2__c, c.Email_Newsletter__c, c.MailingStreet, c.MailingPostalCode, c.MailingCity,
 a.Id, a.Name, a.Phone, a.Website, a.Company_Registration_Number__c
 FROM Contact c, c.Account a
-WHERE Email = \'' . $email . '\'
+WHERE Email1__c = \'' . $email . '\'
 ';
 
         $result = $this->salesForce->query($query);
@@ -66,11 +66,7 @@ WHERE Email = \'' . $email . '\'
             return $result;
         }
 
-        if ($result->size == 0) {
-            return false;
-        }
-
-        return (array)$result->records;
+        return (array)$result;
     }
 
     /**

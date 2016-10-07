@@ -13,25 +13,20 @@ class LeadService extends AbstractEntity
      */
     public function create($data)
     {
-        $isContact = $this->isContactExists($data['email']);
-        if ($isContact !== false) {
+        $isContact = $this->getContact($data['email']);
+        if ($isContact['size'] !== 0) {
             return $isContact;
         }
 
         $lead = new \stdClass();
-        $lead->Email = $data['email'];
         $lead->Email1__c = $data['email'];
+        $lead->LastName = 'Lead';
 
-        if (isset($data['lastname'])) {
-            $lead->LastName = $data['lastname'];
-        } else {
-            $lead->LastName = 'Lead';
-        }
 
         $result = $this->createEntity($lead, 'Contact');
         if ($result instanceof ApiProblemResponse) {
             return $result;
         }
-        return $this->isContactExists($data['email']);
+        return $this->getContact($data['email']);
     }
 }
