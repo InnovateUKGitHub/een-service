@@ -7,11 +7,29 @@ use ZF\ApiProblem\ApiProblemResponse;
 class ContactService extends AbstractEntity
 {
     /**
+     * @param SalesForceService $salesForce
+     */
+    public function __construct(SalesForceService $salesForce)
+    {
+        parent::__construct($salesForce);
+    }
+
+    /**
      * @param array $data
      *
      * @return array
      */
     public function create($data)
+    {
+        $contact = $this->isContactExists($data['email']);
+
+        if ($contact['type'] === 'Lead') {
+            return $this->updateContact($contact['id'], $data);
+        }
+        return $contact;
+    }
+
+    public function updateContact($id, $data)
     {
         // Step1 Create Account
         $account = new \stdClass();
@@ -35,12 +53,11 @@ class ContactService extends AbstractEntity
             return $accountResponse;
         }
 
-        // Step2 Create Contact
-        // Todo Get Id from param and update Lead to Contact instead of create
+        // Step2 Update Contact
         $contact = new \stdClass();
+        $contact->Id = $id;
         $contact->FirstName = $data['firstname'];
         $contact->LastName = $data['lastname'];
-        $contact->Email = $data['email'];
         $contact->Phone = $data['phone'];
         $contact->MobilePhone = $data['contact_phone'];
         $contact->Email1__c = $data['contact_email'];
@@ -55,8 +72,9 @@ class ContactService extends AbstractEntity
             $contact->Email_Newsletter__c = true;
         }
         $contact->AccountId = $accountResponse;
+        $contact->Contact_Status__c = 'Client';
 
-        $contactResponse = $this->createEntity($contact, 'Contact');
+        $contactResponse = $this->updateEntity($contact, 'Contact');
         if ($contactResponse instanceof ApiProblemResponse) {
             // If problem during contact creation delete account
             $this->salesForce->delete([$accountResponse]);

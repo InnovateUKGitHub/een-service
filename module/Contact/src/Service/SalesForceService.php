@@ -164,17 +164,18 @@ class SalesForceService
 
     /**
      * @param \SoapParam $object
+     * @param string     $action
      *
      * @return string|ApiProblemResponse
      */
-    public function create(\SoapParam $object)
+    public function action(\SoapParam $object, $action)
     {
         $this->login();
 
         try {
             $response = $this->client->call(
-                'create',
-                ['create' => $object]
+                $action,
+                [$action => $object]
             );
         } catch (\Exception $e) {
             return new ApiProblemResponse(

@@ -34,25 +34,4 @@ class LeadService extends AbstractEntity
         }
         return $this->isContactExists($data['email']);
     }
-
-    private function isContactExists($email)
-    {
-        $query = new \stdClass();
-        $query->queryString = 'SELECT Id, Email, Contact_Status__c FROM Contact WHERE Email = \'' . $email . '\'';
-
-        $result = $this->salesForce->query($query);
-        if ($result instanceof ApiProblemResponse) {
-            return $result;
-        }
-
-        if ($result->size == 0) {
-            return false;
-        }
-
-        return [
-            'id'    => $result->records->Id,
-            'email' => $result->records->Email,
-            'type'  => $result->records->Contact_Status__c,
-        ];
-    }
 }
