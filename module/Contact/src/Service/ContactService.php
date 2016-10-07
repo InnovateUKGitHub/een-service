@@ -29,6 +29,12 @@ class ContactService extends AbstractEntity
         return $contact;
     }
 
+    /**
+     * @param string $id
+     * @param string $data
+     *
+     * @return array
+     */
     public function updateContact($id, $data)
     {
         // Step1 Create Account
@@ -41,12 +47,10 @@ class ContactService extends AbstractEntity
         $account->BillingStreet = $data['addressone'] . ' ' . $data['addresstwo'];
         $account->BillingPostalCode = $data['postcode'];
         $account->BillingCity = $data['city'];
-//        $account->BillingCountry = $data['county'];
 
         $account->ShippingStreet = $data['addressone'] . ' ' . $data['addresstwo'];
         $account->ShippingPostalCode = $data['postcode'];
         $account->ShippingCity = $data['city'];
-//        $account->ShippingCountry = $data['county'];
 
         $accountResponse = $this->createEntity($account, 'Account');
         if ($accountResponse instanceof ApiProblemResponse) {
@@ -66,7 +70,6 @@ class ContactService extends AbstractEntity
         $contact->MailingStreet = $data['addressone'] . ' ' . $data['addresstwo'];
         $contact->MailingPostalCode = $data['postcode'];
         $contact->MailingCity = $data['city'];
-//        $contact->MailingCountry = $data['county'];
 
         if (!empty($data['newsletter'])) {
             $contact->Email_Newsletter__c = true;
@@ -88,6 +91,11 @@ class ContactService extends AbstractEntity
         ];
     }
 
+    /**
+     * @param string $type
+     *
+     * @return array
+     */
     public function describe($type)
     {
         return $this->salesForce->describesObject($type);

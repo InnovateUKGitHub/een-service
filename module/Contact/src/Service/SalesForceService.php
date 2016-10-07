@@ -118,7 +118,7 @@ class SalesForceService
     /**
      * @param string $type
      *
-     * @return mixed
+     * @return array
      */
     public function describesObject($type)
     {

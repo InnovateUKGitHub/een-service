@@ -53,7 +53,13 @@ abstract class AbstractEntity
     protected function isContactExists($email)
     {
         $query = new \stdClass();
-        $query->queryString = 'SELECT Id, Email, Contact_Status__c FROM Contact WHERE Email = \'' . $email . '\'';
+        $query->queryString = '
+SELECT c.Id, c.Email, c.Contact_Status__c, c.FirstName, c.LastName, c.Phone, c.MobilePhone, c.Email1__c,
+c.Email_Address_2__c, c.Email_Newsletter__c, c.MailingStreet, c.MailingPostalCode, c.MailingCity,
+a.Id, a.Name, a.Phone, a.Website, a.Company_Registration_Number__c
+FROM Contact c, c.Account a
+WHERE Email = \'' . $email . '\'
+';
 
         $result = $this->salesForce->query($query);
         if ($result instanceof ApiProblemResponse) {
@@ -64,11 +70,7 @@ abstract class AbstractEntity
             return false;
         }
 
-        return [
-            'id'    => $result->records->Id,
-            'email' => $result->records->Email,
-            'type'  => $result->records->Contact_Status__c,
-        ];
+        return (array)$result->records;
     }
 
     /**
