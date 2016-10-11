@@ -2,6 +2,8 @@
 
 namespace Contact\Service;
 
+use ZF\ApiProblem\ApiProblemResponse;
+
 class LeadService extends AbstractEntity
 {
     /**
@@ -11,13 +13,20 @@ class LeadService extends AbstractEntity
      */
     public function create($data)
     {
-        $lead = new \stdClass();
-        $lead->Email = $data['email'];
-
-        if (isset($data['lastname'])) {
-            $lead->LastName = $data['lastname'];
+        $isContact = $this->getContact($data['email']);
+        if ($isContact['size'] !== 0) {
+            return $isContact;
         }
 
-        return $this->createEntity($lead, 'Contact');
+        $lead = new \stdClass();
+        $lead->Email1__c = $data['email'];
+        $lead->LastName = 'Lead';
+
+
+        $result = $this->createEntity($lead, 'Contact');
+        if ($result instanceof ApiProblemResponse) {
+            return $result;
+        }
+        return $this->getContact($data['email']);
     }
 }

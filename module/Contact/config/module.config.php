@@ -3,9 +3,11 @@
 namespace Contact;
 
 use Contact\Controller\ContactController;
+use Contact\Controller\DescribeController;
 use Contact\Controller\EmailController;
 use Contact\Controller\LeadController;
 use Contact\Factory\Controller\ContactControllerFactory;
+use Contact\Factory\Controller\DescribeControllerFactory;
 use Contact\Factory\Controller\EmailControllerFactory;
 use Contact\Factory\Controller\LeadControllerFactory;
 use Contact\Factory\Service\ContactServiceFactory;
@@ -27,26 +29,39 @@ return [
     ],
     'controllers'            => [
         'factories' => [
-            ContactController::class => ContactControllerFactory::class,
-            LeadController::class    => LeadControllerFactory::class,
-            EmailController::class   => EmailControllerFactory::class,
+            ContactController::class  => ContactControllerFactory::class,
+            DescribeController::class => DescribeControllerFactory::class,
+            LeadController::class     => LeadControllerFactory::class,
+            EmailController::class    => EmailControllerFactory::class,
         ],
     ],
     'router'                 => [
         'routes' => [
-            'een.contact'      => [
+            'een.describe'           => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'       => '/describe[/:id]',
+                    'constraints' => [
+                        'id' => '[a-zA-Z]+',
+                    ],
+                    'defaults'    => [
+                        'controller' => DescribeController::class,
+                    ],
+                ],
+            ],
+            'een.contact'            => [
                 'type'    => Segment::class,
                 'options' => [
                     'route'       => '/contact[/:id]',
                     'constraints' => [
-                        'id' => '[\d]+',
+                        'id' => '[\w\d_\-\.@]+',
                     ],
                     'defaults'    => [
                         'controller' => ContactController::class,
                     ],
                 ],
             ],
-            'een.lead'         => [
+            'een.lead'               => [
                 'type'    => Segment::class,
                 'options' => [
                     'route'       => '/lead[/:id]',
@@ -71,32 +86,40 @@ return [
     ],
     'zf-content-negotiation' => [
         'controllers'            => [
-            ContactController::class => 'Json',
-            LeadController::class    => 'Json',
-            EmailController::class   => 'Json',
+            DescribeController::class => 'Json',
+            ContactController::class  => 'Json',
+            LeadController::class     => 'Json',
+            EmailController::class    => 'Json',
         ],
         'accept_whitelist'       => [
-            ContactController::class => [
+            DescribeController::class => [
                 'application/json',
                 'application/*+json',
             ],
-            LeadController::class    => [
+            ContactController::class  => [
                 'application/json',
                 'application/*+json',
             ],
-            EmailController::class   => [
+            LeadController::class     => [
+                'application/json',
+                'application/*+json',
+            ],
+            EmailController::class    => [
                 'application/json',
                 'application/*+json',
             ],
         ],
         'content_type_whitelist' => [
-            ContactController::class => [
+            DescribeController::class => [
                 'application/json',
             ],
-            LeadController::class    => [
+            ContactController::class  => [
                 'application/json',
             ],
-            EmailController::class   => [
+            LeadController::class     => [
+                'application/json',
+            ],
+            EmailController::class    => [
                 'application/json',
             ],
         ],
@@ -130,6 +153,51 @@ return [
         ContactController::class => [
             [
                 'required'   => true,
+                'validators' => [
+                    [
+                        'name' => EmailAddress::class,
+                    ],
+                ],
+                'filters'    => [],
+                'name'       => 'other_email',
+            ],
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'description',
+            ],
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'interest',
+            ],
+            [
+                'required'   => false,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'more',
+            ],
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'phone',
+            ],
+            [
+                'required'   => true,
+                'validators' => [
+                    [
+                        'name' => EmailAddress::class,
+                    ],
+                ],
+                'filters'    => [],
+                'name'       => 'email',
+            ],
+
+            [
+                'required'   => true,
                 'validators' => [],
                 'filters'    => [],
                 'name'       => 'firstname',
@@ -148,67 +216,75 @@ return [
                     ],
                 ],
                 'filters'    => [],
-                'name'       => 'email',
+                'name'       => 'contact_email',
             ],
             [
                 'required'   => true,
                 'validators' => [],
                 'filters'    => [],
-                'name'       => 'phone',
+                'name'       => 'contact_phone',
+            ],
+            [
+                'required'   => false,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'newsletter',
+            ],
+
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'company_name',
             ],
             [
                 'required'   => true,
                 'validators' => [],
                 'filters'    => [],
-                'name'       => 'mobile',
-            ],
-            [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'company-name',
-            ],
-            [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'company-phone',
-            ],
-            [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'company-number',
-            ],
-            [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'company-address',
-            ],
-            [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'company-postcode',
-            ],
-            [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'company-city',
-            ],
-            [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'company-country',
+                'name'       => 'company_number',
             ],
             [
                 'required'   => true,
                 'validators' => [],
                 'filters'    => [],
                 'name'       => 'website',
+            ],
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'company_phone',
+            ],
+
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'postcode',
+            ],
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'addressone',
+            ],
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'addresstwo',
+            ],
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'city',
+            ],
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'county',
             ],
         ],
         EmailController::class   => [

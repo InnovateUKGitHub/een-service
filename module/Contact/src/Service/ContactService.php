@@ -7,55 +7,124 @@ use ZF\ApiProblem\ApiProblemResponse;
 class ContactService extends AbstractEntity
 {
     /**
+     * @param SalesForceService $salesForce
+     */
+    public function __construct(SalesForceService $salesForce)
+    {
+        parent::__construct($salesForce);
+    }
+
+    /**
      * @param array $data
      *
      * @return array
      */
     public function create($data)
     {
-        // Step1 Create Account
-        $account = new \stdClass();
-        $account->Name = $data['company-name'];
-        $account->Phone = $data['company-phone'];
-        $account->Website = $data['website'];
-        $account->Company_Registration_Number__c = $data['company-number'];
+        $contact = $this->getContact($data['email']);
+        $contactId = isset($contact['records']) ? $contact['records']->Id : null;
+        $accountId = (isset($contact['records']) && isset($contact['records']->Account)
+            ? $contact['records']->Account->Id
+            : null);
 
-        $account->BillingStreet = $data['company-address'];
-        $account->BillingPostalCode = $data['company-postcode'];
-        $account->BillingCity = $data['company-city'];
-        $account->BillingCountry = $data['company-country'];
+        return $this->createUser(
+            $data,
+            $contactId,
+            $accountId
+        );
+    }
 
-        $account->ShippingStreet = $data['company-address'];
-        $account->ShippingPostalCode = $data['company-postcode'];
-        $account->ShippingCity = $data['company-city'];
-        $account->ShippingCountry = $data['company-country'];
-
-        $accountResponse = $this->createEntity($account, 'Account');
+    /**
+     * @param string $data
+     * @param string $contactId
+     * @param string $accountId
+     *
+     * @return array
+     */
+    public function createUser($data, $contactId, $accountId)
+    {
+        $accountResponse = $this->createAccount($data, $accountId);
         if ($accountResponse instanceof ApiProblemResponse) {
             return $accountResponse;
         }
 
-        // Step2 Create Contact
-        // Todo Get Id from param and update Lead to Contact instead of create
-        $contact = new \stdClass();
-        $contact->FirstName = $data['firstname'];
-        $contact->LastName = $data['lastname'];
-        $contact->Email = $data['email'];
-        $contact->Phone = $data['phone'];
-        $contact->MobilePhone = $data['mobile'];
-        $contact->AccountId = $accountResponse['id'];
-
-        $contactResponse = $this->createEntity($contact, 'Contact');
+        $contactResponse = $this->createContact($data, $contactId, $accountResponse);
         if ($contactResponse instanceof ApiProblemResponse) {
             // If problem during contact creation delete account
-            $this->salesForce->delete([$accountResponse['id']]);
+            $this->salesForce->delete([$accountResponse]);
 
             return $contactResponse;
         }
 
-        return [
-            'account' => $accountResponse['id'],
-            'contact' => $contactResponse['id'],
-        ];
+        return $this->getContact($data['email']);
+    }
+
+    private function createAccount($data, $accountId)
+    {
+        $account = new \stdClass();
+        if ($accountId !== null) {
+            $account->Id = $accountId;
+        }
+        $account->Name = $data['company_name'];
+        $account->Phone = $data['company_phone'];
+        $account->Website = $data['website'];
+        $account->Company_Registration_Number__c = $data['company_number'];
+
+        $account->BillingStreet = $data['addressone'] . ' ' . $data['addresstwo'];
+        $account->BillingPostalCode = $data['postcode'];
+        $account->BillingCity = $data['city'];
+
+        $account->ShippingStreet = $data['addressone'] . ' ' . $data['addresstwo'];
+        $account->ShippingPostalCode = $data['postcode'];
+        $account->ShippingCity = $data['city'];
+
+        if ($accountId === null) {
+            return $this->createEntity($account, 'Account');
+        }
+
+        return $this->updateEntity($account, 'Account');
+    }
+
+    private function createContact($data, $contactId, $accountId)
+    {
+        $contact = new \stdClass();
+        if ($contactId !== null) {
+            $contact->Id = $contactId;
+        }
+        $contact->Id = $contactId;
+        $contact->FirstName = $data['firstname'];
+        $contact->LastName = $data['lastname'];
+        $contact->Phone = $data['phone'];
+        $contact->MobilePhone = $data['contact_phone'];
+        $contact->Email = $data['contact_email'];
+        $contact->Email_Address_2__c = $data['other_email'];
+
+        $contact->MailingStreet = $data['addressone'] . ' ' . $data['addresstwo'];
+        $contact->MailingPostalCode = $data['postcode'];
+        $contact->MailingCity = $data['city'];
+
+        if (!empty($data['newsletter'])) {
+            $contact->Email_Newsletter__c = true;
+        }
+        $contact->AccountId = $accountId;
+        $contact->Contact_Status__c = 'Client';
+
+        if ($contactId === null) {
+            $contact->Email1__c = $data['email'];
+
+            return $this->createEntity($contact, 'Contact');
+        }
+
+        return $this->updateEntity($contact, 'Contact');
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return array
+     */
+    public function describe($type)
+    {
+        return $this->salesForce->describesObject($type);
     }
 }

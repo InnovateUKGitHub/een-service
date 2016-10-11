@@ -9,7 +9,7 @@ use Zend\Mvc\Controller\AbstractRestfulController;
 /**
  * @method InputFilter getInputFilter()
  */
-final class ContactController extends AbstractRestfulController
+final class DescribeController extends AbstractRestfulController
 {
     /** @var ContactService */
     private $service;
@@ -25,19 +25,12 @@ final class ContactController extends AbstractRestfulController
     }
 
     /**
-     * @param array $data
+     * @param string $id
      *
      * @return array
      */
-    public function create($data)
+    public function get($id)
     {
-        $params = $this->getInputFilter()->getValues();
-
-        return $this->service->create($params);
-    }
-
-    public function get($email)
-    {
-        return $this->service->getContact($email);
+        return $this->service->describe($id);
     }
 }
