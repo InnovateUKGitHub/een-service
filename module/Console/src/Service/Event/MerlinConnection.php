@@ -73,6 +73,8 @@ class MerlinConnection
             $return['p'] = $this->password;
         }
 
+        $return['da'] = (new \DateTime())->sub(new \DateInterval('P1D'))->format('Ymd');
+
         return $return;
     }
 }

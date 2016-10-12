@@ -106,7 +106,7 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
             ->with([
                 'Some Index Information' => '',
             ])
-            ->willThrowException(new \Exception());
+            ->willThrowException(new \Exception('An error occurred during the creation of the index'));
 
         $this->service->createIndex(EEN::ES_INDEX_OPPORTUNITY);
     }
@@ -147,7 +147,7 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
                 'type'  => EEN::ES_TYPE_OPPORTUNITY,
                 'id'    => 1,
             ])
-            ->willThrowException(new \Exception());
+            ->willThrowException(new \Exception('An error occurred during the import of a document'));
 
         $this->service->index(
             'body',
@@ -162,31 +162,47 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
         $this->clientMock->expects(self::at(0))
             ->method('search')
             ->with([
-                'index'   => EEN::ES_INDEX_OPPORTUNITY,
-                'type'    => EEN::ES_TYPE_OPPORTUNITY,
-                'from'    => 0,
-                'size'    => 100,
-                '_source' => ['date', 'deadline', 'date_import'],
+                'index' => EEN::ES_INDEX_OPPORTUNITY,
+                'type'  => EEN::ES_TYPE_OPPORTUNITY,
+                'from'  => 0,
+                'size'  => 100,
+                'body'  => [
+                    'query' => [
+                        'range' => [
+                            'date_import' => [
+                                'lt' => '20161012',
+                            ],
+                        ],
+                    ],
+                ],
             ])
             ->willReturn(['hits' => ['hits' => ['A hit']]]);
 
         $this->clientMock->expects(self::at(1))
             ->method('search')
             ->with([
-                'index'   => EEN::ES_INDEX_OPPORTUNITY,
-                'type'    => EEN::ES_TYPE_OPPORTUNITY,
-                'from'    => 100,
-                'size'    => 100,
-                '_source' => ['date', 'deadline', 'date_import'],
+                'index' => EEN::ES_INDEX_OPPORTUNITY,
+                'type'  => EEN::ES_TYPE_OPPORTUNITY,
+                'from'  => 100,
+                'size'  => 100,
+                'body'  => [
+                    'query' => [
+                        'range' => [
+                            'date_import' => [
+                                'lt' => '20161012',
+                            ],
+                        ],
+                    ],
+                ],
             ])
             ->willReturn(['hits' => ['hits' => []]]);
 
         self::assertEquals(
             ['hits' => ['hits' => ['A hit']]],
-            $this->service->getAll(
+            $this->service->getOutOfDateData(
                 EEN::ES_INDEX_OPPORTUNITY,
                 EEN::ES_TYPE_OPPORTUNITY,
-                ['date', 'deadline', 'date_import']
+                '20161012'
             )
         );
     }
@@ -200,18 +216,26 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
         $this->clientMock->expects(self::once())
             ->method('search')
             ->with([
-                'index'   => EEN::ES_INDEX_OPPORTUNITY,
-                'type'    => EEN::ES_TYPE_OPPORTUNITY,
-                'from'    => 0,
-                'size'    => 100,
-                '_source' => ['date', 'deadline', 'date_import'],
+                'index' => EEN::ES_INDEX_OPPORTUNITY,
+                'type'  => EEN::ES_TYPE_OPPORTUNITY,
+                'from'  => 0,
+                'size'  => 100,
+                'body'  => [
+                    'query' => [
+                        'range' => [
+                            'date_import' => [
+                                'lt' => '20161012',
+                            ],
+                        ],
+                    ],
+                ],
             ])
-            ->willThrowException(new \Exception());
+            ->willThrowException(new \Exception('An error occurred during the removal of old documents'));
 
-        $this->service->getAll(
+        $this->service->getOutOfDateData(
             EEN::ES_INDEX_OPPORTUNITY,
             EEN::ES_TYPE_OPPORTUNITY,
-            ['date', 'deadline', 'date_import']
+            '20161012'
         );
     }
 

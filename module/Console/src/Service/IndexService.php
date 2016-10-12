@@ -80,7 +80,7 @@ class IndexService
         } catch (\Exception $e) {
             $this->logger->debug('An error occurred during the creation of the index');
             $this->logger->debug($e->getMessage());
-            throw new \RuntimeException('An error occurred during the creation of the index');
+            throw new \RuntimeException($e->getMessage());
         }
     }
 
@@ -106,29 +106,38 @@ class IndexService
         } catch (\Exception $e) {
             $this->logger->debug('An error occurred during the import of a document');
             $this->logger->debug($e->getMessage());
+            $this->logger->debug($params);
             $this->logger->debug($e->getTraceAsString());
+            throw new \RuntimeException($e->getMessage());
         }
-        throw new \RuntimeException('An error occurred during the import of a document');
     }
 
     /**
      * @param string $index
      * @param string $type
-     * @param array  $source
+     * @param string $now
      * @param array  $results
      * @param int    $from
      * @param int    $size
      *
      * @return array|null
      */
-    public function getAll($index, $type, $source, $results = [], $from = 0, $size = 100)
+    public function getOutOfDateData($index, $type, $now, $results = [], $from = 0, $size = 100)
     {
         $query = [
-            'index'   => $index,
-            'type'    => $type,
-            'from'    => $from,
-            'size'    => $size,
-            '_source' => $source,
+            'index' => $index,
+            'type'  => $type,
+            'from'  => $from,
+            'size'  => $size,
+            'body'  => [
+                'query' => [
+                    'range' => [
+                        'date_import' => [
+                            'lt' => $now,
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         try {
@@ -140,15 +149,15 @@ class IndexService
             }
 
             if (count($tmp['hits']['hits']) > 0) {
-                return $this->getAll($index, $type, $source, $results, $from + $size);
+                return $this->getOutOfDateData($index, $type, $now, $results, $from + $size);
             }
 
             return $results;
         } catch (\Exception $e) {
             $this->logger->debug('An error occurred during the removal of old documents');
             $this->logger->debug($e->getMessage());
+            throw new \RuntimeException($e->getMessage());
         }
-        throw new \RuntimeException('An error occurred during the removal of old documents');
     }
 
     /**

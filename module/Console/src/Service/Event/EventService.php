@@ -43,8 +43,8 @@ class EventService
 
         $dateImport = (new \DateTime())->format('Ymd');
 
-//        $this->merlin->import($dateImport);
-//        $this->eventBrite->import($dateImport);
+        $this->merlin->import($dateImport);
+        $this->eventBrite->import($dateImport);
         $this->salesForce->import($dateImport);
     }
 
@@ -53,24 +53,21 @@ class EventService
      */
     public function delete(\DateTime $now)
     {
-        $results = $this->indexService->getAll(
+        $results = $this->indexService->getOutOfDateData(
             EEN::ES_INDEX_EVENT,
             EEN::ES_TYPE_EVENT,
-            ['date_import']
+            $now->format(EEN::DATE_FORMAT_IMPORT)
         );
 
-        $dateImport = $now->format('Ymd');
         $body = [];
         foreach ($results['hits']['hits'] as $document) {
-            if ($document['_source']['date_import'] < $dateImport) {
-                $body['body'][] = [
-                    'delete' => [
-                        '_index' => EEN::ES_INDEX_EVENT,
-                        '_type'  => EEN::ES_TYPE_EVENT,
-                        '_id'    => $document['_id'],
-                    ],
-                ];
-            }
+            $body['body'][] = [
+                'delete' => [
+                    '_index' => EEN::ES_INDEX_EVENT,
+                    '_type'  => EEN::ES_TYPE_EVENT,
+                    '_id'    => $document['_id'],
+                ],
+            ];
         }
 
         if (empty($body)) {

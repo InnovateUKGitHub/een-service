@@ -33,6 +33,10 @@ class SalesForce
     {
         $events = $this->getEvents();
 
+        if ($events['size'] == 0) {
+            return;
+        }
+
         foreach ($events['records'] as $event) {
             $event = (array)$event;
 
@@ -48,9 +52,7 @@ class SalesForce
                 'country'      => 'Poland',
                 'description'  => 'Enterprise Europe Network is running a company mission in Poland (Poznan & Krakow) from...',
             ];
-if ($event['Name'] == 'EV-000001') {
-    var_dump($event);
-}
+
             if (isset($event['Title__c'])) {
                 $params['title'] = $event['Title__c'];
             }
@@ -78,9 +80,8 @@ if ($event['Name'] == 'EV-000001') {
 
     private function getEvents()
     {
-        $fields = array_keys($this->salesForce->describesObject('Event__c'));
-        var_dump($fields);
-        $fields = implode(', ', $fields);
+        $fields = implode(', ', array_keys($this->salesForce->describesObject('Event__c')));
+
         $query = new \stdClass();
         $query->queryString = "
 SELECT $fields
