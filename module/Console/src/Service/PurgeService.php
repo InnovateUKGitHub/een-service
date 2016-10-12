@@ -26,7 +26,7 @@ class PurgeService
      *
      * @return array
      */
-    public function delete($index)
+    public function purge($index)
     {
         $params = [
             'index' => $index === 'all' ? '*' : $index,

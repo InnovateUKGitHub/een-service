@@ -30,7 +30,7 @@ final class GenerateController extends AbstractActionController
     }
 
     /**
-     * @return array
+     * @return string
      */
     public function generateAction()
     {
@@ -49,13 +49,13 @@ final class GenerateController extends AbstractActionController
         }
         $this->generateService->generate($index, $number);
 
-        return ['generate' => 'success'];
+        return "$number documents generated on $index.\n";
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function deleteAction()
+    public function purgeAction()
     {
         if (!($this->getRequest() instanceof Request)) {
             throw new BadMethodCallException('This is a console tool only');
@@ -67,8 +67,8 @@ final class GenerateController extends AbstractActionController
             throw new InvalidArgumentException('The index enter is not valid');
         }
 
-        $this->purgeService->delete($index);
+        $this->purgeService->purge($index);
 
-        return ['delete' => 'success'];
+        return "Purge done on $index.\n";
     }
 }

@@ -76,15 +76,15 @@ return [
                         ],
                     ],
                 ],
-                'delete-all'    => [
+                'purge'    => [
                     'options' => [
-                        'route'       => 'delete-all [--index=<index>]',
+                        'route'       => 'purge [--index=<index>]',
                         'constraints' => [
                             'index' => '[opportunity|event|all]',
                         ],
                         'defaults'    => [
                             'controller' => Controller\GenerateController::class,
-                            'action'     => 'delete',
+                            'action'     => 'purge',
                         ],
                     ],
                 ],

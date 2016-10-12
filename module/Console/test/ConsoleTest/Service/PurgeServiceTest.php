@@ -30,6 +30,6 @@ class PurgeServiceTest extends \PHPUnit_Framework_TestCase
             ->with(['index' => 'index'])
             ->willReturn(['success' => true]);
 
-        self::assertEquals(['success' => true], $service->delete('index'));
+        self::assertEquals(['success' => true], $service->purge('index'));
     }
 }

@@ -75,7 +75,7 @@ class ImportControllerTest extends \PHPUnit_Framework_TestCase
         $controller = $this->buildController(['action' => 'import']);
 
         $request = new Request();
-        self::assertEquals(['success' => true], $controller->dispatch($request));
+        self::assertEquals("Import opportunity for month 1 done.\n", $controller->dispatch($request));
     }
 
     /**
@@ -94,6 +94,6 @@ class ImportControllerTest extends \PHPUnit_Framework_TestCase
         $controller = $this->buildController(['action' => 'delete']);
 
         $request = new Request();
-        self::assertEquals(['success' => true], $controller->dispatch($request));
+        self::assertEquals("Delete of old date on opportunity done.\n", $controller->dispatch($request));
     }
 }

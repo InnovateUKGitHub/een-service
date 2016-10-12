@@ -30,7 +30,7 @@ final class ImportController extends AbstractActionController
     }
 
     /**
-     * @return array
+     * @return string
      */
     public function importAction()
     {
@@ -48,11 +48,11 @@ final class ImportController extends AbstractActionController
 
         $this->importService->import($index, $month, $type);
 
-        return ['success' => true];
+        return "Import $index for month $month done.\n";
     }
 
     /**
-     * @return array
+     * @return string
      */
     public function deleteAction()
     {
@@ -64,6 +64,6 @@ final class ImportController extends AbstractActionController
 
         $this->deleteService->deleteOutOfDate($index);
 
-        return ['success' => true];
+        return "Delete of old date on $index done.\n";
     }
 }
