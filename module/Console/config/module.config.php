@@ -36,7 +36,7 @@ return [
         ],
     ],
     'console'         => [
-        'router' => [
+        'router'       => [
             'routes' => [
                 'import-data'   => [
                     'options' => [

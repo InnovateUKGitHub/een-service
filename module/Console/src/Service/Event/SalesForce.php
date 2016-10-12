@@ -80,15 +80,17 @@ class SalesForce
 SELECT e.Id, e.Name, e.Event_Type__c, e.Event_Registration_Status__c, e.Event_Category__c, e.Event_Sub_Category__c,
 e.Start_Date_time__c, e.End_Date_Time__c, e.Attendance_Fee__c, e.Venue__c, e.Destination_Country__c,
 e.Event_Status__c, e.Publish_on_website__c, e.Title__c, e.Event_Summary__c, e.Event_Description__c
-FROM Event__c e
-WHERE e.Start_Date_time__c > TODAY
+FROM Event e
+WHERE e.Start_Date_time__c >= TODAY
 ';
 
         $result = $this->salesForce->query($query);
         if ($result instanceof ApiProblemResponse) {
-            throw new \RuntimeException($result->getContent());
+//            var_dump($result->getApiProblem()->toArray()['exception']); die;
+            throw new \RuntimeException($result->getApiProblem()->toArray()['exception']);
         }
 
+        var_dump($result); die;
         return (array)$result;
     }
 }
