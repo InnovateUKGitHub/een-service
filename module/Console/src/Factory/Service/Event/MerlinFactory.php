@@ -3,28 +3,30 @@
 namespace Console\Factory\Service\Event;
 
 use Common\Constant\EEN;
-use Console\Service\Event\MerlinIngest;
+use Console\Service\Event\MerlinConnection;
+use Console\Service\Event\Merlin;
 use Console\Service\IndexService;
 use Console\Validator\MerlinValidator;
 use Zend\ServiceManager\ServiceManager;
 
-final class MerlinIngestFactory
+final class MerlinFactory
 {
     /**
      * @param ServiceManager $serviceManager
      *
-     * @return MerlinIngest
+     * @return Merlin
      */
     public function __invoke(ServiceManager $serviceManager)
     {
         $indexService = $serviceManager->get(IndexService::class);
+        $merlinData = $serviceManager->get(MerlinConnection::class);
         $merlinValidator = $serviceManager->get(MerlinValidator::class);
 
         $config = $serviceManager->get(EEN::CONFIG);
 
         $this->checkRequiredConfig($config);
 
-        return new MerlinIngest($indexService, $merlinValidator, $config[EEN::MERLIN_EVENT_STRUCTURE]);
+        return new Merlin($indexService, $merlinData, $merlinValidator, $config[EEN::MERLIN_EVENT_STRUCTURE]);
     }
     /**
      * @param array $config

@@ -39,7 +39,7 @@ class EventBrite
      */
     public function import($dateImport)
     {
-        $results = $content = $this->client->execute(Request::METHOD_GET, $this->eventsPath);
+        $results = $this->client->execute(Request::METHOD_GET, $this->eventsPath);
 
         foreach ($results['events'] as $event) {
             $params = [

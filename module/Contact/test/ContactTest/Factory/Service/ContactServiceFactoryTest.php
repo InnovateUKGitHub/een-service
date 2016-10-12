@@ -2,9 +2,9 @@
 
 namespace ContactTest\Factory\Service;
 
+use Common\Service\SalesForceService;
 use Contact\Factory\Service\ContactServiceFactory;
 use Contact\Service\ContactService;
-use Contact\Service\SalesForceService;
 use Zend\ServiceManager\ServiceManager;
 
 /**

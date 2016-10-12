@@ -1,7 +1,6 @@
 <?php
 namespace Console\Service;
 
-use Common\Constant\EEN;
 use Elasticsearch\Client;
 use Zend\Log\Logger;
 
@@ -30,7 +29,7 @@ class IndexService
     {
         $params = [
             'index' => $index,
-            'body' => $this->config[$index]['body']['settings']
+            'body'  => $this->config[$index]['body']['settings'],
         ];
 
         $params['body']['number_of_shards'] = null;

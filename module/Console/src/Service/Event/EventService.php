@@ -9,32 +9,32 @@ class EventService
 {
     /** @var IndexService */
     private $indexService;
-    /** @var EventMerlin */
-    private $merlinData;
-    /** @var MerlinIngest */
-    private $merlinIngest;
+    /** @var Merlin */
+    private $merlin;
     /** @var EventBrite */
     private $eventBrite;
+    /** @var SalesForce */
+    private $salesForce;
 
     /**
      * EventService constructor.
      *
      * @param IndexService $indexService
-     * @param EventMerlin  $merlinData
-     * @param MerlinIngest $merlinIngest
+     * @param Merlin       $merlin
      * @param EventBrite   $eventBrite
+     * @param SalesForce   $salesForce
      */
     public function __construct(
         IndexService $indexService,
-        EventMerlin $merlinData,
-        MerlinIngest $merlinIngest,
-        EventBrite $eventBrite
+        Merlin $merlin,
+        EventBrite $eventBrite,
+        SalesForce $salesForce
     )
     {
         $this->indexService = $indexService;
-        $this->merlinData = $merlinData;
-        $this->merlinIngest = $merlinIngest;
+        $this->merlin = $merlin;
         $this->eventBrite = $eventBrite;
+        $this->salesForce = $salesForce;
     }
 
     public function import()
@@ -43,8 +43,9 @@ class EventService
 
         $dateImport = (new \DateTime())->format('Ymd');
 
-        $this->merlinIngest->import($this->merlinData->getList(), $dateImport);
-        $this->eventBrite->import($dateImport);
+//        $this->merlin->import($dateImport);
+//        $this->eventBrite->import($dateImport);
+        $this->salesForce->import($dateImport);
     }
 
     /**

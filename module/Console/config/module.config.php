@@ -16,10 +16,11 @@ return [
             Service\ImportService::class   => ServiceFactory\ImportServiceFactory::class,
             Service\PurgeService::class    => ServiceFactory\PurgeServiceFactory::class,
 
-            Service\Event\EventBrite::class   => ServiceFactory\Event\EventBriteFactory::class,
-            Service\Event\EventMerlin::class  => ServiceFactory\Event\EventMerlinFactory::class,
-            Service\Event\EventService::class => ServiceFactory\Event\EventServiceFactory::class,
-            Service\Event\MerlinIngest::class => ServiceFactory\Event\MerlinIngestFactory::class,
+            Service\Event\EventBrite::class       => ServiceFactory\Event\EventBriteFactory::class,
+            Service\Event\EventService::class     => ServiceFactory\Event\EventServiceFactory::class,
+            Service\Event\MerlinConnection::class => ServiceFactory\Event\MerlinConnectionFactory::class,
+            Service\Event\Merlin::class           => ServiceFactory\Event\MerlinFactory::class,
+            Service\Event\SalesForce::class       => ServiceFactory\Event\SalesForceFactory::class,
 
             Service\Opportunity\OpportunityMerlin::class  => ServiceFactory\Opportunity\OpportunityMerlinFactory::class,
             Service\Opportunity\OpportunityService::class => ServiceFactory\Opportunity\OpportunityServiceFactory::class,

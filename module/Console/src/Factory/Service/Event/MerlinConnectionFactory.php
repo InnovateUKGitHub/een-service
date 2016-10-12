@@ -4,17 +4,17 @@ namespace Console\Factory\Service\Event;
 
 use Common\Constant\EEN;
 use Common\Factory\HttpServiceFactory;
-use Console\Service\Event\EventMerlin;
+use Console\Service\Event\MerlinConnection;
 use Zend\Http\Exception\InvalidArgumentException;
 use Zend\Log\Logger;
 use Zend\ServiceManager\ServiceManager;
 
-final class EventMerlinFactory
+final class MerlinConnectionFactory
 {
     /**
      * @param ServiceManager $serviceManager
      *
-     * @return EventMerlin
+     * @return MerlinConnection
      */
     public function __invoke(ServiceManager $serviceManager)
     {
@@ -34,7 +34,7 @@ final class EventMerlinFactory
 
         $config = $config[EEN::MERLIN];
 
-        return new EventMerlin(
+        return new MerlinConnection(
             $client,
             $logger,
             $config[EEN::USERNAME],

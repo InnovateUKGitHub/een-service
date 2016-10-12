@@ -163,6 +163,9 @@ return [
                             'url'                    => [
                                 'type' => 'string',
                             ],
+                            'summary'                => [
+                                'type' => 'string',
+                            ],
                             'description'            => [
                                 'type' => 'string',
                             ],
