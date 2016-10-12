@@ -37,20 +37,23 @@ class SalesForce
             $event = (array)$event;
 
             $params = [
-                'title'        => $event['Name'],
+                'name'         => $event['Name'],
                 'start_date'   => $event['Start_Date_time__c'],
                 'end_date'     => isset($event['End_Date_Time__c']) ? $event['End_Date_Time__c'] : $event['Start_Date_time__c'],
                 'date_import'  => $dateImport,
                 'url'          => 'een',
 
                 // Temporary information
-                'fee'          => '100',
                 'country_code' => 'PL',
                 'country'      => 'Poland',
-                'summary'      => 'Make the most of an exclusive opportunity to grow your food & drink',
                 'description'  => 'Enterprise Europe Network is running a company mission in Poland (Poznan & Krakow) from...',
             ];
-
+if ($event['Name'] == 'EV-000001') {
+    var_dump($event);
+}
+            if (isset($event['Title__c'])) {
+                $params['title'] = $event['Title__c'];
+            }
             if (isset($event['Event_Type__c'])) {
                 $params['type'] = $event['Event_Type__c'];
             }
@@ -75,22 +78,21 @@ class SalesForce
 
     private function getEvents()
     {
+        $fields = array_keys($this->salesForce->describesObject('Event__c'));
+        var_dump($fields);
+        $fields = implode(', ', $fields);
         $query = new \stdClass();
-        $query->queryString = '
-SELECT e.Id, e.Name, e.Event_Type__c, e.Event_Registration_Status__c, e.Event_Category__c, e.Event_Sub_Category__c,
-e.Start_Date_time__c, e.End_Date_Time__c, e.Attendance_Fee__c, e.Venue__c, e.Destination_Country__c,
-e.Event_Status__c, e.Publish_on_website__c, e.Title__c, e.Event_Summary__c, e.Event_Description__c
-FROM Event e
-WHERE e.Start_Date_time__c >= TODAY
-';
+        $query->queryString = "
+SELECT $fields
+FROM Event__c
+WHERE Start_Date_time__c >= TODAY
+";
 
         $result = $this->salesForce->query($query);
         if ($result instanceof ApiProblemResponse) {
-//            var_dump($result->getApiProblem()->toArray()['exception']); die;
             throw new \RuntimeException($result->getApiProblem()->toArray()['exception']);
         }
 
-        var_dump($result); die;
         return (array)$result;
     }
 }

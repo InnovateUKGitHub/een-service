@@ -148,6 +148,9 @@ return [
                 'mappings' => [
                     EEN::ES_TYPE_EVENT => [
                         'properties' => [
+                            'name'                   => [
+                                'type' => 'string',
+                            ],
                             'title'                  => [
                                 'type' => 'string',
                             ],
