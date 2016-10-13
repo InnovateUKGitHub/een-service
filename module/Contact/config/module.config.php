@@ -149,7 +149,7 @@ return [
         ],
         ContactController::class => [
             [
-                'required'   => true,
+                'required'   => false,
                 'validators' => [
                     [
                         'name' => EmailAddress::class,
@@ -177,7 +177,7 @@ return [
                 'name'       => 'more',
             ],
             [
-                'required'   => true,
+                'required'   => false,
                 'validators' => [],
                 'filters'    => [],
                 'name'       => 'phone',
@@ -229,25 +229,25 @@ return [
             ],
 
             [
-                'required'   => true,
+                'required'   => false,
                 'validators' => [],
                 'filters'    => [],
                 'name'       => 'company_name',
             ],
             [
-                'required'   => true,
+                'required'   => false,
                 'validators' => [],
                 'filters'    => [],
                 'name'       => 'company_number',
             ],
             [
-                'required'   => true,
+                'required'   => false,
                 'validators' => [],
                 'filters'    => [],
                 'name'       => 'website',
             ],
             [
-                'required'   => true,
+                'required'   => false,
                 'validators' => [],
                 'filters'    => [],
                 'name'       => 'company_phone',
@@ -266,7 +266,7 @@ return [
                 'name'       => 'addressone',
             ],
             [
-                'required'   => true,
+                'required'   => false,
                 'validators' => [],
                 'filters'    => [],
                 'name'       => 'addresstwo',
@@ -276,12 +276,6 @@ return [
                 'validators' => [],
                 'filters'    => [],
                 'name'       => 'city',
-            ],
-            [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'county',
             ],
         ],
         EmailController::class   => [
