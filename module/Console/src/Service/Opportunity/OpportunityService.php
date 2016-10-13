@@ -86,11 +86,10 @@ class OpportunityService
 
     /**
      * @param string $month
-     * @param string $type
      */
-    public function import($month, $type)
+    public function import($month)
     {
-        $results = $this->merlinData->getList($month, $type);
+        $results = $this->merlinData->getList($month);
 
         $this->indexService->createIndex(EEN::ES_INDEX_OPPORTUNITY);
         $this->indexService->createIndex(EEN::ES_INDEX_COUNTRY);

@@ -41,33 +41,16 @@ class SalesForce
             $event = (array)$event;
 
             $params = [
-                'name'         => $event['Name'],
-                'start_date'   => $event['Start_Date_time__c'],
-                'end_date'     => isset($event['End_Date_Time__c']) ? $event['End_Date_Time__c'] : $event['Start_Date_time__c'],
-                'date_import'  => $dateImport,
-                'url'          => 'een',
-
-                // Temporary information
-                'country_code' => 'PL',
-                'country'      => 'Poland',
-                'description'  => 'Enterprise Europe Network is running a company mission in Poland (Poznan & Krakow) from...',
+                'title'       => $event['Title__c'],
+                'summary'     => isset($event['Event_Summary__c']) ? $event['Event_Summary__c'] : null,
+                'description' => isset($event['Event_Description__c']) ? $event['Event_Description__c'] : null,
+                'start_date'  => $event['Start_Date_time__c'],
+                'end_date'    => isset($event['End_Date_Time__c']) ? $event['End_Date_Time__c'] : $event['Start_Date_time__c'],
+                'country'     => isset($event['Destination_Country__c']) ? $event['Destination_Country__c'] : null,
+                'fee'         => isset($event['Attendance_Fee__c']) ? $event['Attendance_Fee__c'] : 0,
+                'type'        => 'salesForce',
+                'date_import' => $dateImport,
             ];
-
-            if (isset($event['Title__c'])) {
-                $params['title'] = $event['Title__c'];
-            }
-            if (isset($event['Event_Type__c'])) {
-                $params['type'] = $event['Event_Type__c'];
-            }
-            if (isset($event['Attendance_Fee__c'])) {
-                $params['fee'] = $event['Attendance_Fee__c'];
-            }
-            if (isset($event['Event_Summary__c'])) {
-                $params['summary'] = $event['Event_Summary__c'];
-            }
-            if (isset($event['Event_Description__c'])) {
-                $params['description'] = $event['Event_Description__c'];
-            }
 
             $this->indexService->index(
                 $params,

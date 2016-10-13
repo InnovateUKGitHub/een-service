@@ -42,14 +42,13 @@ class OpportunityMerlin
 
     /**
      * @param string $month
-     * @param string $type
      *
      * @return \SimpleXMLElement|null
      */
-    public function getList($month, $type)
+    public function getList($month)
     {
         try {
-            $result = $this->client->execute(Request::METHOD_GET, $this->path, $this->buildQuery($month, $type));
+            $result = $this->client->execute(Request::METHOD_GET, $this->path, $this->buildQuery($month));
 
             return simplexml_load_string($result);
         } catch (HttpException $e) {
@@ -65,11 +64,10 @@ class OpportunityMerlin
 
     /**
      * @param string $month
-     * @param string $type
      *
      * @return array
      */
-    private function buildQuery($month, $type)
+    private function buildQuery($month)
     {
         $return = [];
         if (empty($this->username) === false) {
@@ -79,8 +77,8 @@ class OpportunityMerlin
             $return['p'] = $this->password;
         }
 
-        $return[$type . 'b'] = (new \DateTime())->sub(new \DateInterval('P' . ($month - 1) . 'M'))->format('Ymd');
-        $return[$type . 'a'] = (new \DateTime())->sub(new \DateInterval('P' . ($month) . 'M'))->format('Ymd');
+        $return['ub'] = (new \DateTime())->sub(new \DateInterval('P' . ($month - 1) . 'M'))->format('Ymd');
+        $return['ua'] = (new \DateTime())->sub(new \DateInterval('P' . ($month) . 'M'))->format('Ymd');
 
         return $return;
     }

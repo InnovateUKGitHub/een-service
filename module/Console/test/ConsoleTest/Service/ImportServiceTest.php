@@ -25,11 +25,11 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
     {
         $this->opportunityServiceMock->expects(self::once())
             ->method('import')
-            ->with(self::MONTH, 's');
+            ->with(self::MONTH);
         $this->eventServiceMock->expects(self::never())
             ->method('import');
 
-        $this->service->import(EEN::ES_INDEX_OPPORTUNITY, self::MONTH, 's');
+        $this->service->import(EEN::ES_INDEX_OPPORTUNITY, self::MONTH);
     }
 
     public function testImportEvent()
@@ -39,7 +39,7 @@ class ImportServiceTest extends \PHPUnit_Framework_TestCase
         $this->opportunityServiceMock->expects(self::never())
             ->method('import');
 
-        $this->service->import(EEN::ES_INDEX_EVENT, self::MONTH, 's');
+        $this->service->import(EEN::ES_INDEX_EVENT, self::MONTH);
     }
 
     protected function Setup()

@@ -40,11 +40,10 @@ return [
             'routes' => [
                 'import-data'   => [
                     'options' => [
-                        'route'       => 'import [--index=<index>] [--month=<month>] [--type=<type>]',
+                        'route'       => 'import [--index=<index>] [--month=<month>]',
                         'constraints' => [
                             'index' => '[opportunity|event]',
                             'month' => '[1|2|3|4|5|6|7|8|9|10|11|12]',
-                            'type'  => '[s|u]',
                         ],
                         'defaults'    => [
                             'controller' => Controller\ImportController::class,
