@@ -45,12 +45,10 @@ class OpportunitiesService extends AbstractSearchService
 
             $this->query->highlight([
                 'title'   => [
-                    'fragment_size'       => 0,
                     'number_of_fragments' => 0,
                 ],
                 'summary' => [
-                    'fragment_size'       => 240,
-                    'number_of_fragments' => 1,
+                    'number_of_fragments' => 2,
                 ],
             ]);
         }

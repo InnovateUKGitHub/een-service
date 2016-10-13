@@ -40,7 +40,6 @@ class QueryService extends MustQuery
 
         foreach ($fields as $field => $args) {
             $this->highlight['fields'][$field] = [
-                'fragment_size'       => $args['fragment_size'],
                 'number_of_fragments' => $args['number_of_fragments'],
                 'highlight_query'     => [
                     'bool' => [
