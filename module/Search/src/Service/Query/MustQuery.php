@@ -71,11 +71,17 @@ class MustQuery extends ShouldQuery
      */
     public function mustMatchPhrase($fields, $value)
     {
+        $value = preg_replace('/distrib(\w*)/', '', $value);
+        $value = preg_replace('/manufact(\w*)/', '', $value);
         $this->must[] = [
             'query_string' => [
-                'fields'      => $fields,
-                'query'       => $value,
-                'phrase_slop' => 50,
+                'fields'                 => $fields,
+                'query'                  => trim($value),
+                'phrase_slop'            => 5,
+                'allow_leading_wildcard' => true,
+                'analyze_wildcard'       => true,
+                'default_operator'       => 'AND',
+                'fuzzy_prefix_length'    => 3,
             ],
         ];
     }

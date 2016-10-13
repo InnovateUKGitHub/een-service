@@ -27,9 +27,8 @@ class OpportunitiesService extends AbstractSearchService
      */
     private function buildSearch($params)
     {
-        if (empty($params['search'])) {
-            $this->buildFullTextSearch($params['search'], ['title^3', 'summary^2', 'description^1']);
-        } else {
+        if (!empty($params['search'])) {
+
             switch ($params['type']) {
                 case 1:
                     $this->buildFullTextSearch($params['search'], ['title^3', 'summary^2', 'description^1']);
@@ -44,10 +43,16 @@ class OpportunitiesService extends AbstractSearchService
             }
 
             $this->query->highlight([
-                'title'   => [
+                'title'       => [
+                    'fragment_size'       => 0,
                     'number_of_fragments' => 0,
                 ],
-                'summary' => [
+                'summary'     => [
+                    'fragment_size'       => 120,
+                    'number_of_fragments' => 2,
+                ],
+                'description' => [
+                    'fragment_size'       => 120,
                     'number_of_fragments' => 2,
                 ],
             ]);

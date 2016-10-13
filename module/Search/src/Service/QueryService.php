@@ -40,6 +40,7 @@ class QueryService extends MustQuery
 
         foreach ($fields as $field => $args) {
             $this->highlight['fields'][$field] = [
+                'fragment_size'       => $args['fragment_size'],
                 'number_of_fragments' => $args['number_of_fragments'],
                 'highlight_query'     => [
                     'bool' => [
@@ -74,11 +75,6 @@ class QueryService extends MustQuery
         $query = [
             'index' => $index,
             'type'  => $type,
-            'body'  => [
-                'query' => [
-                    'bool' => [],
-                ],
-            ],
         ];
 
         if (!empty($this->must)) {
@@ -113,7 +109,6 @@ class QueryService extends MustQuery
             $query['body']['sort'] = $params['sort'];
         }
 
-//print_r($query); die;
         return $this->convertResult($this->elastic->search($query));
     }
 
