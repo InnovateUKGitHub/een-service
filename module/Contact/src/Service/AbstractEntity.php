@@ -2,6 +2,7 @@
 
 namespace Contact\Service;
 
+use Common\Service\SalesForceService;
 use ZF\ApiProblem\ApiProblemResponse;
 
 abstract class AbstractEntity

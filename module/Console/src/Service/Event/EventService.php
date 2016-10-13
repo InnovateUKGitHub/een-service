@@ -9,32 +9,32 @@ class EventService
 {
     /** @var IndexService */
     private $indexService;
-    /** @var EventMerlin */
-    private $merlinData;
-    /** @var MerlinIngest */
-    private $merlinIngest;
+    /** @var Merlin */
+    private $merlin;
     /** @var EventBrite */
     private $eventBrite;
+    /** @var SalesForce */
+    private $salesForce;
 
     /**
      * EventService constructor.
      *
      * @param IndexService $indexService
-     * @param EventMerlin  $merlinData
-     * @param MerlinIngest $merlinIngest
+     * @param Merlin       $merlin
      * @param EventBrite   $eventBrite
+     * @param SalesForce   $salesForce
      */
     public function __construct(
         IndexService $indexService,
-        EventMerlin $merlinData,
-        MerlinIngest $merlinIngest,
-        EventBrite $eventBrite
+        Merlin $merlin,
+        EventBrite $eventBrite,
+        SalesForce $salesForce
     )
     {
         $this->indexService = $indexService;
-        $this->merlinData = $merlinData;
-        $this->merlinIngest = $merlinIngest;
+        $this->merlin = $merlin;
         $this->eventBrite = $eventBrite;
+        $this->salesForce = $salesForce;
     }
 
     public function import()
@@ -43,8 +43,9 @@ class EventService
 
         $dateImport = (new \DateTime())->format('Ymd');
 
-        $this->merlinIngest->import($this->merlinData->getList(), $dateImport);
+        $this->merlin->import($dateImport);
         $this->eventBrite->import($dateImport);
+        $this->salesForce->import($dateImport);
     }
 
     /**
@@ -52,24 +53,21 @@ class EventService
      */
     public function delete(\DateTime $now)
     {
-        $results = $this->indexService->getAll(
+        $results = $this->indexService->getOutOfDateData(
             EEN::ES_INDEX_EVENT,
             EEN::ES_TYPE_EVENT,
-            ['date_import']
+            $now->format(EEN::DATE_FORMAT_IMPORT)
         );
 
-        $dateImport = $now->format('Ymd');
         $body = [];
         foreach ($results['hits']['hits'] as $document) {
-            if ($document['_source']['date_import'] < $dateImport) {
-                $body['body'][] = [
-                    'delete' => [
-                        '_index' => EEN::ES_INDEX_EVENT,
-                        '_type'  => EEN::ES_TYPE_EVENT,
-                        '_id'    => $document['_id'],
-                    ],
-                ];
-            }
+            $body['body'][] = [
+                'delete' => [
+                    '_index' => EEN::ES_INDEX_EVENT,
+                    '_type'  => EEN::ES_TYPE_EVENT,
+                    '_id'    => $document['_id'],
+                ],
+            ];
         }
 
         if (empty($body)) {

@@ -7,14 +7,6 @@ use ZF\ApiProblem\ApiProblemResponse;
 class ContactService extends AbstractEntity
 {
     /**
-     * @param SalesForceService $salesForce
-     */
-    public function __construct(SalesForceService $salesForce)
-    {
-        parent::__construct($salesForce);
-    }
-
-    /**
      * @param array $data
      *
      * @return array

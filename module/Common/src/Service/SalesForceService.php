@@ -1,6 +1,6 @@
 <?php
 
-namespace Contact\Service;
+namespace Common\Service;
 
 use Zend\Http\Response;
 use Zend\Soap\Client;
@@ -126,7 +126,7 @@ class SalesForceService
 
         $data = new \stdClass();
         $data->sObjectType = $type;
-        $object = new \SoapVar($data, SOAP_ENC_OBJECT, $type, $this->namespace);
+        $object = new \SoapVar($data, SOAP_ENC_OBJECT, 'sObjectType', $this->namespace);
         $object = new \SoapParam($object, 'sObjectType');
 
         $response = $this->client->call(
@@ -137,12 +137,27 @@ class SalesForceService
         $results = [];
         foreach ($response->result->fields as $field) {
             $results[$field->name] = [
-                'soapType' => $field->soapType,
-                'type'     => $field->type,
+                'name' => $field->name,
+                'type' => $field->type,
             ];
         }
 
         return $results;
+    }
+
+    public function retrieve($fieldList, $type, $ids)
+    {
+        $this->login();
+
+        $data = new \stdClass();
+        $data->sObjectType = $type;
+        $data->fieldList = $fieldList;
+        $data->ids = $ids;
+
+        return $this->client->call(
+            'retrieve',
+            ['retrieve' => $data]
+        );
     }
 
     /**

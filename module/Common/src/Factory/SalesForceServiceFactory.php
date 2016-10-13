@@ -1,8 +1,8 @@
 <?php
 
-namespace Contact\Factory\Service;
+namespace Common\Factory;
 
-use Contact\Service\SalesForceService;
+use Common\Service\SalesForceService;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Soap\Client;
 
@@ -21,7 +21,7 @@ final class SalesForceServiceFactory
         $config = $serviceManager->get(self::CONFIG);
 
         $soap = new Client(
-            __DIR__ . '/../../../../../config/SF_EEN_Enterprise.wsdl',
+            __DIR__ . '/../../../../config/SF_EEN_Enterprise.wsdl',
             [
                 'soap_version' => SOAP_1_1,
             ]

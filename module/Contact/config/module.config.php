@@ -12,10 +12,8 @@ use Contact\Factory\Controller\EmailControllerFactory;
 use Contact\Factory\Controller\LeadControllerFactory;
 use Contact\Factory\Service\ContactServiceFactory;
 use Contact\Factory\Service\LeadServiceFactory;
-use Contact\Factory\Service\SalesForceServiceFactory;
 use Contact\Service\ContactService;
 use Contact\Service\LeadService;
-use Contact\Service\SalesForceService;
 use Zend\Router\Http\Segment;
 use Zend\Validator\EmailAddress;
 
@@ -24,7 +22,6 @@ return [
         'factories' => [
             ContactService::class    => ContactServiceFactory::class,
             LeadService::class       => LeadServiceFactory::class,
-            SalesForceService::class => SalesForceServiceFactory::class,
         ],
     ],
     'controllers'            => [
@@ -42,7 +39,7 @@ return [
                 'options' => [
                     'route'       => '/describe[/:id]',
                     'constraints' => [
-                        'id' => '[a-zA-Z]+',
+                        'id' => '[a-zA-Z\_]+',
                     ],
                     'defaults'    => [
                         'controller' => DescribeController::class,
@@ -288,6 +285,12 @@ return [
             ],
         ],
         EmailController::class   => [
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'template',
+            ],
             [
                 'required'   => true,
                 'validators' => [],

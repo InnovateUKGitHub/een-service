@@ -2,8 +2,8 @@
 
 namespace Contact\Factory\Service;
 
+use Common\Service\SalesForceService;
 use Contact\Service\ContactService;
-use Contact\Service\SalesForceService;
 use Zend\ServiceManager\ServiceManager;
 
 final class ContactServiceFactory

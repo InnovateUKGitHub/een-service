@@ -48,7 +48,7 @@ return [
                 'options' => [
                     'route'       => '/events[/:id]',
                     'constraints' => [
-                        'id' => '[\d]+\.[\d]+',
+                        'id' => '[\w]+',
                     ],
                     'defaults'    => [
                         'controller' => EventsController::class,

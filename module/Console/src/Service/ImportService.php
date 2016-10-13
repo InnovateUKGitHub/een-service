@@ -27,13 +27,12 @@ class ImportService
     /**
      * @param string $index
      * @param string $month
-     * @param string $type
      */
-    public function import($index, $month, $type)
+    public function import($index, $month)
     {
         switch ($index) {
             case EEN::ES_INDEX_OPPORTUNITY:
-                $this->opportunityService->import($month, $type);
+                $this->opportunityService->import($month);
                 break;
             case EEN::ES_INDEX_EVENT:
                 $this->eventService->import();

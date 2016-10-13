@@ -30,7 +30,7 @@ final class ImportController extends AbstractActionController
     }
 
     /**
-     * @return array
+     * @return string
      */
     public function importAction()
     {
@@ -40,19 +40,18 @@ final class ImportController extends AbstractActionController
 
         $index = (string)$this->params('index', 'opportunity');
         $month = (int)$this->params('month', 1);
-        $type = (string)$this->params('type', 'u');
 
         if (Helper::checkValidMonth($month) === false) {
             throw new InvalidArgumentException('The month enter is not valid');
         }
 
-        $this->importService->import($index, $month, $type);
+        $this->importService->import($index, $month);
 
-        return ['success' => true];
+        return "Import $index for month $month done.\n";
     }
 
     /**
-     * @return array
+     * @return string
      */
     public function deleteAction()
     {
@@ -64,6 +63,6 @@ final class ImportController extends AbstractActionController
 
         $this->deleteService->deleteOutOfDate($index);
 
-        return ['success' => true];
+        return "Delete of old date on $index done.\n";
     }
 }

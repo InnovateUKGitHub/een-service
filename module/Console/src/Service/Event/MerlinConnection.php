@@ -1,13 +1,13 @@
 <?php
 
-namespace Console\Service\Opportunity;
+namespace Console\Service\Event;
 
 use Common\Service\HttpService;
 use Zend\Http\Request;
 use Zend\Json\Server\Exception\HttpException;
 use Zend\Log\Logger;
 
-class OpportunityMerlin
+class MerlinConnection
 {
     /** @var string */
     private $username;
@@ -22,7 +22,7 @@ class OpportunityMerlin
     private $logger;
 
     /**
-     * OpportunityMerlin constructor.
+     * MerlinConnection constructor.
      *
      * @param HttpService $client
      * @param Logger      $logger
@@ -41,33 +41,29 @@ class OpportunityMerlin
     }
 
     /**
-     * @param string $month
-     *
-     * @return \SimpleXMLElement|null
+     * @return \SimpleXMLElement
      */
-    public function getList($month)
+    public function getList()
     {
         try {
-            $result = $this->client->execute(Request::METHOD_GET, $this->path, $this->buildQuery($month));
+            $result = $this->client->execute(Request::METHOD_GET, $this->path, $this->buildQuery());
 
-            return simplexml_load_string($result);
+            return simplexml_load_string(str_replace('utf-16', 'utf-8', $result));
         } catch (HttpException $e) {
-            $this->logger->debug("An error occurred during the retrieve of the $month month");
+            $this->logger->debug("An error occurred during the retrieve of the merlin events");
             $this->logger->debug($e->getMessage());
         } catch (\Exception $e) {
-            $this->logger->debug("An error occurred during the retrieve of the $month month");
+            $this->logger->debug("An error occurred during the retrieve of the merlin events");
             $this->logger->debug($e->getMessage());
         }
 
-        throw new \RuntimeException("An error occurred during the retrieve of the $month month");
+        throw new \RuntimeException("An error occurred during the retrieve of the merlin events");
     }
 
     /**
-     * @param string $month
-     *
      * @return array
      */
-    private function buildQuery($month)
+    private function buildQuery()
     {
         $return = [];
         if (empty($this->username) === false) {
@@ -77,8 +73,7 @@ class OpportunityMerlin
             $return['p'] = $this->password;
         }
 
-        $return['ub'] = (new \DateTime())->sub(new \DateInterval('P' . ($month - 1) . 'M'))->format('Ymd');
-        $return['ua'] = (new \DateTime())->sub(new \DateInterval('P' . ($month) . 'M'))->format('Ymd');
+        $return['da'] = (new \DateTime())->sub(new \DateInterval('P1D'))->format('Ymd');
 
         return $return;
     }

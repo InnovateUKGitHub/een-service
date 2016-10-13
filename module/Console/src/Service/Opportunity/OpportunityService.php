@@ -43,43 +43,38 @@ class OpportunityService
      */
     public function delete(\DateTime $now)
     {
-        $dateImport = $now->format(EEN::DATE_FORMAT_IMPORT);
         $body = [];
 
         // Get all the out of date opportunities
-        $results = $this->indexService->getAll(
+        $results = $this->indexService->getOutOfDateData(
             EEN::ES_INDEX_OPPORTUNITY,
             EEN::ES_TYPE_OPPORTUNITY,
-            ['date_import']
+            $now->format(EEN::DATE_FORMAT_IMPORT)
         );
         foreach ($results['hits']['hits'] as $document) {
-            if ($document['_source']['date_import'] < $dateImport) {
-                $body['body'][] = [
-                    'delete' => [
-                        '_index' => EEN::ES_INDEX_OPPORTUNITY,
-                        '_type'  => EEN::ES_TYPE_OPPORTUNITY,
-                        '_id'    => $document['_id'],
-                    ],
-                ];
-            }
+            $body['body'][] = [
+                'delete' => [
+                    '_index' => EEN::ES_INDEX_OPPORTUNITY,
+                    '_type'  => EEN::ES_TYPE_OPPORTUNITY,
+                    '_id'    => $document['_id'],
+                ],
+            ];
         }
 
         // Get all the out of date country
-        $results = $this->indexService->getAll(
+        $results = $this->indexService->getOutOfDateData(
             EEN::ES_INDEX_COUNTRY,
             EEN::ES_TYPE_COUNTRY,
-            ['date_import']
+            $now->format(EEN::DATE_FORMAT_IMPORT)
         );
         foreach ($results['hits']['hits'] as $document) {
-            if ($document['_source']['date_import'] < $dateImport) {
-                $body['body'][] = [
-                    'delete' => [
-                        '_index' => EEN::ES_INDEX_COUNTRY,
-                        '_type'  => EEN::ES_TYPE_COUNTRY,
-                        '_id'    => $document['_id'],
-                    ],
-                ];
-            }
+            $body['body'][] = [
+                'delete' => [
+                    '_index' => EEN::ES_INDEX_COUNTRY,
+                    '_type'  => EEN::ES_TYPE_COUNTRY,
+                    '_id'    => $document['_id'],
+                ],
+            ];
         }
 
         if (empty($body)) {
@@ -91,11 +86,10 @@ class OpportunityService
 
     /**
      * @param string $month
-     * @param string $type
      */
-    public function import($month, $type)
+    public function import($month)
     {
-        $results = $this->merlinData->getList($month, $type);
+        $results = $this->merlinData->getList($month);
 
         $this->indexService->createIndex(EEN::ES_INDEX_OPPORTUNITY);
         $this->indexService->createIndex(EEN::ES_INDEX_COUNTRY);
@@ -149,15 +143,17 @@ class OpportunityService
             );
 
             // Import countries
-            $this->indexService->index(
-                [
-                    'name'        => $params['country'],
-                    'date_import' => $dateImport,
-                ],
-                $params['country_code'],
-                EEN::ES_INDEX_COUNTRY,
-                EEN::ES_TYPE_COUNTRY
-            );
+            if (!empty($params['country_code'])) {
+                $this->indexService->index(
+                    [
+                        'name'        => $params['country'],
+                        'date_import' => $dateImport,
+                    ],
+                    $params['country_code'],
+                    EEN::ES_INDEX_COUNTRY,
+                    EEN::ES_TYPE_COUNTRY
+                );
+            }
         }
     }
 

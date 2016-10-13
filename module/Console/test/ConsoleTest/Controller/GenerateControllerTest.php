@@ -87,7 +87,7 @@ class GenerateControllerTest extends \PHPUnit_Framework_TestCase
         $controller = $this->buildController(['action' => 'generate']);
 
         $request = new Request();
-        self::assertEquals(['generate' => 'success'], $controller->dispatch($request));
+        self::assertEquals("100 documents generated on all.\n", $controller->dispatch($request));
     }
 
     /**
@@ -96,7 +96,7 @@ class GenerateControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testDeleteActionNotConsole()
     {
-        $controller = $this->buildController(['action' => 'delete']);
+        $controller = $this->buildController(['action' => 'purge']);
 
         $controller->dispatch($controller->getRequest());
     }
@@ -107,7 +107,7 @@ class GenerateControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testDeleteActionInvalidIndex()
     {
-        $controller = $this->buildController(['index' => 'invalidIndex', 'action' => 'delete']);
+        $controller = $this->buildController(['index' => 'invalidIndex', 'action' => 'purge']);
 
         $request = new Request();
         $controller->dispatch($request);
@@ -115,9 +115,9 @@ class GenerateControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testDeleteAction()
     {
-        $controller = $this->buildController(['action' => 'delete']);
+        $controller = $this->buildController(['action' => 'purge']);
 
         $request = new Request();
-        self::assertEquals(['delete' => 'success'], $controller->dispatch($request));
+        self::assertEquals("Purge done on all.\n", $controller->dispatch($request));
     }
 }

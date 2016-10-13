@@ -39,22 +39,20 @@ class EventBrite
      */
     public function import($dateImport)
     {
-        $results = $content = $this->client->execute(Request::METHOD_GET, $this->eventsPath);
+        $results = $this->client->execute(Request::METHOD_GET, $this->eventsPath);
 
         foreach ($results['events'] as $event) {
             $params = [
-                'id'           => $event['id'],
                 'title'        => $event['name']['text'],
+                'summary'      => $event['description']['text'],
                 'description'  => $event['description']['text'],
-                'url'          => $event['url'],
                 'start_date'   => $event['start']['utc'],
                 'end_date'     => $event['end']['utc'],
-                'status'       => $event['status'],
-                'created'      => $event['created'],
-                'date_import'  => $dateImport,
+                'url'          => $event['url'],
                 'country_code' => 'GB',
                 'country'      => 'United Kingdom',
-                'type'         => 'eventbrite',
+                'type'         => 'eventBrite',
+                'date_import'  => $dateImport,
             ];
 
             $this->indexService->index(

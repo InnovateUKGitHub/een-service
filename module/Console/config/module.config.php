@@ -16,10 +16,11 @@ return [
             Service\ImportService::class   => ServiceFactory\ImportServiceFactory::class,
             Service\PurgeService::class    => ServiceFactory\PurgeServiceFactory::class,
 
-            Service\Event\EventBrite::class   => ServiceFactory\Event\EventBriteFactory::class,
-            Service\Event\EventMerlin::class  => ServiceFactory\Event\EventMerlinFactory::class,
-            Service\Event\EventService::class => ServiceFactory\Event\EventServiceFactory::class,
-            Service\Event\MerlinIngest::class => ServiceFactory\Event\MerlinIngestFactory::class,
+            Service\Event\EventBrite::class       => ServiceFactory\Event\EventBriteFactory::class,
+            Service\Event\EventService::class     => ServiceFactory\Event\EventServiceFactory::class,
+            Service\Event\MerlinConnection::class => ServiceFactory\Event\MerlinConnectionFactory::class,
+            Service\Event\Merlin::class           => ServiceFactory\Event\MerlinFactory::class,
+            Service\Event\SalesForce::class       => ServiceFactory\Event\SalesForceFactory::class,
 
             Service\Opportunity\OpportunityMerlin::class  => ServiceFactory\Opportunity\OpportunityMerlinFactory::class,
             Service\Opportunity\OpportunityService::class => ServiceFactory\Opportunity\OpportunityServiceFactory::class,
@@ -35,15 +36,14 @@ return [
         ],
     ],
     'console'         => [
-        'router' => [
+        'router'       => [
             'routes' => [
                 'import-data'   => [
                     'options' => [
-                        'route'       => 'import [--index=<index>] [--month=<month>] [--type=<type>]',
+                        'route'       => 'import [--index=<index>] [--month=<month>]',
                         'constraints' => [
                             'index' => '[opportunity|event]',
                             'month' => '[1|2|3|4|5|6|7|8|9|10|11|12]',
-                            'type'  => '[s|u]',
                         ],
                         'defaults'    => [
                             'controller' => Controller\ImportController::class,
@@ -75,15 +75,15 @@ return [
                         ],
                     ],
                 ],
-                'delete-all'    => [
+                'purge'    => [
                     'options' => [
-                        'route'       => 'delete-all [--index=<index>]',
+                        'route'       => 'purge [--index=<index>]',
                         'constraints' => [
                             'index' => '[opportunity|event|all]',
                         ],
                         'defaults'    => [
                             'controller' => Controller\GenerateController::class,
-                            'action'     => 'delete',
+                            'action'     => 'purge',
                         ],
                     ],
                 ],
@@ -97,6 +97,10 @@ return [
                     ],
                 ],
             ],
+        ],
+        'view_manager' => [
+            'display_not_found_reason' => true,
+            'display_exceptions'       => true,
         ],
     ],
 ];

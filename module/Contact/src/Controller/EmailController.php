@@ -44,7 +44,7 @@ final class EmailController extends AbstractRestfulController
                 ],
             ],
             '_links'     => [
-                'email_template' => 'email-verification',
+                'email_template' => $data['template'],
             ],
         ];
 

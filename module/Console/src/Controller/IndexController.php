@@ -22,7 +22,7 @@ final class IndexController extends AbstractActionController
     }
 
     /**
-     * @return array
+     * @return string
      */
     public function indexAction()
     {
@@ -38,6 +38,6 @@ final class IndexController extends AbstractActionController
         $this->service->createSettings(EEN::ES_INDEX_EVENT);
         $this->service->createSettings(EEN::ES_INDEX_OPPORTUNITY);
 
-        return ['success' => true];
+        return "Index creation done.\n";
     }
 }
