@@ -47,7 +47,7 @@ class SalesForce
                 'start_date'  => $event['Start_Date_time__c'],
                 'end_date'    => isset($event['End_Date_Time__c']) ? $event['End_Date_Time__c'] : $event['Start_Date_time__c'],
                 'country'     => isset($event['Destination_Country__c']) ? $event['Destination_Country__c'] : null,
-                'fee'         => isset($event['Attendance_Fee__c']) ? $event['Attendance_Fee__c'] : 0,
+                'fee'         => isset($event['Attendance_Fee__c']) ? (int)$event['Attendance_Fee__c'] : 0,
                 'type'        => 'salesForce',
                 'date_import' => $dateImport,
             ];

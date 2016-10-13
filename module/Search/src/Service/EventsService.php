@@ -22,8 +22,6 @@ class EventsService extends AbstractSearchService
 
         $searches = explode(' ', trim($params['search']));
         $this->query->mustQueryString(['title', 'description'], $searches);
-        $this->query->mustRange('end_date', 'now/d', 'gte');
-        $this->query->mustExist(['url']);
 
         return $this->query->search($params, EEN::ES_INDEX_EVENT, EEN::ES_TYPE_EVENT);
     }
