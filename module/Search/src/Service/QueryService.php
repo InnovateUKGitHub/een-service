@@ -75,11 +75,6 @@ class QueryService extends MustQuery
         $query = [
             'index' => $index,
             'type'  => $type,
-            'body'  => [
-                'query' => [
-                    'bool' => [],
-                ],
-            ],
         ];
 
         if (!empty($this->must)) {
@@ -114,7 +109,6 @@ class QueryService extends MustQuery
             $query['body']['sort'] = $params['sort'];
         }
 
-//print_r($query); die;
         return $this->convertResult($this->elastic->search($query));
     }
 

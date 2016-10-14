@@ -59,8 +59,9 @@ return [
                                 'analyzer'      => 'my_analyzer',
                             ],
                             'description'        => [
-                                'type'     => 'string',
-                                'analyzer' => 'my_analyzer',
+                                'type'          => 'string',
+                                'index_options' => 'offsets',
+                                'analyzer'      => 'my_analyzer',
                             ],
                             'partner_expertise'  => [
                                 'type' => 'string',
