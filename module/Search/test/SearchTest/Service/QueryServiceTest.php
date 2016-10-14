@@ -56,11 +56,6 @@ class QueryServiceTest extends \PHPUnit_Framework_TestCase
                 'type'    => self::TYPE,
                 'from'    => $params['from'],
                 'size'    => $params['size'],
-                'body'    => [
-                    'query' => [
-                        'bool' => [],
-                    ],
-                ],
                 '_source' => $params['source'],
             ])
             ->willReturn([
