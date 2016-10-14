@@ -56,7 +56,7 @@ abstract class AbstractEntity
         $query = new \stdClass();
         $query->queryString = '
 SELECT c.Id, c.Email, c.Contact_Status__c, c.FirstName, c.LastName, c.Phone, c.MobilePhone,
-c.Email_Address_2__c, c.Email_Newsletter__c, c.MailingStreet, c.MailingPostalCode, c.MailingCity,
+c.Email_Newsletter__c, c.MailingStreet, c.MailingPostalCode, c.MailingCity,
 a.Id, a.Name, a.Phone, a.Website, a.Company_Registration_Number__c
 FROM Contact c, c.Account a
 WHERE Email1__c = \'' . $email . '\'

@@ -89,7 +89,6 @@ class ContactService extends AbstractEntity
         $contact->Phone = $data['phone'];
         $contact->MobilePhone = $data['contact_phone'];
         $contact->Email = $data['contact_email'];
-        $contact->Email_Address_2__c = $data['other_email'];
 
         $contact->MailingStreet = $data['addressone'] . ' ' . $data['addresstwo'];
         $contact->MailingPostalCode = $data['postcode'];

@@ -149,16 +149,6 @@ return [
         ],
         ContactController::class => [
             [
-                'required'   => false,
-                'validators' => [
-                    [
-                        'name' => EmailAddress::class,
-                    ],
-                ],
-                'filters'    => [],
-                'name'       => 'other_email',
-            ],
-            [
                 'required'   => true,
                 'validators' => [],
                 'filters'    => [],
