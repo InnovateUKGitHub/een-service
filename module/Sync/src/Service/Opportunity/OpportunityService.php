@@ -5,6 +5,7 @@ namespace Sync\Service\Opportunity;
 use Common\Constant\EEN;
 use Sync\Service\IndexService;
 use Sync\Validator\MerlinValidator;
+use Zend\Escaper\Escaper;
 
 class OpportunityService
 {
@@ -16,6 +17,10 @@ class OpportunityService
     private $merlinValidator;
     /** @var array */
     private $structure;
+    /** @var \HTMLPurifier */
+    private $purifier;
+    /** @var Escaper */
+    private $escaper;
 
     /**
      * OpportunityService constructor.
@@ -36,6 +41,9 @@ class OpportunityService
         $this->merlinData = $merlinData;
         $this->merlinValidator = $merlinValidator;
         $this->structure = $structure;
+
+        $this->purifier = new \HTMLPurifier();
+        $this->escaper = new Escaper();
     }
 
     /**
@@ -105,39 +113,29 @@ class OpportunityService
             $cooperation = $profile->{'cooperation'};
             $company = $profile->{'company'};
             $datum = $profile->{'datum'};
-            $keyword = $profile->{'keyword'};
-
-            $id = (string)$reference->{'external'}->__toString();
 
             $params = [
-                'id'                 => $id,
-                'type'               => (string)$reference->{'type'}->__toString(),
-                'title'              => (string)$content->{'title'}->__toString(),
-                'summary'            => (string)$content->{'summary'}->__toString(),
-                'description'        => (string)$content->{'description'}->__toString(),
-                'partner_expertise'  => (string)$cooperation->{'partner'}->{'area'}->__toString(),
-                'stage'              => (string)$cooperation->{'stagedev'}->{'stage'}->__toString(),
-                'ipr'                => (string)$cooperation->{'ipr'}->{'status'}->__toString(),
-                'ipr_comment'        => (string)$cooperation->{'ipr'}->{'comment'}->__toString(),
-                'country_code'       => (string)$company->{'country'}->{'key'}->__toString(),
-                'country'            => (string)$company->{'country'}->{'label'}->__toString(),
-                'date_create'        => (string)$datum->{'submit'}->__toString() ?: null,
-                'date'               => (string)$datum->{'update'}->__toString() ?: null,
-                'deadline'           => (string)$datum->{'deadline'}->__toString() ?: null,
-                'partnership_sought' => $this->extractPartnerships($profile->{'partnerships'}),
-                'industries'         => $this->extractIndustries($cooperation->{'exploitations'}),
-                'technologies'       => $this->extractTechnologies($keyword->{'technologies'}),
-                'commercials'        => $this->extractCommercials($keyword->{'naces'}),
-                'markets'            => $this->extractMarkets($keyword->{'markets'}),
-                'eoi'                => (bool)$profile->{'eoi'}->{'status'}->__toString(),
-                'advantage'          => (string)$cooperation->{'plusvalue'}->__toString(),
-                'date_import'        => $dateImport,
+                'type'              => (string)$reference->{'type'},
+                'title'             => (string)$content->{'title'},
+                'summary'           => $this->purify($content->{'summary'}),
+                'description'       => $this->purify($content->{'description'}),
+                'partner_expertise' => $this->purify($cooperation->{'partner'}->{'area'}),
+                'advantage'         => $this->purify($cooperation->{'plusvalue'}),
+                'stage'             => $this->purify($cooperation->{'stagedev'}->{'stage'}),
+                'ipr'               => (string)$cooperation->{'ipr'}->{'status'},
+                'ipr_comment'       => (string)$cooperation->{'ipr'}->{'comment'},
+                'country_code'      => (string)$company->{'country'}->{'key'},
+                'country'           => (string)$company->{'country'}->{'label'},
+                'date_create'       => (string)$datum->{'submit'} ?: null,
+                'date'              => (string)$datum->{'update'} ?: null,
+                'deadline'          => (string)$datum->{'deadline'} ?: null,
+                'date_import'       => $dateImport,
             ];
 
             // Import opportunities
             $this->indexService->index(
                 $params,
-                $id,
+                (string)$reference->{'external'},
                 EEN::ES_INDEX_OPPORTUNITY,
                 EEN::ES_TYPE_OPPORTUNITY
             );
@@ -158,85 +156,22 @@ class OpportunityService
     }
 
     /**
-     * @param \SimpleXMLElement $partnerships
+     * @param string $text
      *
-     * @return array
+     * @return string
      */
-    private function extractPartnerships(\SimpleXMLElement $partnerships)
+    private function purify($text)
     {
-        $result = [];
-        foreach ($partnerships->{'string'} as $partnership) {
-            $result[] = (string)$partnership;
-        }
+        $text = $this->escaper->escapeHtml($text);
 
-        return $result;
-    }
-
-    /**
-     * @param \SimpleXMLElement $industries
-     *
-     * @return array
-     */
-    private function extractIndustries(\SimpleXMLElement $industries)
-    {
-        $result = [];
-        foreach ($industries->{'exploitation'} as $industry) {
-            if ((string)$industry->{'other'}) {
-                $result[] = (string)$industry->{'other'};
+        $paragraphs = explode("\n", $text);
+        $result = '';
+        foreach ($paragraphs as $paragraph) {
+            if (trim($paragraph) != '') {
+                $result .= '<p>' . $paragraph . '</p>';
             }
         }
 
-        return $result;
-    }
-
-    /**
-     * @param \SimpleXMLElement $technologies
-     *
-     * @return array
-     */
-    private function extractTechnologies(\SimpleXMLElement $technologies)
-    {
-        $result = [];
-        foreach ($technologies->{'technology'} as $technology) {
-            if ((string)$technology->{'label'}) {
-                $result[] = (string)$technology->{'label'};
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param \SimpleXMLElement $commercials
-     *
-     * @return array
-     */
-    private function extractCommercials(\SimpleXMLElement $commercials)
-    {
-        $result = [];
-        foreach ($commercials->{'nace'} as $commercial) {
-            if ((string)$commercial->{'label'}) {
-                $result[] = (string)$commercial->{'label'};
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param \SimpleXMLElement $markets
-     *
-     * @return array
-     */
-    private function extractMarkets(\SimpleXMLElement $markets)
-    {
-        $result = [];
-        foreach ($markets->{'market'} as $market) {
-            if ((string)$market->{'label'}) {
-                $result[] = (string)$market->{'label'};
-            }
-        }
-
-        return $result;
+        return $this->purifier->purify($result);
     }
 }

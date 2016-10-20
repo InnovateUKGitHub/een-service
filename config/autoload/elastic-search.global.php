@@ -43,85 +43,52 @@ return [
                 'mappings' => [
                     EEN::ES_TYPE_OPPORTUNITY => [
                         'properties' => [
-                            'id'                 => [
+                            'type'              => [
                                 'type' => 'string',
                             ],
-                            'type'               => [
-                                'type' => 'string',
-                            ],
-                            'title'              => [
+                            'title'             => [
                                 'type'     => 'string',
                                 'analyzer' => 'my_analyzer',
                             ],
-                            'summary'            => [
-                                'type'          => 'string',
-                                'analyzer'      => 'my_analyzer',
+                            'summary'           => [
+                                'type'     => 'string',
+                                'analyzer' => 'my_analyzer',
                             ],
-                            'description'        => [
-                                'type'          => 'string',
-                                'analyzer'      => 'my_analyzer',
+                            'description'       => [
+                                'type'     => 'string',
+                                'analyzer' => 'my_analyzer',
                             ],
-                            'partner_expertise'  => [
+                            'partner_expertise' => [
                                 'type' => 'string',
                             ],
-                            'stage'              => [
+                            'advantage'         => [
                                 'type' => 'string',
                             ],
-                            'ipr'                => [
+                            'stage'             => [
                                 'type' => 'string',
                             ],
-                            'ipr_comment'        => [
+                            'ipr'               => [
                                 'type' => 'string',
                             ],
-                            'country_code'       => [
-                                'type'   => 'string',
-                                'fields' => [
-                                    'raw' => [
-                                        'type'  => 'string',
-                                        'index' => 'not_analyzed',
-                                    ],
-                                ],
+                            'ipr_comment'       => [
+                                'type' => 'string',
                             ],
-                            'country'            => [
-                                'type'   => 'string',
-                                'fields' => [
-                                    'raw' => [
-                                        'type'  => 'string',
-                                        'index' => 'not_analyzed',
-                                    ],
-                                ],
+                            'country_code'      => [
+                                'type' => 'string',
                             ],
-                            'date_create'        => [
+                            'country'           => [
+                                'type' => 'string',
+                            ],
+                            'date_create'       => [
                                 'type' => 'date',
                             ],
-                            'date'               => [
+                            'date'              => [
                                 'type' => 'date',
                             ],
-                            'deadline'           => [
+                            'deadline'          => [
                                 'type' => 'date',
                             ],
-                            'partnership_sought' => [
-                                'type' => 'string',
-                            ],
-                            'industries'         => [
-                                'type' => 'string',
-                            ],
-                            'technologies'       => [
-                                'type' => 'string',
-                            ],
-                            'commercials'        => [
-                                'type' => 'string',
-                            ],
-                            'markets'            => [
-                                'type' => 'string',
-                            ],
-                            'eoi'                => [
-                                'type' => 'boolean',
-                            ],
-                            'advantage'          => [
-                                'type' => 'string',
-                            ],
-                            'date_import'        => [
+                            'date_import'       => [
                                 'type' => 'date',
                             ],
                         ],
