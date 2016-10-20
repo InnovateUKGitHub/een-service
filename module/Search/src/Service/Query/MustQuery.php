@@ -77,7 +77,7 @@ class MustQuery extends ShouldQuery
             'query_string' => [
                 'fields'                 => $fields,
                 'query'                  => trim($value),
-                'phrase_slop'            => 5,
+                'phrase_slop'            => 50,
                 'allow_leading_wildcard' => true,
                 'analyze_wildcard'       => true,
                 'default_operator'       => 'AND',

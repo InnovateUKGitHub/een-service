@@ -48,11 +48,11 @@ class OpportunitiesService extends AbstractSearchService
                     'number_of_fragments' => 0,
                 ],
                 'summary'     => [
-                    'fragment_size'       => 120,
+                    'fragment_size'       => 240,
                     'number_of_fragments' => 2,
                 ],
                 'description' => [
-                    'fragment_size'       => 120,
+                    'fragment_size'       => 240,
                     'number_of_fragments' => 2,
                 ],
             ]);

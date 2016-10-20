@@ -55,12 +55,10 @@ return [
                             ],
                             'summary'            => [
                                 'type'          => 'string',
-                                'index_options' => 'offsets',
                                 'analyzer'      => 'my_analyzer',
                             ],
                             'description'        => [
                                 'type'          => 'string',
-                                'index_options' => 'offsets',
                                 'analyzer'      => 'my_analyzer',
                             ],
                             'partner_expertise'  => [
