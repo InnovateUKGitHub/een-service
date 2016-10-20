@@ -1,6 +1,6 @@
 <?php
 
-namespace ConsoleTest\Factory\Service;
+namespace CommonTest\Factory\Service;
 
 use Common\Factory\HttpServiceFactory;
 use Common\Service\HttpService;

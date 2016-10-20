@@ -9,7 +9,7 @@ return [
     'ZF\ContentNegotiation',
     'ZF\ContentValidation',
     'Common',
-    'Console',
+    'Sync',
     'Contact',
     'Mail',
     'Search',

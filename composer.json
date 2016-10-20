@@ -27,20 +27,20 @@
     "psr-4": {
       "Application\\": "module/Application/src/",
       "Common\\": "module/Common/src",
-      "Console\\": "module/Console/src",
       "Contact\\": "module/Contact/src",
       "Mail\\": "module/Mail/src",
-      "Search\\": "module/Search/src"
+      "Search\\": "module/Search/src",
+      "Sync\\": "module/Sync/src"
     }
   },
   "autoload-dev": {
     "psr-4": {
       "ApplicationTest\\": "module/Application/test/",
       "CommonTest\\": "module/Common/test",
-      "ConsoleTest\\": "module/Console/test",
       "ContactTest\\": "module/Contact/test",
       "MailTest\\": "module/Mail/test",
-      "SearchTest\\": "module/Search/test"
+      "SearchTest\\": "module/Search/test",
+      "SyncTest\\": "module/Sync/test"
     }
   },
   "extra": [],

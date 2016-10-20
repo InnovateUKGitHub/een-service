@@ -1,6 +1,6 @@
 <?php
 
-namespace ConsoleTest\Service;
+namespace CommonTest\Service;
 
 use Common\Service\HttpService;
 use Zend\Http\Client;
