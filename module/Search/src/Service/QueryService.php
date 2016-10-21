@@ -32,7 +32,6 @@ class QueryService extends MustQuery
         $this->highlight = [
             'pre_tags'            => ['<' . $html . '>'],
             'post_tags'           => ['</' . $html . '>'],
-            'encoder'             => 'html',
             'order'               => 'score',
             'fields'              => [],
             'require_field_match' => false,
