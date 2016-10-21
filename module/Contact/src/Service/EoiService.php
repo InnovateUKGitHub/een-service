@@ -73,7 +73,7 @@ WHERE Profile_reference_number__c = \'' . $profileId . '\'
 
         $profile = new \stdClass();
         $profile->Profile_reference_number__c = $profileId;
-        $profile->Profile_Title__c = $data['_source']['title'];
+        $profile->Name = substr($data['_source']['title'], 0, 80);
         $profile->Profile_Type__c = self::profileType[$data['_source']['type']];
 
         return $this->createEntity($profile, 'Profile__c');
