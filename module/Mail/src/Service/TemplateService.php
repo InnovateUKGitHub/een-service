@@ -25,7 +25,7 @@ class TemplateService
     {
         $fileName = __DIR__ . '/../../template/' . $data['id'] . '.html';
         if (file_exists($fileName) === false) {
-            throw new ApplicationException(['Template does not exist']);
+            throw new ApplicationException('Template does not exist');
         }
 
         $body = file_get_contents($fileName);
@@ -45,7 +45,7 @@ class TemplateService
     {
         $fileName = __DIR__ . '/../../template/' . $data['id'] . '.html';
         if (file_exists($fileName) === false) {
-            throw new ApplicationException(['Template does not exist']);
+            throw new ApplicationException('Template does not exist');
         }
 
         $body = file_get_contents($fileName);

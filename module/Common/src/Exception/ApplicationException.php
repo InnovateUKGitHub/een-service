@@ -2,38 +2,20 @@
 
 namespace Common\Exception;
 
+use Zend\Http\Response;
+
 /**
  * @codeCoverageIgnore
  */
 class ApplicationException extends \Exception
 {
-    /** @var array */
-    private $messages = [];
-
     /**
      * ApplicationException constructor.
      *
-     * @param array $messages
+     * @param string $message
      */
-    public function __construct($messages = [])
+    public function __construct($message = '')
     {
-        $this->messages = $messages;
-        parent::__construct('An error as occurred', 520);
-    }
-
-    /**
-     * @return array
-     */
-    public function getMessages()
-    {
-        return $this->messages;
-    }
-
-    /**
-     * @param array $messages
-     */
-    public function setMessages($messages)
-    {
-        $this->messages = $messages;
+        parent::__construct($message, Response::STATUS_CODE_422);
     }
 }
