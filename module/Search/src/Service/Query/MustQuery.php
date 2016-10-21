@@ -85,4 +85,12 @@ class MustQuery extends ShouldQuery
             ],
         ];
     }
+
+    /**
+     * @return array
+     */
+    public function getMust()
+    {
+        return $this->must;
+    }
 }

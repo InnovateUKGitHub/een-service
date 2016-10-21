@@ -148,7 +148,7 @@ class QueryService extends MustQuery
     public function getCountryList()
     {
         if ($this->exists(EEN::ES_INDEX_COUNTRY) === false) {
-            return ['total' => 0];
+            return [];
         }
 
         $query = [
@@ -161,7 +161,6 @@ class QueryService extends MustQuery
                 ],
             ],
             '_source' => ['name'],
-
         ];
 
         return $this->convertToAssociatedArray($this->elastic->search($query));

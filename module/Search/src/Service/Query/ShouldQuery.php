@@ -30,10 +30,22 @@ class ShouldQuery
     {
         $this->should[] = [
             'query_string' => [
-                'fields'      => $fields,
-                'query'       => $search,
-                'phrase_slop' => 50,
+                'fields'                 => $fields,
+                'query'                  => trim($search),
+                'phrase_slop'            => 50,
+                'allow_leading_wildcard' => true,
+                'analyze_wildcard'       => true,
+                'default_operator'       => 'AND',
+                'fuzzy_prefix_length'    => 3,
             ],
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getShould()
+    {
+        return $this->should;
     }
 }
