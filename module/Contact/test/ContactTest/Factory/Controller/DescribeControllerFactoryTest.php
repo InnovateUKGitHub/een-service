@@ -2,15 +2,15 @@
 
 namespace ContactTest\Factory\Controller;
 
-use Contact\Controller\ContactController;
-use Contact\Factory\Controller\ContactControllerFactory;
+use Contact\Controller\DescribeController;
+use Contact\Factory\Controller\DescribeControllerFactory;
 use Contact\Service\ContactService;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * @covers \Contact\Factory\Controller\ContactControllerFactory
+ * @covers \Contact\Factory\Controller\DescribeControllerFactory
  */
-class ContactControllerFactoryTest extends \PHPUnit_Framework_TestCase
+class DescribeControllerFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
@@ -21,8 +21,8 @@ class ContactControllerFactoryTest extends \PHPUnit_Framework_TestCase
             ->willReturn($this->createMock(ContactService::class));
 
         self::assertInstanceOf(
-            ContactController::class,
-            (new ContactControllerFactory())->__invoke($serviceManagerMock)
+            DescribeController::class,
+            (new DescribeControllerFactory())->__invoke($serviceManagerMock)
         );
     }
 }

@@ -14,9 +14,9 @@ class ContactService extends AbstractEntity
     public function create($data)
     {
         $contact = $this->getContact($data['email']);
-        $contactId = isset($contact['records']) ? $contact['records']->Id : null;
-        $accountId = (isset($contact['records']) && isset($contact['records']->Account)
-            ? $contact['records']->Account->Id
+        $contactId = isset($contact->records) ? $contact->records->Id : null;
+        $accountId = (isset($contact->records) && isset($contact->records->Account)
+            ? $contact->records->Account->Id
             : null);
 
         return $this->createUser(
@@ -33,7 +33,7 @@ class ContactService extends AbstractEntity
      *
      * @return array
      */
-    public function createUser($data, $contactId, $accountId)
+    private function createUser($data, $contactId, $accountId)
     {
         $accountResponse = $this->createAccount($data, $accountId);
         if ($accountResponse instanceof ApiProblemResponse) {
@@ -51,6 +51,12 @@ class ContactService extends AbstractEntity
         return $this->getContact($data['email']);
     }
 
+    /**
+     * @param array  $data
+     * @param string $accountId
+     *
+     * @return array
+     */
     private function createAccount($data, $accountId)
     {
         $account = new \stdClass();
@@ -77,6 +83,13 @@ class ContactService extends AbstractEntity
         return $this->updateEntity($account, 'Account');
     }
 
+    /**
+     * @param array  $data
+     * @param string $contactId
+     * @param string $accountId
+     *
+     * @return array
+     */
     private function createContact($data, $contactId, $accountId)
     {
         $contact = new \stdClass();
