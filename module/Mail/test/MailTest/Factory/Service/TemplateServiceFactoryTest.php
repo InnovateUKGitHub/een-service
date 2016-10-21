@@ -3,14 +3,14 @@
 namespace MailTest\Factory\Service;
 
 use Common\Service\HttpService;
-use Mail\Factory\Service\MailServiceFactory;
-use Mail\Service\MailService;
+use Mail\Factory\Service\TemplateServiceFactory;
+use Mail\Service\TemplateService;
 use Zend\ServiceManager\ServiceManager;
 
 /**
- * @covers \Mail\Factory\Service\MailServiceFactory
+ * @covers \Mail\Factory\Service\TemplateServiceFactory
  */
-class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
+class TemplateServiceFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testFactory()
     {
@@ -33,8 +33,8 @@ class MailServiceFactoryTest extends \PHPUnit_Framework_TestCase
             ->willReturn($config);
 
         self::assertInstanceOf(
-            MailService::class,
-            (new MailServiceFactory())->__invoke($serviceManager)
+            TemplateService::class,
+            (new TemplateServiceFactory())->__invoke($serviceManager)
         );
     }
 }

@@ -2,11 +2,9 @@
 
 namespace Mail\Service;
 
+use Common\Exception\ApplicationException;
 use Common\Service\HttpService;
 use Zend\Http\Request;
-use Zend\Http\Response;
-use ZF\ApiProblem\ApiProblem;
-use ZF\ApiProblem\ApiProblemResponse;
 
 class TemplateService
 {
@@ -27,12 +25,7 @@ class TemplateService
     {
         $fileName = __DIR__ . '/../../template/' . $data['id'] . '.html';
         if (file_exists($fileName) === false) {
-            return new ApiProblemResponse(
-                new ApiProblem(
-                    Response::STATUS_CODE_400,
-                    'Template does not exist'
-                )
-            );
+            throw new ApplicationException(['Template does not exist']);
         }
 
         $body = file_get_contents($fileName);
@@ -52,12 +45,7 @@ class TemplateService
     {
         $fileName = __DIR__ . '/../../template/' . $data['id'] . '.html';
         if (file_exists($fileName) === false) {
-            return new ApiProblemResponse(
-                new ApiProblem(
-                    Response::STATUS_CODE_400,
-                    'Template does not exist'
-                )
-            );
+            throw new ApplicationException(['Template does not exist']);
         }
 
         $body = file_get_contents($fileName);
@@ -76,6 +64,7 @@ class TemplateService
     public function delete($id)
     {
         $this->client->execute(Request::METHOD_DELETE, '/templates/email/' . $id);
+
         return ['success' => true];
     }
 

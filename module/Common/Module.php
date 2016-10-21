@@ -35,9 +35,7 @@ class Module implements ConfigProviderInterface, AutoloaderProviderInterface, Bo
     }
 
     /**
-     * @param EventInterface $e
-     *
-     * @return null
+     * {@inheritDoc}
      */
     public function onBootstrap(EventInterface $e)
     {
