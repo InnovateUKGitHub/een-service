@@ -9,10 +9,6 @@ use Search\Service\Query\MustQuery;
  */
 class MustQueryTest extends \PHPUnit_Framework_TestCase
 {
-    const INDEX = 'index';
-    const TYPE = 'type';
-    const OPPORTUNITY_ID = 'myId';
-
     public function testMustQueryString()
     {
         $service = new MustQuery();

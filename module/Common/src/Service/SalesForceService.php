@@ -28,7 +28,7 @@ class SalesForceService
     private $sessionId;
 
     /**
-     * MailService constructor.
+     * SalesForce constructor.
      *
      * @param Client $client
      * @param array  $config
@@ -91,7 +91,7 @@ class SalesForceService
         // attach the session id to the soap client
         $this->sessionId = $loginResult->result->sessionId;
         $header = new \SoapHeader(
-            $this->namespace,
+            $this->getNamespace(),
             'SessionHeader',
             ['sessionId' => $this->sessionId]
         );
@@ -126,7 +126,7 @@ class SalesForceService
 
         $data = new \stdClass();
         $data->sObjectType = $type;
-        $object = new \SoapVar($data, SOAP_ENC_OBJECT, 'sObjectType', $this->namespace);
+        $object = new \SoapVar($data, SOAP_ENC_OBJECT, 'sObjectType', $this->getNamespace());
         $object = new \SoapParam($object, 'sObjectType');
 
         $response = $this->client->call(
@@ -143,21 +143,6 @@ class SalesForceService
         }
 
         return $results;
-    }
-
-    public function retrieve($fieldList, $type, $ids)
-    {
-        $this->login();
-
-        $data = new \stdClass();
-        $data->sObjectType = $type;
-        $data->fieldList = $fieldList;
-        $data->ids = $ids;
-
-        return $this->client->call(
-            'retrieve',
-            ['retrieve' => $data]
-        );
     }
 
     /**
@@ -251,7 +236,12 @@ class SalesForceService
         );
     }
 
-    public function query($query)
+    /**
+     * @param \stdClass $query
+     *
+     * @return ApiProblemResponse
+     */
+    public function query(\stdClass $query)
     {
         $this->login();
 

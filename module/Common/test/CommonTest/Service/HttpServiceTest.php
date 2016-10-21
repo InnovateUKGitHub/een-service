@@ -39,11 +39,23 @@ class HttpServiceTest extends \PHPUnit_Framework_TestCase
         $service = new HttpService($this->clientMock);
         self::assertInstanceOf(HttpService::class, $service->setHttpMethod(Request::METHOD_GET));
         self::assertEquals(Request::METHOD_GET, $service->getHttpMethod());
+
         self::assertInstanceOf(HttpService::class, $service->setPathToService(self::PATH_TO_SERVICE));
         self::assertEquals(self::PATH_TO_SERVICE, $service->getPathToService());
+
         self::assertInstanceOf(HttpService::class, $service->setRequestBody(self::REQUEST_BODY));
         self::assertInstanceOf(HttpService::class, $service->setHeaders([]));
+
         self::assertInstanceOf(HttpService::class, $service->setQueryParams([]));
+
+        self::assertInstanceOf(HttpService::class, $service->setUserName('username'));
+        self::assertEquals('username', $service->getUserName());
+
+        self::assertInstanceOf(HttpService::class, $service->setPassword('password'));
+        self::assertEquals('password', $service->getPassword());
+
+        self::assertInstanceOf(HttpService::class, $service->setScheme('http'));
+        self::assertEquals('http', $service->getHttpScheme());
     }
 
     /**
@@ -78,7 +90,7 @@ class HttpServiceTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function testExecute()
+    public function testExecutePostPlainTextAnswer()
     {
         $service = new HttpService($this->clientMock);
         $this->clientMock
@@ -114,10 +126,61 @@ class HttpServiceTest extends \PHPUnit_Framework_TestCase
 
         $service->setRequestBody(self::REQUEST_BODY);
         $service->setServer(self::SERVER);
+        $service->setUserName('username');
+        $service->setPassword('password');
 
         self::assertEquals('{"success": 1}', $service->execute(
             Request::METHOD_POST,
-            self::PATH_TO_SERVICE
+            self::PATH_TO_SERVICE,
+            [],
+            ['test' => 'test']
+        ));
+    }
+
+    public function testExecuteGetJsonAnswer()
+    {
+        $service = new HttpService($this->clientMock);
+        $this->clientMock
+            ->expects(self::once())
+            ->method('setMethod')
+            ->with(Request::METHOD_GET);
+        $this->clientMock
+            ->expects(self::once())
+            ->method('setUri')
+            ->with(self::HTTP_SCHEME . '://' . self::SERVER . self::PATH_TO_SERVICE);
+
+        $responseMock = $this->createMock(Response::class);
+        $headersMock = $this->createMock(Headers::class);
+        $contentTypeMock = $this->createMock(ContentType::class);
+        $responseMock->expects(self::once())
+            ->method('getHeaders')
+            ->willReturn($headersMock);
+        $headersMock->expects(self::once())
+            ->method('get')
+            ->willReturn($contentTypeMock);
+        $contentTypeMock->expects(self::once())
+            ->method('getFieldValue')
+            ->willReturn('application/json');
+
+        $responseMock->expects(self::once())
+            ->method('getBody')
+            ->willReturn('{"success": 1}');
+
+        $this->clientMock
+            ->expects(self::once())
+            ->method('send')
+            ->willReturn($responseMock);
+
+        $service->setRequestBody(self::REQUEST_BODY);
+        $service->setServer(self::SERVER);
+        $service->setUserName('username');
+        $service->setPassword('password');
+
+        self::assertEquals(['success' => true], $service->execute(
+            Request::METHOD_GET,
+            self::PATH_TO_SERVICE,
+            ['test' => 'test'],
+            []
         ));
     }
 

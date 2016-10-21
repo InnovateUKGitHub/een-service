@@ -117,6 +117,14 @@ class HttpService
     }
 
     /**
+     * @return string
+     */
+    public function getUserName()
+    {
+        return $this->userName;
+    }
+
+    /**
      * @param string $password
      *
      * @return $this
@@ -129,6 +137,14 @@ class HttpService
     }
 
     /**
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
      * @param string $scheme
      *
      * @return $this
@@ -138,6 +154,14 @@ class HttpService
         $this->httpScheme = $scheme;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHttpScheme()
+    {
+        return $this->httpScheme;
     }
 
     /**
@@ -210,10 +234,8 @@ class HttpService
             case 'application/json; charset=utf-8':
             case 'application/json':
                 return json_decode($response->getBody(), true);
-            case 'text':
-            default:
-                return $response->getBody();
         }
+        return $response->getBody();
     }
 
     /**
