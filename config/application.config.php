@@ -12,6 +12,6 @@ return [
         'config_cache_enabled'     => false,
         'module_map_cache_key'     => 'application.module.cache',
         'module_map_cache_enabled' => false,
-        'cache_dir'                => 'data/cache/',
+        'cache_dir'                => 'cache/',
     ],
 ];

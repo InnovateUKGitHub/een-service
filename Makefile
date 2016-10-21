@@ -25,7 +25,6 @@ install:
 
 clear-cache:
 	@echo "Clearing cache..."
-	@sh -c "rm -rf data/cache/module*"
 	@sh -c "rm -rf cache/*"
 
 test:
