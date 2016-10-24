@@ -149,24 +149,6 @@ return [
         ],
         ContactController::class => [
             [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'description',
-            ],
-            [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'interest',
-            ],
-            [
-                'required'   => false,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'more',
-            ],
-            [
                 'required'   => false,
                 'validators' => [],
                 'filters'    => [],
