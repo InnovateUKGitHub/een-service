@@ -19,20 +19,19 @@ final class MerlinConnectionFactory
     public function __invoke(ServiceManager $serviceManager)
     {
         $client = (new HttpServiceFactory())->__invoke($serviceManager);
+
+        $logger = $serviceManager->get(Logger::class);
         $config = $serviceManager->get(EEN::CONFIG);
 
         $this->checkRequiredConfig($config);
 
-        $client->setServer($config[EEN::MERLIN][EEN::SERVER]);
+        $config = $config[EEN::MERLIN];
 
+        $client->setServer($config[EEN::SERVER]);
         $client->setHeaders([
             'Content-type' => 'application/xml',
             'Accept'       => 'application/xml',
         ]);
-
-        $logger = $serviceManager->get(Logger::class);
-
-        $config = $config[EEN::MERLIN];
 
         return new MerlinConnection(
             $client,

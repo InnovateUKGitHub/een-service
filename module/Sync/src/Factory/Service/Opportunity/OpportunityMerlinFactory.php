@@ -18,19 +18,20 @@ final class OpportunityMerlinFactory
      */
     public function __invoke(ServiceManager $serviceManager)
     {
-        $config = $serviceManager->get(EEN::CONFIG);
-        $this->checkRequiredConfig($config);
+        $client = (new HttpServiceFactory())->__invoke($serviceManager);
 
+        $logger = $serviceManager->get(Logger::class);
+        $config = $serviceManager->get(EEN::CONFIG);
+
+        $this->checkRequiredConfig($config);
         $config = $config[EEN::MERLIN];
 
-        $client = (new HttpServiceFactory())->__invoke($serviceManager);
         $client->setServer($config[EEN::SERVER]);
         $client->setHeaders([
             'Content-type' => 'application/xml',
             'Accept'       => 'application/xml',
         ]);
 
-        $logger = $serviceManager->get(Logger::class);
 
         return new OpportunityMerlin(
             $client,

@@ -1,6 +1,6 @@
 <?php
 
-namespace SyncTest\Factory\Service\Import;
+namespace SyncTest\Factory\Service;
 
 use Sync\Factory\Service\DeleteServiceFactory;
 use Sync\Service\DeleteService;

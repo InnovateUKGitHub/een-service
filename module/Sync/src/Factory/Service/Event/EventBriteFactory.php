@@ -20,6 +20,7 @@ final class EventBriteFactory
     public function __invoke(ServiceManager $serviceManager)
     {
         $client = (new HttpServiceFactory())->__invoke($serviceManager);
+
         $logger = $serviceManager->get(Logger::class);
         $indexService = $serviceManager->get(IndexService::class);
         $config = $serviceManager->get(EEN::CONFIG);
