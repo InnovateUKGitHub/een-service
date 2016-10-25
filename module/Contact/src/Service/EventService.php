@@ -13,7 +13,6 @@ class EventService extends AbstractEntity
      */
     public function create($data)
     {
-
         $attendee = new \stdClass();
         $attendee->Contact__c = $data['contact'];
         $attendee->Event__c = $data['event'];

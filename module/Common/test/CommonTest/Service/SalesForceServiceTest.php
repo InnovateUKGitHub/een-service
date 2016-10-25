@@ -241,6 +241,31 @@ class SalesForceServiceTest extends \PHPUnit_Framework_TestCase
         self::assertEquals('Failed Validation', $apiProblem['detail']);
     }
 
+    public function testActionCreateSuccessFalseErrorsWithoutField()
+    {
+        $sObject = new \SoapParam('create', 'test');
+        $result = new \stdClass();
+        $result->result = new \stdClass();
+        $result->result->success = false;
+        $result->result->errors = new \stdClass();
+        $result->result->errors->message = 'message';
+
+        $this->clientMock->expects(self::at(4))
+            ->method('call')
+            ->with('create', ['create' => $sObject])
+            ->willReturn($result);
+
+        $this->mockLogin();
+        $response = $this->service->action($sObject, 'create');
+        self::assertInstanceOf(ApiProblemResponse::class, $response);
+        self::assertInstanceOf(ApiProblem::class, $response->getApiProblem());
+        $apiProblem = $response->getApiProblem()->toArray();
+        self::assertEquals('message', $apiProblem['validation_messages']);
+        self::assertEquals('Unprocessable Entity', $apiProblem['title']);
+        self::assertEquals(422, $apiProblem['status']);
+        self::assertEquals('Failed Validation', $apiProblem['detail']);
+    }
+
     public function testActionThrowException()
     {
         $sObject = new \SoapParam('create', 'test');

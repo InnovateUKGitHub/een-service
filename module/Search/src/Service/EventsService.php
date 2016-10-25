@@ -8,6 +8,7 @@ class EventsService extends AbstractSearchService
 {
     /**
      * @inheritdoc
+     * @codeCoverageIgnore
      */
     public function count($params)
     {
