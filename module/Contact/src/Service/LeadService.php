@@ -27,6 +27,7 @@ class LeadService extends AbstractEntity
         if ($result instanceof ApiProblemResponse) {
             return $result;
         }
+
         return (array)$this->getContact($data['email']);
     }
 }

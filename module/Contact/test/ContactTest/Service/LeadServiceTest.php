@@ -59,7 +59,6 @@ class LeadServiceTest extends \PHPUnit_Framework_TestCase
         $object = new \SoapVar($lead, SOAP_ENC_OBJECT, 'Contact', 'namespace');
         $object = new \SoapParam([$object], 'sObjects');
 
-
         $this->serviceMock
             ->expects(self::at(1))
             ->method('getNamespace')
@@ -70,6 +69,7 @@ class LeadServiceTest extends \PHPUnit_Framework_TestCase
                 ->method('action')
                 ->with($object, 'create')
                 ->willReturn(new ApiProblemResponse(new ApiProblem(400, 'error')));
+
             return;
         }
         $this->serviceMock

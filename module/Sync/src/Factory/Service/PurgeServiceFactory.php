@@ -2,8 +2,8 @@
 
 namespace Sync\Factory\Service;
 
-use Sync\Service\PurgeService;
 use Elasticsearch\ClientBuilder;
+use Sync\Service\PurgeService;
 use Zend\ServiceManager\ServiceManager;
 
 final class PurgeServiceFactory

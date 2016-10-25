@@ -75,7 +75,7 @@ return [
                         ],
                     ],
                 ],
-                'purge'    => [
+                'purge'         => [
                     'options' => [
                         'route'       => 'purge [--index=<index>]',
                         'constraints' => [

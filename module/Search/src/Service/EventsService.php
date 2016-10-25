@@ -9,7 +9,9 @@ class EventsService extends AbstractSearchService
     /**
      * @inheritdoc
      */
-    public function count($params) {}
+    public function count($params)
+    {
+    }
 
     /**
      * @inheritdoc

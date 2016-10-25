@@ -2,9 +2,9 @@
 
 namespace SyncTest\Service;
 
-use Sync\Service\PurgeService;
 use Elasticsearch\Client;
 use Elasticsearch\Namespaces\IndicesNamespace;
+use Sync\Service\PurgeService;
 
 /**
  * @covers \Sync\Service\PurgeService

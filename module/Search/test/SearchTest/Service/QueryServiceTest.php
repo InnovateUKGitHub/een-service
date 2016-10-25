@@ -235,7 +235,6 @@ class QueryServiceTest extends \PHPUnit_Framework_TestCase
             ->with(['index' => EEN::ES_INDEX_COUNTRY])
             ->willReturn(true);
 
-
         $this->elasticSearchMock
             ->expects(self::once())
             ->method('search')

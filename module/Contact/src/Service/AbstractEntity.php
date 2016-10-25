@@ -65,6 +65,7 @@ WHERE Email1__c = \'' . $email . '\'
         if (isset($result->records)) {
             return $result->records;
         }
+
         return null;
     }
 
