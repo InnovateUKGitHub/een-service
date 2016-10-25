@@ -3,8 +3,8 @@
 namespace Sync\Factory\Service;
 
 use Common\Constant\EEN;
-use Sync\Service\IndexService;
 use Elasticsearch\ClientBuilder;
+use Sync\Service\IndexService;
 use Zend\Log\Logger;
 use Zend\ServiceManager\ServiceManager;
 

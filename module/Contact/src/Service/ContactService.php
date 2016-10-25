@@ -14,9 +14,9 @@ class ContactService extends AbstractEntity
     public function create($data)
     {
         $contact = $this->getContact($data['email']);
-        $contactId = isset($contact->records) ? $contact->records->Id : null;
-        $accountId = (isset($contact->records) && isset($contact->records->Account)
-            ? $contact->records->Account->Id
+        $contactId = isset($contact->Id) ? $contact->Id : null;
+        $accountId = (isset($contact) && isset($contact->Account) && isset($contact->Account->Id)
+            ? $contact->Account->Id
             : null);
 
         return $this->createUser(
@@ -48,7 +48,7 @@ class ContactService extends AbstractEntity
             return $contactResponse;
         }
 
-        return $this->getContact($data['email']);
+        return (array)$this->getContact($data['email']);
     }
 
     /**

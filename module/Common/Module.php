@@ -44,8 +44,8 @@ class Module implements ConfigProviderInterface, AutoloaderProviderInterface, Bo
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
 
-        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'onDispatchError'), 0);
-        $eventManager->attach(MvcEvent::EVENT_RENDER_ERROR, array($this, 'onRenderError'), 0);
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'onDispatchError'], 0);
+        $eventManager->attach(MvcEvent::EVENT_RENDER_ERROR, [$this, 'onRenderError'], 0);
     }
 
     /**
@@ -81,27 +81,27 @@ class Module implements ConfigProviderInterface, AutoloaderProviderInterface, Bo
         }
 
         $exception = $e->getParam('exception');
-        $exceptionJson = array();
+        $exceptionJson = [];
         if ($exception) {
-            $exceptionJson = array(
-                'class' => get_class($exception),
-                'file' => $exception->getFile(),
-                'line' => $exception->getLine(),
-                'message' => $exception->getMessage(),
-                'stacktrace' => $exception->getTraceAsString()
-            );
+            $exceptionJson = [
+                'class'      => get_class($exception),
+                'file'       => $exception->getFile(),
+                'line'       => $exception->getLine(),
+                'message'    => $exception->getMessage(),
+                'stacktrace' => $exception->getTraceAsString(),
+            ];
         }
 
-        $errorJson = array(
+        $errorJson = [
             'message'   => 'An error occurred during execution; please try again later.',
             'error'     => $error,
             'exception' => $exceptionJson,
-        );
+        ];
         if ($error == 'error-router-no-match') {
             $errorJson['message'] = 'Resource not found.';
         }
 
-        $model = new JsonModel(array('errors' => array($errorJson)));
+        $model = new JsonModel(['errors' => [$errorJson]]);
 
         $e->setResult($model);
 

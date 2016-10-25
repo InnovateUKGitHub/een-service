@@ -235,6 +235,7 @@ class HttpService
             case 'application/json':
                 return json_decode($response->getBody(), true);
         }
+
         return $response->getBody();
     }
 

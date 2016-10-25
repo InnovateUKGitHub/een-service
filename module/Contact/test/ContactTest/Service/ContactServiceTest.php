@@ -180,7 +180,7 @@ WHERE Email1__c = \'' . $data['email'] . '\'
         $this->mockContact($data);
         $result = $this->mockGetUser($data, 5);
 
-        self::assertEquals($result, $this->service->create($data));
+        self::assertEquals((array)$result->records, $this->service->create($data));
     }
 
     public function testCreateFailAccount()
@@ -208,7 +208,7 @@ WHERE Email1__c = \'' . $data['email'] . '\'
         $this->mockContact($data, 'update');
         $result = $this->mockGetUser($data, 5);
 
-        self::assertEquals($result, $this->service->create($data));
+        self::assertEquals((array)$result->records, $this->service->create($data));
     }
 
     public function testDescribe()

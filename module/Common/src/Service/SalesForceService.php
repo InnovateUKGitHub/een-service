@@ -213,7 +213,7 @@ class SalesForceService
             foreach ($errors as $field) {
                 $validationMessages[strtolower($field->fields)] = [$field->message];
             }
-        } else {
+        } else if (isset($errors->fields)) {
             if (is_array($errors->fields)) {
                 foreach ($errors->fields as $field) {
                     $validationMessages[strtolower($field)] = [$errors->message];
@@ -221,6 +221,8 @@ class SalesForceService
             } else {
                 $validationMessages[strtolower($errors->fields)] = [$errors->message];
             }
+        } else {
+            $validationMessages = $errors->message;
         }
 
         return new ApiProblemResponse(

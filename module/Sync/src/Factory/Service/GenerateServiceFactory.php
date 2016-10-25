@@ -2,9 +2,9 @@
 
 namespace Sync\Factory\Service;
 
+use Faker\Factory;
 use Sync\Service\GenerateService;
 use Sync\Service\IndexService;
-use Faker\Factory;
 use Zend\ServiceManager\ServiceManager;
 
 final class GenerateServiceFactory

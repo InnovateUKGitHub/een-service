@@ -50,6 +50,7 @@ abstract class AbstractSearchService
 
     /**
      * @codeCoverageIgnore
+     *
      * @param string $search
      * @param array  $fields
      */
@@ -60,6 +61,7 @@ abstract class AbstractSearchService
 
     /**
      * @codeCoverageIgnore
+     *
      * @param string $search
      * @param array  $fields
      */

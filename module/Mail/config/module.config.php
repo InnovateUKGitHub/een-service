@@ -42,11 +42,11 @@ return [
             'een.email.template' => [
                 'type'    => Segment::class,
                 'options' => [
-                    'route'    => '/templates/email[/:id]',
+                    'route'       => '/templates/email[/:id]',
                     'constraints' => [
                         'id' => '[\d\w\-]+',
                     ],
-                    'defaults' => [
+                    'defaults'    => [
                         'controller' => TemplateController::class,
                     ],
                 ],

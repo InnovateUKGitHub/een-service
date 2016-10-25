@@ -8,7 +8,7 @@ use Common\Service\SalesForceService;
 return [
     'service_manager' => [
         'factories' => [
-            HttpService::class => HttpServiceFactory::class,
+            HttpService::class       => HttpServiceFactory::class,
             SalesForceService::class => SalesForceServiceFactory::class,
         ],
     ],

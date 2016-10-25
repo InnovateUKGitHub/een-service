@@ -5,29 +5,36 @@ namespace Contact;
 use Contact\Controller\ContactController;
 use Contact\Controller\DescribeController;
 use Contact\Controller\EmailController;
+use Contact\Controller\EventController;
 use Contact\Controller\LeadController;
 use Contact\Factory\Controller\ContactControllerFactory;
 use Contact\Factory\Controller\DescribeControllerFactory;
 use Contact\Factory\Controller\EmailControllerFactory;
+use Contact\Factory\Controller\EventControllerFactory;
 use Contact\Factory\Controller\LeadControllerFactory;
 use Contact\Factory\Service\ContactServiceFactory;
+use Contact\Factory\Service\EventServiceFactory;
 use Contact\Factory\Service\LeadServiceFactory;
 use Contact\Service\ContactService;
+use Contact\Service\EventService;
 use Contact\Service\LeadService;
+use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 use Zend\Validator\EmailAddress;
 
 return [
     'service_manager'        => [
         'factories' => [
-            ContactService::class    => ContactServiceFactory::class,
-            LeadService::class       => LeadServiceFactory::class,
+            ContactService::class => ContactServiceFactory::class,
+            EventService::class   => EventServiceFactory::class,
+            LeadService::class    => LeadServiceFactory::class,
         ],
     ],
     'controllers'            => [
         'factories' => [
             ContactController::class  => ContactControllerFactory::class,
             DescribeController::class => DescribeControllerFactory::class,
+            EventController::class    => EventControllerFactory::class,
             LeadController::class     => LeadControllerFactory::class,
             EmailController::class    => EmailControllerFactory::class,
         ],
@@ -58,6 +65,15 @@ return [
                     ],
                 ],
             ],
+            'een.contact.event'      => [
+                'type'    => Literal::class,
+                'options' => [
+                    'route'    => '/contact/event',
+                    'defaults' => [
+                        'controller' => EventController::class,
+                    ],
+                ],
+            ],
             'een.lead'               => [
                 'type'    => Segment::class,
                 'options' => [
@@ -85,6 +101,7 @@ return [
         'controllers'            => [
             DescribeController::class => 'Json',
             ContactController::class  => 'Json',
+            EventController::class    => 'Json',
             LeadController::class     => 'Json',
             EmailController::class    => 'Json',
         ],
@@ -94,6 +111,10 @@ return [
                 'application/*+json',
             ],
             ContactController::class  => [
+                'application/json',
+                'application/*+json',
+            ],
+            EventController::class    => [
                 'application/json',
                 'application/*+json',
             ],
@@ -113,6 +134,9 @@ return [
             ContactController::class  => [
                 'application/json',
             ],
+            EventController::class    => [
+                'application/json',
+            ],
             LeadController::class     => [
                 'application/json',
             ],
@@ -124,6 +148,9 @@ return [
     'zf-content-validation'  => [
         ContactController::class => [
             'POST' => ContactController::class,
+        ],
+        EventController::class   => [
+            'POST' => EventController::class,
         ],
         LeadController::class    => [
             'POST' => LeadController::class,
@@ -147,25 +174,27 @@ return [
                 'name'       => 'lastname',
             ],
         ],
-        ContactController::class => [
-            [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'description',
-            ],
-            [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'interest',
-            ],
+        EventController::class   => [
             [
                 'required'   => false,
                 'validators' => [],
                 'filters'    => [],
-                'name'       => 'more',
+                'name'       => 'dietary',
             ],
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'event',
+            ],
+            [
+                'required'   => true,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'contact',
+            ],
+        ],
+        ContactController::class => [
             [
                 'required'   => false,
                 'validators' => [],

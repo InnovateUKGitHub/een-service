@@ -9,13 +9,14 @@ class LeadService extends AbstractEntity
     /**
      * @param array $data
      *
-     * @return array
+     * @return array|ApiProblemResponse
      */
     public function create($data)
     {
         $contact = $this->getContact($data['email']);
-        if (isset($contact->size) && $contact->size !== 0) {
-            return $contact;
+
+        if ($contact !== null) {
+            return (array)$contact;
         }
 
         $lead = new \stdClass();
@@ -26,6 +27,7 @@ class LeadService extends AbstractEntity
         if ($result instanceof ApiProblemResponse) {
             return $result;
         }
-        return $this->getContact($data['email']);
+
+        return (array)$this->getContact($data['email']);
     }
 }

@@ -24,7 +24,7 @@ class LeadServiceTest extends \PHPUnit_Framework_TestCase
         $this->mockLead($data);
         $result = $this->mockGetUser($data, 3);
 
-        self::assertEquals($result, $this->service->create($data));
+        self::assertEquals((array)$result->records, $this->service->create($data));
     }
 
     public function testCreateAlreadyExists()
@@ -32,7 +32,7 @@ class LeadServiceTest extends \PHPUnit_Framework_TestCase
         $data = $this->getData();
         $result = $this->mockGetUser($data, 0);
 
-        self::assertEquals($result, $this->service->create($data));
+        self::assertEquals((array)$result->records, $this->service->create($data));
     }
 
     public function testCreateError()
@@ -59,7 +59,6 @@ class LeadServiceTest extends \PHPUnit_Framework_TestCase
         $object = new \SoapVar($lead, SOAP_ENC_OBJECT, 'Contact', 'namespace');
         $object = new \SoapParam([$object], 'sObjects');
 
-
         $this->serviceMock
             ->expects(self::at(1))
             ->method('getNamespace')
@@ -70,6 +69,7 @@ class LeadServiceTest extends \PHPUnit_Framework_TestCase
                 ->method('action')
                 ->with($object, 'create')
                 ->willReturn(new ApiProblemResponse(new ApiProblem(400, 'error')));
+
             return;
         }
         $this->serviceMock

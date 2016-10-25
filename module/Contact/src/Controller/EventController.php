@@ -2,24 +2,24 @@
 
 namespace Contact\Controller;
 
-use Contact\Service\ContactService;
+use Contact\Service\EventService;
 use Zend\InputFilter\InputFilter;
 use Zend\Mvc\Controller\AbstractRestfulController;
 
 /**
  * @method InputFilter getInputFilter()
  */
-final class ContactController extends AbstractRestfulController
+final class EventController extends AbstractRestfulController
 {
-    /** @var ContactService */
+    /** @var EventService */
     private $service;
 
     /**
-     * ContactController constructor.
+     * EventController constructor.
      *
-     * @param ContactService $service
+     * @param EventService $service
      */
-    public function __construct(ContactService $service)
+    public function __construct(EventService $service)
     {
         $this->service = $service;
     }
@@ -34,15 +34,5 @@ final class ContactController extends AbstractRestfulController
         $params = $this->getInputFilter()->getValues();
 
         return $this->service->create($params);
-    }
-
-    /**
-     * @param string $email
-     *
-     * @return array
-     */
-    public function get($email)
-    {
-        return (array)$this->service->getContact($email);
     }
 }

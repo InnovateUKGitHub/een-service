@@ -3,9 +3,9 @@
 namespace SyncTest\Service;
 
 use Common\Constant\EEN;
-use Sync\Service\IndexService;
 use Elasticsearch\Client;
 use Elasticsearch\Namespaces\IndicesNamespace;
+use Sync\Service\IndexService;
 use Zend\Log\Logger;
 
 /**

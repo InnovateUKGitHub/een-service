@@ -3,7 +3,6 @@
 namespace Contact\Service;
 
 use Common\Service\SalesForceService;
-use ZF\ApiProblem\ApiProblemResponse;
 
 abstract class AbstractEntity
 {
@@ -62,7 +61,12 @@ FROM Contact c, c.Account a
 WHERE Email1__c = \'' . $email . '\'
 ';
 
-        return $this->salesForce->query($query);
+        $result = $this->salesForce->query($query);
+        if (isset($result->records)) {
+            return $result->records;
+        }
+
+        return null;
     }
 
     /**

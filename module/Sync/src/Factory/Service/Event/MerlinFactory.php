@@ -3,8 +3,8 @@
 namespace Sync\Factory\Service\Event;
 
 use Common\Constant\EEN;
-use Sync\Service\Event\MerlinConnection;
 use Sync\Service\Event\Merlin;
+use Sync\Service\Event\MerlinConnection;
 use Sync\Service\IndexService;
 use Sync\Validator\MerlinValidator;
 use Zend\ServiceManager\ServiceManager;
@@ -28,6 +28,7 @@ final class MerlinFactory
 
         return new Merlin($indexService, $merlinData, $merlinValidator, $config[EEN::MERLIN_EVENT_STRUCTURE]);
     }
+
     /**
      * @param array $config
      */

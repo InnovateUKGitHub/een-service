@@ -32,7 +32,6 @@ final class OpportunityMerlinFactory
             'Accept'       => 'application/xml',
         ]);
 
-
         return new OpportunityMerlin(
             $client,
             $logger,
