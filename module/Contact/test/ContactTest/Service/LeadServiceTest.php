@@ -24,7 +24,7 @@ class LeadServiceTest extends \PHPUnit_Framework_TestCase
         $this->mockLead($data);
         $result = $this->mockGetUser($data, 3);
 
-        self::assertEquals($result, $this->service->create($data));
+        self::assertEquals((array)$result->records, $this->service->create($data));
     }
 
     public function testCreateAlreadyExists()
@@ -32,7 +32,7 @@ class LeadServiceTest extends \PHPUnit_Framework_TestCase
         $data = $this->getData();
         $result = $this->mockGetUser($data, 0);
 
-        self::assertEquals($result, $this->service->create($data));
+        self::assertEquals((array)$result->records, $this->service->create($data));
     }
 
     public function testCreateError()
