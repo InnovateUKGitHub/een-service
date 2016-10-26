@@ -2,9 +2,9 @@
 
 namespace ContactTest\Service;
 
+use Common\Exception\SoapException;
 use Common\Service\SalesForceService;
 use Contact\Service\ContactService;
-use ZF\ApiProblem\ApiProblem;
 use ZF\ApiProblem\ApiProblemResponse;
 
 /**
@@ -50,21 +50,20 @@ class ContactServiceTest extends \PHPUnit_Framework_TestCase
             ->method('getNamespace')
             ->willReturn('namespace');
 
+
         if ($exception === true) {
             $this->serviceMock
                 ->expects(self::at(2))
                 ->method('action')
                 ->with($object, $action)
-                ->willReturn(new ApiProblemResponse(new ApiProblem(500, 'error')));
-
-            return;
+                ->willThrowException(new SoapException(new \Exception(), '', ''));
+        } else {
+            $this->serviceMock
+                ->expects(self::at(2))
+                ->method('action')
+                ->with($object, $action)
+                ->willReturn(['id' => 1]);
         }
-
-        $this->serviceMock
-            ->expects(self::at(2))
-            ->method('action')
-            ->with($object, $action)
-            ->willReturn(1);
     }
 
     private function getAccount($data, $accountId = null)
@@ -105,16 +104,14 @@ class ContactServiceTest extends \PHPUnit_Framework_TestCase
                 ->expects(self::at(4))
                 ->method('action')
                 ->with($object, $action)
-                ->willReturn(new ApiProblemResponse(new ApiProblem(500, 'error')));
-
-            return;
+                ->willThrowException(new SoapException(new \Exception(), '', ''));
+        } else {
+            $this->serviceMock
+                ->expects(self::at(4))
+                ->method('action')
+                ->with($object, $action)
+                ->willReturn(['id' => 1]);
         }
-
-        $this->serviceMock
-            ->expects(self::at(4))
-            ->method('action')
-            ->with($object, $action)
-            ->willReturn(1);
     }
 
     private function getContact($data, $accountId, $contactId = null)
@@ -158,11 +155,14 @@ FROM Contact c, c.Account a
 WHERE Email1__c = \'' . $data['email'] . '\'
 ';
 
-        $result = new \stdClass();
-        $result->records = new \stdClass();
-        $result->records->Id = 1;
-        $result->records->Account = new \stdClass();
-        $result->records->Account->Id = 1;
+        $result = [
+            'records' => [
+                'Id'      => 1,
+                'Account' => [
+                    'Id' => 1,
+                ],
+            ],
+        ];
 
         $this->serviceMock
             ->expects(self::at($at))
@@ -180,9 +180,12 @@ WHERE Email1__c = \'' . $data['email'] . '\'
         $this->mockContact($data);
         $result = $this->mockGetUser($data, 5);
 
-        self::assertEquals((array)$result->records, $this->service->create($data));
+        self::assertEquals($result, $this->service->create($data));
     }
 
+    /**
+     * @expectedException \Common\Exception\SoapException
+     */
     public function testCreateFailAccount()
     {
         $data = $this->getData();
@@ -191,6 +194,9 @@ WHERE Email1__c = \'' . $data['email'] . '\'
         self::assertInstanceOf(ApiProblemResponse::class, $this->service->create($data));
     }
 
+    /**
+     * @expectedException \Common\Exception\SoapException
+     */
     public function testCreateFailContact()
     {
         $data = $this->getData();
@@ -208,7 +214,7 @@ WHERE Email1__c = \'' . $data['email'] . '\'
         $this->mockContact($data, 'update');
         $result = $this->mockGetUser($data, 5);
 
-        self::assertEquals((array)$result->records, $this->service->create($data));
+        self::assertEquals($result, $this->service->create($data));
     }
 
     public function testDescribe()

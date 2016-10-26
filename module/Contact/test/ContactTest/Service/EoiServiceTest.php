@@ -5,10 +5,7 @@ namespace ContactTest\Service;
 use Common\Constant\EEN;
 use Common\Service\SalesForceService;
 use Contact\Service\EoiService;
-use Contact\Service\LeadService;
 use Search\Service\QueryService;
-use ZF\ApiProblem\ApiProblem;
-use ZF\ApiProblem\ApiProblemResponse;
 
 /**
  * @covers \Contact\Service\EoiService
@@ -20,7 +17,7 @@ class EoiServiceTest extends \PHPUnit_Framework_TestCase
     private $serviceMock;
     /** @var \PHPUnit_Framework_MockObject_MockObject|QueryService $queryServiceMock */
     private $queryServiceMock;
-    /** @var LeadService $service */
+    /** @var EoiService $service */
     private $service;
 
     public function testCreateAndGetProfile()
@@ -31,16 +28,6 @@ class EoiServiceTest extends \PHPUnit_Framework_TestCase
         $this->mockEoi($data);
 
         self::assertEquals(['id' => 1], $this->service->create($data));
-    }
-
-    public function testCreateAndGetProfileException()
-    {
-        $data = $this->getData();
-        $this->mockGetProfile($data);
-
-        $this->mockEoi($data, 1, true);
-
-        self::assertInstanceOf(ApiProblemResponse::class, $this->service->create($data));
     }
 
     public function testCreateAndCreateProfile()
@@ -62,7 +49,7 @@ class EoiServiceTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    private function mockEoi($data, $at = 1, $exception = false)
+    private function mockEoi($data, $at = 1)
     {
         $eoi = new \stdClass();
         $eoi->Nature_of_interest__c = $data['interest'];
@@ -76,20 +63,12 @@ class EoiServiceTest extends \PHPUnit_Framework_TestCase
             ->expects(self::at($at))
             ->method('getNamespace')
             ->willReturn('namespace');
-        if ($exception === true) {
-            $this->serviceMock
-                ->expects(self::at($at + 1))
-                ->method('action')
-                ->with($object, 'create')
-                ->willReturn(new ApiProblemResponse(new ApiProblem(400, 'error')));
 
-            return;
-        }
         $this->serviceMock
             ->expects(self::at($at + 1))
             ->method('action')
             ->with($object, 'create')
-            ->willReturn(1);
+            ->willReturn(['id' => 1]);
     }
 
     private function mockGetProfile($data)
@@ -101,10 +80,12 @@ FROM Profile__c
 WHERE Profile_reference_number__c = \'' . $data['profile_id'] . '\'
 ';
 
-        $result = new \stdClass();
-        $result->records = new \stdClass();
-        $result->records->Id = 1;
-        $result->size = 1;
+        $result = [
+            'size'    => 1,
+            'records' => [
+                'Id' => 1,
+            ],
+        ];
 
         $this->serviceMock
             ->expects(self::at(0))
@@ -124,8 +105,9 @@ FROM Profile__c
 WHERE Profile_reference_number__c = \'' . $data['profile_id'] . '\'
 ';
 
-        $result = new \stdClass();
-        $result->size = 0;
+        $result = [
+            'size' => 0,
+        ];
 
         $this->serviceMock
             ->expects(self::at(0))
@@ -159,7 +141,7 @@ WHERE Profile_reference_number__c = \'' . $data['profile_id'] . '\'
             ->expects(self::at(2))
             ->method('action')
             ->with($object, 'create')
-            ->willReturn(1);
+            ->willReturn(['id' => 1]);
 
         return $result;
     }

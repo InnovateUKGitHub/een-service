@@ -5,7 +5,6 @@ namespace Sync\Service\Event;
 use Common\Constant\EEN;
 use Common\Service\SalesForceService;
 use Sync\Service\IndexService;
-use ZF\ApiProblem\ApiProblemResponse;
 
 class SalesForce
 {
@@ -61,6 +60,9 @@ class SalesForce
         }
     }
 
+    /**
+     * @return array
+     */
     private function getEvents()
     {
         $fields = implode(', ', array_keys($this->salesForce->describesObject('Event__c')));
@@ -72,11 +74,6 @@ FROM Event__c
 WHERE Start_Date_time__c >= TODAY
 ";
 
-        $result = $this->salesForce->query($query);
-        if ($result instanceof ApiProblemResponse) {
-            throw new \RuntimeException($result->getApiProblem()->toArray()['exception']);
-        }
-
-        return (array)$result;
+        return $this->salesForce->query($query);
     }
 }

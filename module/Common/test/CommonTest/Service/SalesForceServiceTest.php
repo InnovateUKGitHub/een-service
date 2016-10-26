@@ -4,8 +4,6 @@ namespace CommonTest\Service;
 
 use Common\Service\SalesForceService;
 use Zend\Soap\Client;
-use ZF\ApiProblem\ApiProblem;
-use ZF\ApiProblem\ApiProblemResponse;
 
 /**
  * @covers \Common\Service\SalesForceService
@@ -44,11 +42,25 @@ class SalesForceServiceTest extends \PHPUnit_Framework_TestCase
             ->willReturn($result);
 
         $this->mockLogin();
-        self::assertTrue($this->service->login());
+        $this->service->login();
         self::assertEquals(
             ['infos' => 'test'],
             $this->service->getUserInfo()
         );
+    }
+
+    /**
+     * @expectedException \Common\Exception\SoapException
+     */
+    public function testGetUserInfoThrowException()
+    {
+        $this->clientMock->expects(self::at(4))
+            ->method('call')
+            ->with('getUserInfo', ['getUserInfo' => []])
+            ->willThrowException(new \Exception());
+
+        $this->mockLogin();
+        $this->service->getUserInfo();
     }
 
     private function mockLogin()
@@ -70,6 +82,9 @@ class SalesForceServiceTest extends \PHPUnit_Framework_TestCase
             ->willReturn($loginObject);
     }
 
+    /**
+     * @expectedException \Common\Exception\SoapException
+     */
     public function testLoginThrowException()
     {
         $this->clientMock->expects(self::at(0))
@@ -83,7 +98,7 @@ class SalesForceServiceTest extends \PHPUnit_Framework_TestCase
                 ])
             ->willThrowException(new \Exception());
 
-        self::assertFalse($this->service->login());
+        $this->service->login();
     }
 
     public function testLogout()
@@ -93,9 +108,12 @@ class SalesForceServiceTest extends \PHPUnit_Framework_TestCase
             ->with('logout', ['logout' => []])
             ->willReturn('hello');
 
-        self::assertTrue($this->service->logout());
+        $this->service->logout();
     }
 
+    /**
+     * @expectedException \Common\Exception\SoapException
+     */
     public function testLogoutThrowException()
     {
         $this->clientMock->expects(self::at(0))
@@ -103,7 +121,7 @@ class SalesForceServiceTest extends \PHPUnit_Framework_TestCase
             ->with('logout', ['logout' => []])
             ->willThrowException(new \Exception());
 
-        self::assertFalse($this->service->logout());
+        $this->service->logout();
     }
 
     public function testDescribeObject()
@@ -134,11 +152,37 @@ class SalesForceServiceTest extends \PHPUnit_Framework_TestCase
         ], $this->service->describesObject($data->sObjectType));
     }
 
+    /**
+     * @expectedException \Common\Exception\SoapException
+     */
+    public function testDescribeObjectThrowException()
+    {
+        $this->clientMock->expects(self::at(4))
+            ->method('call')
+            ->willThrowException(new \Exception());
+
+        $this->mockLogin();
+        $this->service->describesObject([]);
+    }
+
     public function testDelete()
     {
         $this->clientMock->expects(self::at(4))
             ->method('call')
             ->with('delete', ['delete' => ['id']]);
+
+        $this->mockLogin();
+        $this->service->delete(['id']);
+    }
+
+    /**
+     * @expectedException \Common\Exception\SoapException
+     */
+    public function testDeleteThrowException()
+    {
+        $this->clientMock->expects(self::at(4))
+            ->method('call')
+            ->willThrowException(new \Exception());
 
         $this->mockLogin();
         $this->service->delete(['id']);
@@ -158,9 +202,18 @@ class SalesForceServiceTest extends \PHPUnit_Framework_TestCase
             ->willReturn($result);
 
         $this->mockLogin();
-        self::assertEquals(1, $this->service->action($sObject, 'create'));
+        self::assertEquals(
+            [
+                'success' => true,
+                'id'      => 1,
+            ],
+            $this->service->action($sObject, 'create')
+        );
     }
 
+    /**
+     * @expectedException \Common\Exception\ApplicationException
+     */
     public function testActionCreateSuccessFalseErrorsArray()
     {
         $error = new \stdClass();
@@ -179,16 +232,12 @@ class SalesForceServiceTest extends \PHPUnit_Framework_TestCase
             ->willReturn($result);
 
         $this->mockLogin();
-        $response = $this->service->action($sObject, 'create');
-        self::assertInstanceOf(ApiProblemResponse::class, $response);
-        self::assertInstanceOf(ApiProblem::class, $response->getApiProblem());
-        $apiProblem = $response->getApiProblem()->toArray();
-        self::assertEquals(['fields' => ['message']], $apiProblem['validation_messages']);
-        self::assertEquals('Unprocessable Entity', $apiProblem['title']);
-        self::assertEquals(422, $apiProblem['status']);
-        self::assertEquals('Failed Validation', $apiProblem['detail']);
+        $this->service->action($sObject, 'create');
     }
 
+    /**
+     * @expectedException \Common\Exception\ApplicationException
+     */
     public function testActionCreateSuccessFalseErrorsFieldsArray()
     {
         $sObject = new \SoapParam('create', 'test');
@@ -205,16 +254,12 @@ class SalesForceServiceTest extends \PHPUnit_Framework_TestCase
             ->willReturn($result);
 
         $this->mockLogin();
-        $response = $this->service->action($sObject, 'create');
-        self::assertInstanceOf(ApiProblemResponse::class, $response);
-        self::assertInstanceOf(ApiProblem::class, $response->getApiProblem());
-        $apiProblem = $response->getApiProblem()->toArray();
-        self::assertEquals(['fields' => ['message']], $apiProblem['validation_messages']);
-        self::assertEquals('Unprocessable Entity', $apiProblem['title']);
-        self::assertEquals(422, $apiProblem['status']);
-        self::assertEquals('Failed Validation', $apiProblem['detail']);
+        $this->service->action($sObject, 'create');
     }
 
+    /**
+     * @expectedException \Common\Exception\ApplicationException
+     */
     public function testActionCreateSuccessFalseErrorsFields()
     {
         $sObject = new \SoapParam('create', 'test');
@@ -231,16 +276,12 @@ class SalesForceServiceTest extends \PHPUnit_Framework_TestCase
             ->willReturn($result);
 
         $this->mockLogin();
-        $response = $this->service->action($sObject, 'create');
-        self::assertInstanceOf(ApiProblemResponse::class, $response);
-        self::assertInstanceOf(ApiProblem::class, $response->getApiProblem());
-        $apiProblem = $response->getApiProblem()->toArray();
-        self::assertEquals(['fields' => ['message']], $apiProblem['validation_messages']);
-        self::assertEquals('Unprocessable Entity', $apiProblem['title']);
-        self::assertEquals(422, $apiProblem['status']);
-        self::assertEquals('Failed Validation', $apiProblem['detail']);
+        $this->service->action($sObject, 'create');
     }
 
+    /**
+     * @expectedException \Common\Exception\ApplicationException
+     */
     public function testActionCreateSuccessFalseErrorsWithoutField()
     {
         $sObject = new \SoapParam('create', 'test');
@@ -256,16 +297,12 @@ class SalesForceServiceTest extends \PHPUnit_Framework_TestCase
             ->willReturn($result);
 
         $this->mockLogin();
-        $response = $this->service->action($sObject, 'create');
-        self::assertInstanceOf(ApiProblemResponse::class, $response);
-        self::assertInstanceOf(ApiProblem::class, $response->getApiProblem());
-        $apiProblem = $response->getApiProblem()->toArray();
-        self::assertEquals('message', $apiProblem['validation_messages']);
-        self::assertEquals('Unprocessable Entity', $apiProblem['title']);
-        self::assertEquals(422, $apiProblem['status']);
-        self::assertEquals('Failed Validation', $apiProblem['detail']);
+        $this->service->action($sObject, 'create');
     }
 
+    /**
+     * @expectedException \Common\Exception\SoapException
+     */
     public function testActionThrowException()
     {
         $sObject = new \SoapParam('create', 'test');
@@ -282,12 +319,7 @@ class SalesForceServiceTest extends \PHPUnit_Framework_TestCase
             ->willThrowException(new \Exception('message', 400));
 
         $this->mockLogin();
-        $response = $this->service->action($sObject, 'create');
-        self::assertInstanceOf(ApiProblemResponse::class, $response);
-        self::assertInstanceOf(ApiProblem::class, $response->getApiProblem());
-        $apiProblem = $response->getApiProblem()->toArray();
-        self::assertEquals(400, $apiProblem['code']);
-        self::assertEquals('message', $apiProblem['exception']);
+        $this->service->action($sObject, 'create');
     }
 
     public function testQuery()
@@ -305,6 +337,9 @@ class SalesForceServiceTest extends \PHPUnit_Framework_TestCase
         self::assertEquals(1, $this->service->query($query));
     }
 
+    /**
+     * @expectedException \Common\Exception\SoapException
+     */
     public function testQueryThrowException()
     {
         $query = new \stdClass();
@@ -315,11 +350,6 @@ class SalesForceServiceTest extends \PHPUnit_Framework_TestCase
             ->willThrowException(new \Exception('message', 400));
 
         $this->mockLogin();
-        $response = $this->service->query($query);
-        self::assertInstanceOf(ApiProblemResponse::class, $response);
-        self::assertInstanceOf(ApiProblem::class, $response->getApiProblem());
-        $apiProblem = $response->getApiProblem()->toArray();
-        self::assertEquals(400, $apiProblem['code']);
-        self::assertEquals('message', $apiProblem['exception']);
+        $this->service->query($query);
     }
 }

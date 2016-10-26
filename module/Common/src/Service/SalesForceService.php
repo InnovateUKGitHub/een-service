@@ -2,10 +2,9 @@
 
 namespace Common\Service;
 
-use Zend\Http\Response;
+use Common\Exception\ApplicationException;
+use Common\Exception\SoapException;
 use Zend\Soap\Client;
-use ZF\ApiProblem\ApiProblem;
-use ZF\ApiProblem\ApiProblemResponse;
 
 class SalesForceService
 {
@@ -51,22 +50,28 @@ class SalesForceService
 
     /**
      * @return array
+     * @throws SoapException
      */
     public function getUserInfo()
     {
         $this->login();
-        $info = $this->client->call('getUserInfo', ['getUserInfo' => []]);
+
+        try {
+            $info = $this->client->call('getUserInfo', ['getUserInfo' => []]);
+        } catch (\Exception $e) {
+            throw new SoapException($e, $this->client->getLastRequest(), $this->client->getLastResponse());
+        }
 
         return json_decode(json_encode($info), true);
     }
 
     /**
-     * @return bool
+     * @throws SoapException
      */
     public function login()
     {
         if ($this->sessionId) {
-            return true;
+            return;
         }
 
         try {
@@ -79,46 +84,42 @@ class SalesForceService
                     ],
                 ]
             );
+            $loginResult = json_decode(json_encode($loginResult), true);
         } catch (\Exception $e) {
-            // TODO Log failing error to logger
-            return false;
+            throw new SoapException($e, $this->client->getLastRequest(), $this->client->getLastResponse());
         }
 
         // Set new Url retrieve from the login
-        $this->client->setUri($loginResult->result->serverUrl);
-        $this->client->setLocation($loginResult->result->serverUrl);
+        $this->client->setUri($loginResult['result']['serverUrl']);
+        $this->client->setLocation($loginResult['result']['serverUrl']);
 
         // attach the session id to the soap client
-        $this->sessionId = $loginResult->result->sessionId;
+        $this->sessionId = $loginResult['result']['sessionId'];
         $header = new \SoapHeader(
             $this->getNamespace(),
             'SessionHeader',
             ['sessionId' => $this->sessionId]
         );
         $this->client->addSoapInputHeader($header, true);
-
-        return true;
     }
 
     /**
-     * @return bool
+     * @throws SoapException
      */
     public function logout()
     {
         try {
             $this->client->call('logout', ['logout' => []]);
         } catch (\Exception $e) {
-            // TODO Log failing error to logger
-            return false;
+            throw new SoapException($e, $this->client->getLastRequest(), $this->client->getLastResponse());
         }
-
-        return true;
     }
 
     /**
      * @param string $type
      *
      * @return array
+     * @throws SoapException
      */
     public function describesObject($type)
     {
@@ -129,10 +130,14 @@ class SalesForceService
         $object = new \SoapVar($data, SOAP_ENC_OBJECT, 'sObjectType', $this->getNamespace());
         $object = new \SoapParam($object, 'sObjectType');
 
-        $response = $this->client->call(
-            'describeSObject',
-            ['describeSObject' => $object]
-        );
+        try {
+            $response = $this->client->call(
+                'describeSObject',
+                ['describeSObject' => $object]
+            );
+        } catch (\Exception $e) {
+            throw new SoapException($e, $this->client->getLastRequest(), $this->client->getLastResponse());
+        }
 
         $results = [];
         foreach ($response->result->fields as $field) {
@@ -147,6 +152,8 @@ class SalesForceService
 
     /**
      * @param array $ids
+     *
+     * @throws SoapException
      */
     public function delete($ids)
     {
@@ -158,7 +165,7 @@ class SalesForceService
                 ['delete' => $ids]
             );
         } catch (\Exception $e) {
-            // TODO Log failing error to logger
+            throw new SoapException($e, $this->client->getLastRequest(), $this->client->getLastResponse());
         }
     }
 
@@ -166,7 +173,8 @@ class SalesForceService
      * @param \SoapParam $object
      * @param string     $action
      *
-     * @return string|ApiProblemResponse
+     * @return string
+     * @throws SoapException
      */
     public function action(\SoapParam $object, $action)
     {
@@ -177,71 +185,50 @@ class SalesForceService
                 $action,
                 [$action => $object]
             );
+            $response = json_decode(json_encode($response), true);
         } catch (\Exception $e) {
-            return new ApiProblemResponse(
-                new ApiProblem(
-                    Response::STATUS_CODE_500,
-                    'Invalid Soap answer',
-                    null,
-                    null,
-                    [
-                        'code'      => $e->getCode(),
-                        'exception' => $e->getMessage(),
-                        'request'   => $this->client->getLastRequest(),
-                        'response'  => $this->client->getLastResponse(),
-                    ]
-                )
-            );
+            throw new SoapException($e, $this->client->getLastRequest(), $this->client->getLastResponse());
         }
         // TODO Log failing error to logger
-        if ($response->result->success == false && isset($response->result->errors)) {
-            return $this->buildValidationErrors($response->result->errors);
+        if ($response['result']['success'] == false && isset($response['result']['errors'])) {
+            $this->buildValidationErrors($response['result']['errors']);
         }
 
-        return $response->result->id;
+        return $response['result'];
     }
 
     /**
-     * @param \stdClass $errors
+     * @param array $errors
      *
-     * @return ApiProblemResponse
+     * @throws ApplicationException
      */
     public function buildValidationErrors($errors)
     {
         $validationMessages = [];
-        if (is_array($errors)) {
-            foreach ($errors as $field) {
-                $validationMessages[strtolower($field->fields)] = [$field->message];
-            }
-        } else if (isset($errors->fields)) {
-            if (is_array($errors->fields)) {
-                foreach ($errors->fields as $field) {
-                    $validationMessages[strtolower($field)] = [$errors->message];
+        if (isset($errors['fields'])) {
+            if (is_array($errors['fields'])) {
+                foreach ($errors['fields'] as $field) {
+                    $validationMessages[strtolower($field)] = [$errors['message']];
                 }
             } else {
-                $validationMessages[strtolower($errors->fields)] = [$errors->message];
+                $validationMessages[strtolower($errors['fields'])] = [$errors['message']];
+            }
+        } else if (!isset($errors['message'])) {
+            foreach ($errors as $field) {
+                $validationMessages[strtolower($field['fields'])] = [$field['message']];
             }
         } else {
-            $validationMessages = $errors->message;
+            $validationMessages = $errors['message'];
         }
 
-        return new ApiProblemResponse(
-            new ApiProblem(
-                Response::STATUS_CODE_422,
-                'Failed Validation',
-                null,
-                null,
-                [
-                    'validation_messages' => $validationMessages,
-                ]
-            )
-        );
+        throw new ApplicationException(['validation_messages' => $validationMessages]);
     }
 
     /**
      * @param \stdClass $query
      *
-     * @return ApiProblemResponse
+     * @return array
+     * @throws SoapException
      */
     public function query(\stdClass $query)
     {
@@ -252,23 +239,11 @@ class SalesForceService
                 'query',
                 ['query' => $query]
             );
+            $response = json_decode(json_encode($response), true);
         } catch (\Exception $e) {
-            return new ApiProblemResponse(
-                new ApiProblem(
-                    Response::STATUS_CODE_500,
-                    'Invalid Soap answer',
-                    null,
-                    null,
-                    [
-                        'code'      => $e->getCode(),
-                        'exception' => $e->getMessage(),
-                        'request'   => $this->client->getLastRequest(),
-                        'response'  => $this->client->getLastResponse(),
-                    ]
-                )
-            );
+            throw new SoapException($e, $this->client->getLastRequest(), $this->client->getLastResponse());
         }
 
-        return $response->result;
+        return $response['result'];
     }
 }

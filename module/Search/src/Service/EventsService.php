@@ -3,6 +3,7 @@
 namespace Search\Service;
 
 use Common\Constant\EEN;
+use Zend\Http\Response;
 
 class EventsService extends AbstractSearchService
 {
@@ -35,7 +36,7 @@ class EventsService extends AbstractSearchService
     public function get($id)
     {
         if ($this->query->exists(EEN::ES_INDEX_EVENT) === false) {
-            return ['total' => 0];
+            throw new \Exception('Event not found', Response::STATUS_CODE_404);
         }
 
         return $this->query->getDocument($id, EEN::ES_INDEX_EVENT, EEN::ES_TYPE_EVENT);

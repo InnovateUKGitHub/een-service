@@ -4,11 +4,8 @@ namespace SyncTest\Service\Import\Event;
 
 use Common\Constant\EEN;
 use Common\Service\SalesForceService;
-use Sync\Service\Event\EventBrite;
 use Sync\Service\Event\SalesForce;
 use Sync\Service\IndexService;
-use ZF\ApiProblem\ApiProblem;
-use ZF\ApiProblem\ApiProblemResponse;
 
 /**
  * @covers \Sync\Service\Event\SalesForce
@@ -22,7 +19,7 @@ class SalesForceTest extends \PHPUnit_Framework_TestCase
     private $indexMock;
     /** @var \PHPUnit_Framework_MockObject_MockObject|SalesForceService $salesForceMock */
     private $salesForceMock;
-    /** @var EventBrite $service */
+    /** @var SalesForce $service */
     private $service;
 
     public function testImport()
@@ -85,27 +82,6 @@ WHERE Start_Date_time__c >= TODAY
         $this->salesForceMock->expects(self::once())
             ->method('query')
             ->willReturn(['size' => 0]);
-
-        $this->indexMock->expects(self::never())
-            ->method('index');
-
-        $this->service->import(self::DATE);
-    }
-
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Error
-     */
-    public function testImportThrowException()
-    {
-        $this->salesForceMock->expects(self::once())
-            ->method('describesObject')
-            ->with('Event__c')
-            ->willReturn([]);
-
-        $this->salesForceMock->expects(self::once())
-            ->method('query')
-            ->willReturn(new ApiProblemResponse(new ApiProblem(500, '', null, null, ['exception' => 'Error'])));
 
         $this->indexMock->expects(self::never())
             ->method('index');

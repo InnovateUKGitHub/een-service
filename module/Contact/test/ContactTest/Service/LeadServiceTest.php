@@ -4,8 +4,6 @@ namespace ContactTest\Service;
 
 use Common\Service\SalesForceService;
 use Contact\Service\LeadService;
-use ZF\ApiProblem\ApiProblem;
-use ZF\ApiProblem\ApiProblemResponse;
 
 /**
  * @covers \Contact\Service\LeadService
@@ -24,7 +22,7 @@ class LeadServiceTest extends \PHPUnit_Framework_TestCase
         $this->mockLead($data);
         $result = $this->mockGetUser($data, 3);
 
-        self::assertEquals((array)$result->records, $this->service->create($data));
+        self::assertEquals($result, $this->service->create($data));
     }
 
     public function testCreateAlreadyExists()
@@ -32,15 +30,7 @@ class LeadServiceTest extends \PHPUnit_Framework_TestCase
         $data = $this->getData();
         $result = $this->mockGetUser($data, 0);
 
-        self::assertEquals((array)$result->records, $this->service->create($data));
-    }
-
-    public function testCreateError()
-    {
-        $data = $this->getData();
-        $this->mockLead($data, true);
-
-        self::assertInstanceOf(ApiProblemResponse::class, $this->service->create($data));
+        self::assertEquals($result, $this->service->create($data));
     }
 
     private function getData()
@@ -50,7 +40,7 @@ class LeadServiceTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    private function mockLead($data, $exception = false)
+    private function mockLead($data)
     {
         $lead = new \stdClass();
         $lead->Email1__c = $data['email'];
@@ -63,15 +53,6 @@ class LeadServiceTest extends \PHPUnit_Framework_TestCase
             ->expects(self::at(1))
             ->method('getNamespace')
             ->willReturn('namespace');
-        if ($exception === true) {
-            $this->serviceMock
-                ->expects(self::at(2))
-                ->method('action')
-                ->with($object, 'create')
-                ->willReturn(new ApiProblemResponse(new ApiProblem(400, 'error')));
-
-            return;
-        }
         $this->serviceMock
             ->expects(self::at(2))
             ->method('action')
@@ -90,12 +71,15 @@ FROM Contact c, c.Account a
 WHERE Email1__c = \'' . $data['email'] . '\'
 ';
 
-        $result = new \stdClass();
-        $result->records = new \stdClass();
-        $result->records->Id = 1;
-        $result->records->Account = new \stdClass();
-        $result->records->Account->Id = 1;
-        $result->size = 1;
+        $result = [
+            'records' => [
+                'Id'      => 1,
+                'Account' => [
+                    'Id' => 1,
+                ],
+            ],
+            'size'    => 1,
+        ];
 
         $this->serviceMock
             ->expects(self::at($at))

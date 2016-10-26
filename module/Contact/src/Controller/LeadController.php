@@ -33,6 +33,8 @@ final class LeadController extends AbstractRestfulController
     {
         $params = $this->getInputFilter()->getValues();
 
-        return $this->service->create($params);
+        $contact = $this->service->create($params);
+
+        return $contact['records'];
     }
 }

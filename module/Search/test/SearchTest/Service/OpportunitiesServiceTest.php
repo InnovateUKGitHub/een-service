@@ -168,6 +168,9 @@ class OpportunitiesServiceTest extends \PHPUnit_Framework_TestCase
         self::assertEquals(['success' => true], $service->get(self::ID));
     }
 
+    /**
+     * @expectedException \Exception
+     */
     public function testGetNoIndex()
     {
         /** @var \PHPUnit_Framework_MockObject_MockObject|QueryService $queryServiceMock */
@@ -179,6 +182,6 @@ class OpportunitiesServiceTest extends \PHPUnit_Framework_TestCase
 
         $service = new OpportunitiesService($queryServiceMock);
 
-        self::assertEquals(['total' => 0], $service->get(self::ID));
+        $service->get(self::ID);
     }
 }

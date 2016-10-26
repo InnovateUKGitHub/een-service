@@ -28,7 +28,7 @@ class ContactControllerTest extends \PHPUnit_Framework_TestCase
         $service->expects(self::once())
             ->method('create')
             ->with(['params' => 'myParams'])
-            ->willReturn(['success' => true]);
+            ->willReturn(['records' => true]);
 
         $inputFilterMock->expects(self::once())
             ->method('getValues')
@@ -47,10 +47,7 @@ class ContactControllerTest extends \PHPUnit_Framework_TestCase
         $request = new Request();
         $request->setMethod(Request::METHOD_POST);
 
-        self::assertEquals(
-            ['success' => true],
-            $controller->dispatch($request)
-        );
+        self::assertTrue($controller->dispatch($request));
     }
 
     public function testGet()
@@ -62,7 +59,7 @@ class ContactControllerTest extends \PHPUnit_Framework_TestCase
         $service->expects(self::once())
             ->method('getContact')
             ->with($id)
-            ->willReturn(['found' => true]);
+            ->willReturn(['records' => true, 'size' => 1]);
 
         $controller = new ContactController($service);
         $routeMatch = new RouteMatch(['id' => $id]);
@@ -74,9 +71,35 @@ class ContactControllerTest extends \PHPUnit_Framework_TestCase
         $request = new Request();
         $request->setMethod(Request::METHOD_GET);
 
-        self::assertEquals(
-            ['found' => true],
-            $controller->dispatch($request)
-        );
+        self::assertTrue($controller->dispatch($request));
+    }
+
+    /**
+     * @expectedException \Exception
+     * @expectedExceptionMessage User not found
+     * @expectedExceptionCode    404
+     */
+    public function testGetNoResult()
+    {
+        $id = 'accountId';
+
+        $service = $this->createMock(ContactService::class);
+
+        $service->expects(self::once())
+            ->method('getContact')
+            ->with($id)
+            ->willReturn(['size' => 0]);
+
+        $controller = new ContactController($service);
+        $routeMatch = new RouteMatch(['id' => $id]);
+
+        $event = new MvcEvent();
+        $event->setRouteMatch($routeMatch);
+        $controller->setEvent($event);
+
+        $request = new Request();
+        $request->setMethod(Request::METHOD_GET);
+
+        self::assertTrue($controller->dispatch($request));
     }
 }

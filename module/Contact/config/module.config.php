@@ -191,24 +191,6 @@ return [
     'input_filter_specs'     => [
         ContactController::class => [
             [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'description',
-            ],
-            [
-                'required'   => true,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'interest',
-            ],
-            [
-                'required'   => false,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'more',
-            ],
-            [
                 'required'   => false,
                 'validators' => [],
                 'filters'    => [],
@@ -388,12 +370,6 @@ return [
                 'validators' => [],
                 'filters'    => [],
                 'name'       => 'email',
-            ],
-            [
-                'required'   => false,
-                'validators' => [],
-                'filters'    => [],
-                'name'       => 'lastname',
             ],
         ],
     ],

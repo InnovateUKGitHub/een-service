@@ -5,7 +5,6 @@ namespace Contact\Service;
 use Common\Constant\EEN;
 use Common\Service\SalesForceService;
 use Search\Service\QueryService;
-use ZF\ApiProblem\ApiProblemResponse;
 
 class EoiService extends AbstractEntity
 {
@@ -42,12 +41,7 @@ class EoiService extends AbstractEntity
         $eoi->External_EEN_Partner__c = $data['account_id'];
         $eoi->Profile__c = $this->getProfile($data['profile_id']);
 
-        $eoiId = $this->createEntity($eoi, 'Eoi__c');
-        if ($eoiId instanceof ApiProblemResponse) {
-            return $eoiId;
-        }
-
-        return ['id' => $eoiId];
+        return $this->createEntity($eoi, 'Eoi__c');
     }
 
     private function getProfile($profileId)
@@ -60,11 +54,11 @@ WHERE Profile_reference_number__c = \'' . $profileId . '\'
 ';
 
         $result = $this->salesForce->query($query);
-        if ($result->size == 0) {
+        if ($result['size'] == 0) {
             return $this->createProfile($profileId);
         }
 
-        return $result->records->Id;
+        return $result['records']['Id'];
     }
 
     private function createProfile($profileId)
@@ -76,6 +70,6 @@ WHERE Profile_reference_number__c = \'' . $profileId . '\'
         $profile->Name = substr($data['_source']['title'], 0, 80);
         $profile->Profile_Type__c = self::profileType[$data['_source']['type']];
 
-        return $this->createEntity($profile, 'Profile__c');
+        return $this->createEntity($profile, 'Profile__c')['id'];
     }
 }

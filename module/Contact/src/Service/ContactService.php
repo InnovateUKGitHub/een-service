@@ -2,7 +2,7 @@
 
 namespace Contact\Service;
 
-use ZF\ApiProblem\ApiProblemResponse;
+use Common\Exception\SoapException;
 
 class ContactService extends AbstractEntity
 {
@@ -14,10 +14,8 @@ class ContactService extends AbstractEntity
     public function create($data)
     {
         $contact = $this->getContact($data['email']);
-        $contactId = isset($contact->Id) ? $contact->Id : null;
-        $accountId = (isset($contact) && isset($contact->Account) && isset($contact->Account->Id)
-            ? $contact->Account->Id
-            : null);
+        $contactId = isset($contact['records']['Id']) ? $contact['records']['Id'] : null;
+        $accountId = (isset($contact['records']['Account']['Id']) ? $contact['records']['Account']['Id'] : null);
 
         return $this->createUser(
             $data,
@@ -32,23 +30,20 @@ class ContactService extends AbstractEntity
      * @param string $accountId
      *
      * @return array
+     * @throws SoapException
      */
     private function createUser($data, $contactId, $accountId)
     {
-        $accountResponse = $this->createAccount($data, $accountId);
-        if ($accountResponse instanceof ApiProblemResponse) {
-            return $accountResponse;
+        $account = $this->createAccount($data, $accountId);
+
+        try {
+            $this->createContact($data, $contactId, $account['id']);
+        } catch (SoapException $e) {
+            $this->salesForce->delete([$account['id']]);
+            throw $e;
         }
 
-        $contactResponse = $this->createContact($data, $contactId, $accountResponse);
-        if ($contactResponse instanceof ApiProblemResponse) {
-            // If problem during contact creation delete account
-            $this->salesForce->delete([$accountResponse]);
-
-            return $contactResponse;
-        }
-
-        return (array)$this->getContact($data['email']);
+        return $this->getContact($data['email']);
     }
 
     /**

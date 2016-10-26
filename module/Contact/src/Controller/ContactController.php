@@ -3,6 +3,7 @@
 namespace Contact\Controller;
 
 use Contact\Service\ContactService;
+use Zend\Http\Response;
 use Zend\InputFilter\InputFilter;
 use Zend\Mvc\Controller\AbstractRestfulController;
 
@@ -33,16 +34,24 @@ final class ContactController extends AbstractRestfulController
     {
         $params = $this->getInputFilter()->getValues();
 
-        return $this->service->create($params);
+        $contact = $this->service->create($params);
+
+        return $contact['records'];
     }
 
     /**
      * @param string $email
      *
      * @return array
+     * @throws \Exception
      */
     public function get($email)
     {
-        return (array)$this->service->getContact($email);
+        $contact = $this->service->getContact($email);
+        if ($contact['size'] === 0) {
+            throw new \Exception('User not found', Response::STATUS_CODE_404);
+        }
+
+        return $contact['records'];
     }
 }

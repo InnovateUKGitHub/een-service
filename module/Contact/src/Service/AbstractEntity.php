@@ -48,7 +48,7 @@ abstract class AbstractEntity
     /**
      * @param string $email
      *
-     * @return array|\ZF\ApiProblem\ApiProblemResponse
+     * @return array
      */
     public function getContact($email)
     {
@@ -61,12 +61,7 @@ FROM Contact c, c.Account a
 WHERE Email1__c = \'' . $email . '\'
 ';
 
-        $result = $this->salesForce->query($query);
-        if (isset($result->records)) {
-            return $result->records;
-        }
-
-        return null;
+        return $this->salesForce->query($query);
     }
 
     /**

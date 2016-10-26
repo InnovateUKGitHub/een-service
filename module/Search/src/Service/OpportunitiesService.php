@@ -3,6 +3,7 @@
 namespace Search\Service;
 
 use Common\Constant\EEN;
+use Zend\Http\Response;
 
 class OpportunitiesService extends AbstractSearchService
 {
@@ -94,7 +95,7 @@ class OpportunitiesService extends AbstractSearchService
     public function get($id)
     {
         if ($this->query->exists(EEN::ES_INDEX_OPPORTUNITY) === false) {
-            return ['total' => 0];
+            throw new \Exception('Opportunity not found', Response::STATUS_CODE_404);
         }
 
         return $this->query->getDocument($id, EEN::ES_INDEX_OPPORTUNITY, EEN::ES_TYPE_OPPORTUNITY);

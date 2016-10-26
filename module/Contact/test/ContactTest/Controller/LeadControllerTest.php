@@ -28,7 +28,7 @@ class LeadControllerTest extends \PHPUnit_Framework_TestCase
         $service->expects(self::once())
             ->method('create')
             ->with(['params' => 'myParams'])
-            ->willReturn(['success' => true]);
+            ->willReturn(['records' => true]);
 
         $inputFilterMock->expects(self::once())
             ->method('getValues')
@@ -47,9 +47,6 @@ class LeadControllerTest extends \PHPUnit_Framework_TestCase
         $request = new Request();
         $request->setMethod(Request::METHOD_POST);
 
-        self::assertEquals(
-            ['success' => true],
-            $controller->dispatch($request)
-        );
+        self::assertTrue($controller->dispatch($request));
     }
 }
