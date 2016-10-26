@@ -7,6 +7,8 @@ use Zend\InputFilter\InputFilter;
 use Zend\Mvc\Controller\AbstractRestfulController;
 
 /**
+ * TODO This controller is WIP to build an auto suggest
+ *
  * @method InputFilter getInputFilter()
  */
 final class AutoSuggestController extends AbstractRestfulController
@@ -33,6 +35,7 @@ final class AutoSuggestController extends AbstractRestfulController
     {
         $params = $this->getInputFilter()->getValues();
 
-        return $this->service->findTerm($params);
+        return [];
+//        return $this->service->findTerm($params);
     }
 }
