@@ -1,6 +1,6 @@
 <?php
 
-namespace SyncTest\Service\Import\Opportunity;
+namespace SyncTest\Service\Opportunity;
 
 use Common\Service\HttpService;
 use Sync\Service\Opportunity\OpportunityMerlin;

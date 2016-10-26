@@ -27,7 +27,7 @@ class SalesForce
     }
 
     /**
-     * @param \DateTime $dateImport
+     * @param string $dateImport
      */
     public function import($dateImport)
     {

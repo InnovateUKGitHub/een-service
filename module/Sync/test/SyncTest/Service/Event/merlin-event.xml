@@ -1,0 +1,13 @@
+<pod>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <location_website>website</location_website>
+        <EventTitle>Title</EventTitle>
+        <Description>Description</Description>
+        <EventStartDate>StartDate</EventStartDate>
+        <EventEndDate>EndDate</EventEndDate>
+        <CountryISO>CI</CountryISO>
+        <Country>Country</Country>
+        <City>City</City>
+        <Created>Created</Created>
+    </event>
+</pod>

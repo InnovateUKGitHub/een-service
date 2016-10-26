@@ -1,0 +1,41 @@
+<pod>
+    <profile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <reference>
+            <type>BO</type>
+            <external>BOCN20160720001</external>
+        </reference>
+        <datum>
+            <submit>2016-07-20T00:00:00</submit>
+            <update>2016-08-09T00:00:00</update>
+            <deadline>2017-08-09T00:00:00</deadline>
+        </datum>
+        <content>
+            <title>Chinese company offering aluminum sheet</title>
+            <summary>The Summary with list:
+                - A list
+                - Of awesome
+                - Feature
+            </summary>
+            <description>The Description</description>
+        </content>
+        <company>
+            <country>
+                <key>CN</key>
+                <label>China</label>
+            </country>
+        </company>
+        <cooperation>
+            <stagedev>
+                <stage/>
+            </stagedev>
+            <ipr>
+                <status/>
+                <comment/>
+            </ipr>
+            <partner>
+                <area>Partner Expertise</area>
+            </partner>
+            <plusvalue>Advantage</plusvalue>
+        </cooperation>
+    </profile>
+</pod>

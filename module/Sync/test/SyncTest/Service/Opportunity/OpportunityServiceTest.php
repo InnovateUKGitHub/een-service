@@ -1,6 +1,6 @@
 <?php
 
-namespace SyncTest\Service\Import\Opportunity;
+namespace SyncTest\Service\Opportunity;
 
 use Common\Constant\EEN;
 use Sync\Service\IndexService;
@@ -15,9 +15,7 @@ use Zend\Escaper\Escaper;
 class OpportunityServiceTest extends \PHPUnit_Framework_TestCase
 {
     const MONTH = 1;
-    const STRUCTURE = [
-
-    ];
+    const STRUCTURE = [];
 
     /** @var \PHPUnit_Framework_MockObject_MockObject|IndexService $indexMock */
     private $indexMock;
@@ -86,7 +84,7 @@ class OpportunityServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testImport()
     {
-        $xml = file_get_contents(__DIR__ . '/../merlin-data.xml');
+        $xml = file_get_contents(__DIR__ . '/merlin-opportunity.xml');
         $results = simplexml_load_string($xml);
 
         $this->merlinMock->expects(self::once())
