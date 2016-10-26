@@ -317,13 +317,13 @@ return [
                 'required'   => true,
                 'validators' => [],
                 'filters'    => [],
-                'name'       => 'profile_id',
+                'name'       => 'profile',
             ],
             [
                 'required'   => true,
                 'validators' => [],
                 'filters'    => [],
-                'name'       => 'account_id',
+                'name'       => 'account',
             ],
             [
                 'required'   => true,

@@ -38,8 +38,8 @@ class EoiService extends AbstractEntity
     {
         $eoi = new \stdClass();
         $eoi->Nature_of_interest__c = $data['interest'];
-        $eoi->External_EEN_Partner__c = $data['account_id'];
-        $eoi->Profile__c = $this->getProfile($data['profile_id']);
+        $eoi->Local_Client__c = $data['account'];
+        $eoi->Profile__c = $this->getProfile($data['profile']);
 
         return $this->createEntity($eoi, 'Eoi__c');
     }
