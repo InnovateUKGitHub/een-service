@@ -1,6 +1,7 @@
 <?php
 namespace Sync\Service;
 
+use Common\Constant\EEN;
 use Elasticsearch\Client;
 use Zend\Log\Logger;
 

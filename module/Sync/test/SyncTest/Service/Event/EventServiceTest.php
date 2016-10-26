@@ -50,7 +50,7 @@ class EventServiceTest extends \PHPUnit_Framework_TestCase
             ->willReturn(['hits' => ['hits' => []]]);
 
         $this->indexMock->expects(self::never())
-            ->method('delete');
+            ->method('bulk');
         $this->service->delete($now);
     }
 
@@ -64,7 +64,7 @@ class EventServiceTest extends \PHPUnit_Framework_TestCase
             ->willReturn(['hits' => ['hits' => [['_id' => '1']]]]);
 
         $this->indexMock->expects(self::once())
-            ->method('delete')
+            ->method('bulk')
             ->with([
                 'body' => [
                     [

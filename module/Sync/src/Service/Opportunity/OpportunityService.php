@@ -94,7 +94,7 @@ class OpportunityService
             return;
         }
 
-        $this->indexService->delete($body);
+        $this->indexService->bulk($body);
     }
 
     /**
