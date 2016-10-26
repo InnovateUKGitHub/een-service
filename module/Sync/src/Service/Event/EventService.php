@@ -74,6 +74,6 @@ class EventService
             return;
         }
 
-        $this->indexService->delete($body);
+        $this->indexService->bulk($body);
     }
 }

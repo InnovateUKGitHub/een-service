@@ -75,16 +75,16 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
     {
         $indicesMock = $this->createMock(IndicesNamespace::class);
 
-        $this->clientMock->expects(self::exactly(2))
+        $this->clientMock->expects(self::exactly(3))
             ->method('indices')
             ->willReturn($indicesMock);
 
-        $indicesMock->expects(self::once())
+        $indicesMock->expects(self::at(0))
             ->method('exists')
             ->with(['index' => EEN::ES_INDEX_OPPORTUNITY])
             ->willReturn(false);
 
-        $indicesMock->expects(self::once())
+        $indicesMock->expects(self::exactly(2))
             ->method('create')
             ->with([
                 'Some Index Information' => '',
@@ -290,7 +290,7 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
             ->method('bulk')
             ->with('params');
 
-        self::assertTrue($this->service->delete('params'));
+        self::assertTrue($this->service->bulk('params'));
     }
 
     /**
@@ -304,13 +304,16 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
             ->with('params')
             ->willThrowException(new \Exception());
 
-        $this->service->delete('params');
+        $this->service->bulk('params');
     }
 
     protected function Setup()
     {
         $config = [
             EEN::ES_INDEX_OPPORTUNITY => [
+                'Some Index Information' => '',
+            ],
+            EEN::ES_INDEX_OPPORTUNITY . EEN::ES_INDEX_WORDS => [
                 'Some Index Information' => '',
             ],
         ];

@@ -1,6 +1,7 @@
 <?php
 namespace Sync\Service;
 
+use Common\Constant\EEN;
 use Elasticsearch\Client;
 use Zend\Log\Logger;
 
@@ -48,6 +49,7 @@ class IndexService
             return;
         }
         $this->create($index);
+        $this->create($index . EEN::ES_INDEX_WORDS);
     }
 
     /**
@@ -165,7 +167,7 @@ class IndexService
      *
      * @return bool
      */
-    public function delete($params)
+    public function bulk($params)
     {
         try {
             $this->elasticSearch->bulk($params);
