@@ -7,6 +7,7 @@ use Sync\Service\IndexService;
 use Sync\Service\Opportunity\OpportunityMerlin;
 use Sync\Service\Opportunity\OpportunityService;
 use Sync\Validator\MerlinValidator;
+use Zend\Escaper\Escaper;
 use Zend\ServiceManager\ServiceManager;
 
 final class OpportunityServiceFactory
@@ -26,7 +27,14 @@ final class OpportunityServiceFactory
 
         $this->checkRequiredConfig($config);
 
-        return new OpportunityService($indexService, $merlinData, $merlinValidator, $config[EEN::MERLIN_PROFILE_STRUCTURE]);
+        return new OpportunityService(
+            $indexService,
+            $merlinData,
+            $merlinValidator,
+            new \HTMLPurifier(),
+            new Escaper(),
+            $config[EEN::MERLIN_PROFILE_STRUCTURE]
+        );
     }
 
     /**

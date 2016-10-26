@@ -41,7 +41,7 @@ class EventService
     {
         $this->indexService->createIndex(EEN::ES_INDEX_EVENT);
 
-        $dateImport = (new \DateTime())->format('Ymd');
+        $dateImport = (new \DateTime())->format(EEN::DATE_FORMAT_IMPORT);
 
         $this->merlin->import($dateImport);
         $this->eventBrite->import($dateImport);

@@ -3,6 +3,7 @@
 namespace Sync\Service\Opportunity;
 
 use Common\Constant\EEN;
+use HTMLPurifier;
 use Sync\Service\IndexService;
 use Sync\Validator\MerlinValidator;
 use Zend\Escaper\Escaper;
@@ -28,12 +29,16 @@ class OpportunityService
      * @param IndexService      $indexService
      * @param OpportunityMerlin $merlinData
      * @param MerlinValidator   $merlinValidator
+     * @param HTMLPurifier      $purifier
+     * @param Escaper           $escaper
      * @param array             $structure
      */
     public function __construct(
         IndexService $indexService,
         OpportunityMerlin $merlinData,
         MerlinValidator $merlinValidator,
+        HTMLPurifier $purifier,
+        Escaper $escaper,
         $structure
     )
     {
@@ -42,8 +47,8 @@ class OpportunityService
         $this->merlinValidator = $merlinValidator;
         $this->structure = $structure;
 
-        $this->purifier = new \HTMLPurifier();
-        $this->escaper = new Escaper();
+        $this->purifier = $purifier;
+        $this->escaper = $escaper;
     }
 
     /**

@@ -34,6 +34,24 @@ class MerlinValidatorTest extends \PHPUnit_Framework_TestCase
         $this->validator->checkProfilesExists($merlinData);
     }
 
+    public function testCheckEventsExists()
+    {
+        $this->validator = new MerlinValidator($this->loggerMock, $this->config);
+        $merlinData = simplexml_load_string('<pod><event></event></pod>');
+        $this->validator->checkEventsExists($merlinData);
+    }
+
+    /**
+     * @expectedException \Zend\Di\Exception\MissingPropertyException
+     * @expectedExceptionMessage Merlin Data is missing the events
+     */
+    public function testCheckEventsDoesNotExists()
+    {
+        $this->validator = new MerlinValidator($this->loggerMock, $this->config);
+        $merlinData = simplexml_load_string('<not-event></not-event>');
+        $this->validator->checkEventsExists($merlinData);
+    }
+
     public function testCheckProfileDataExistsWithRequiredValue()
     {
         $this->config = [

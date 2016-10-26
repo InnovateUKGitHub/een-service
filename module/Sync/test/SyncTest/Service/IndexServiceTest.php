@@ -26,6 +26,51 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
     /** @var IndexService $service */
     private $service;
 
+    public function testCreateSettings()
+    {
+        $config = [
+            EEN::ES_INDEX_OPPORTUNITY => [
+                'body' => [
+                    'settings' => [
+                        'number_of_shards'   => '',
+                        'number_of_replicas' => '',
+                    ],
+                ],
+            ],
+        ];
+        $this->clientMock = $this->createMock(Client::class);
+        $this->loggerMock = $this->createMock(Logger::class);
+
+        $this->service = new IndexService($this->clientMock, $this->loggerMock, $config);
+
+        $indicesMock = $this->createMock(IndicesNamespace::class);
+
+        $this->clientMock->expects(self::exactly(3))
+            ->method('indices')
+            ->willReturn($indicesMock);
+
+        $indicesMock->expects(self::once())
+            ->method('close')
+            ->with(['index' => EEN::ES_INDEX_OPPORTUNITY])
+            ->willReturn(false);
+        $indicesMock->expects(self::once())
+            ->method('open')
+            ->with(['index' => EEN::ES_INDEX_OPPORTUNITY])
+            ->willReturn(false);
+
+        $indicesMock->expects(self::once())
+            ->method('putSettings')
+            ->with([
+                'index' => EEN::ES_INDEX_OPPORTUNITY,
+                'body'  => [
+                    'number_of_shards'   => null,
+                    'number_of_replicas' => null,
+                ],
+            ]);
+
+        $this->service->createSettings(EEN::ES_INDEX_OPPORTUNITY);
+    }
+
     public function testCreateIndex()
     {
         $indicesMock = $this->createMock(IndicesNamespace::class);

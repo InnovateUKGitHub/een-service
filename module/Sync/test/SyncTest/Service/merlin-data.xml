@@ -12,7 +12,11 @@
         </datum>
         <content>
             <title>Chinese company offering aluminum sheet</title>
-            <summary>The Summary</summary>
+            <summary>The Summary with list:
+                - A list
+                - Of awesome
+                - Feature
+            </summary>
             <description>The Description</description>
         </content>
         <company>
