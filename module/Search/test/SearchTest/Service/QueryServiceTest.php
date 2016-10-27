@@ -262,6 +262,38 @@ class QueryServiceTest extends \PHPUnit_Framework_TestCase
         self::assertEquals([], $service->getCountryList());
     }
 
+    public function testFindTerm()
+    {
+        $service = new QueryService($this->elasticSearchMock);
+
+        $query = [
+            'index'   => EEN::ES_INDEX_OPPORTUNITY . EEN::ES_INDEX_WORDS,
+            'type'    => EEN::ES_TYPE_COUNTRY . EEN::ES_INDEX_WORDS,
+            'size'    => 10,
+            'body'    => [
+                'query' => [
+                    'bool' => [
+                        'must' => [
+                            'query_string' => [
+                                'fields' => ['word'],
+                                'query'  => 'A*',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            '_source' => ['word'],
+        ];
+
+        $this->elasticSearchMock
+            ->expects(self::once())
+            ->method('search')
+            ->with($query)
+            ->willReturn([1 => 'Name']);
+
+        self::assertEquals([1 => 'Name'], $service->findTerm('A', 10));
+    }
+
     protected function Setup()
     {
         $this->elasticSearchMock = $this->createMock(Client::class);

@@ -14,6 +14,8 @@ final class IndexController extends AbstractActionController
     private $service;
 
     /**
+     * IndexController constructor.
+     *
      * @param IndexService $service
      */
     public function __construct(IndexService $service)

@@ -189,6 +189,7 @@ class SalesForceService
         } catch (\Exception $e) {
             throw new SoapException($e, $this->client->getLastRequest(), $this->client->getLastResponse());
         }
+
         // TODO Log failing error to logger
         if ($response['result']['success'] == false && isset($response['result']['errors'])) {
             $this->buildValidationErrors($response['result']['errors']);

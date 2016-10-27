@@ -7,6 +7,8 @@ return [
     ['--month', 'The number amount of month to go back. [1|2|3|4|5|6|7|8|9|10|11|12] (default: 1)'],
     'delete [--index=<index>]'                                   => 'delete old data of elasticSearch',
     ['--index', 'The index to delete (default: opportunity)'],
+    'email-alert [--user=<user>]'                                => 'Email Alert user',
+    ['--user', 'The user id to send the alert to'],
     'generate [--index=<index>] [--number=<number>]'             => 'Generate random data into elasticSearch for test purpose',
     ['--index', 'Index to generate. [opportunity|event|all] (default: all)'],
     ['--number', 'Number of documents to generate. (default: 10)'],

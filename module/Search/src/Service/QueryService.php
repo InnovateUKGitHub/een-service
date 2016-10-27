@@ -176,6 +176,11 @@ class QueryService extends MustQuery
         return $this->elastic->indices()->exists(['index' => $index]);
     }
 
+    /**
+     * @param array $results
+     *
+     * @return array
+     */
     private function convertToAssociatedArray($results)
     {
         $response = [];
@@ -184,5 +189,35 @@ class QueryService extends MustQuery
         }
 
         return $response;
+    }
+
+    /**
+     * @param string $search
+     * @param int    $size
+     *
+     * @return array
+     */
+    public function findTerm($search, $size)
+    {
+        $query = [
+            'index'   => EEN::ES_INDEX_OPPORTUNITY . EEN::ES_INDEX_WORDS,
+            'type'    => EEN::ES_TYPE_COUNTRY . EEN::ES_INDEX_WORDS,
+            'size'    => $size,
+            'body'    => [
+                'query' => [
+                    'bool' => [
+                        'must' => [
+                            'query_string' => [
+                                'fields' => ['word'],
+                                'query'  => $search . '*',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            '_source' => ['word'],
+        ];
+
+        return $this->elastic->search($query);
     }
 }

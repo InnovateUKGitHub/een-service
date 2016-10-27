@@ -1,0 +1,19 @@
+<h3>Your have some new results on your search</h3>
+
+<?php
+/**
+ * @var array $profiles
+ */
+
+foreach ($profiles as $profile): ?>
+    <div class="row">
+        <h3>
+            <a href="https://een.int.aerian.com/opportunities/<?= $this->escapeHtml($profile['_id']) ?>">
+                <?= $this->escapeHtml($profile['_source']['title']) ?>
+            </a>
+        </h3>
+        <p class="summary">
+            <?= $this->escapeHtml($profile['_source']['summary']) ?>
+        </p>
+    </div>
+<?php endforeach; ?>

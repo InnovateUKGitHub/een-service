@@ -18,7 +18,7 @@ final class ImportController extends AbstractActionController
     private $deleteService;
 
     /**
-     * GenerateController constructor.
+     * ImportController constructor.
      *
      * @param ImportService $importService
      * @param DeleteService $deleteService
