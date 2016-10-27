@@ -2,6 +2,7 @@
 namespace Sync\Service;
 
 use Common\Constant\EEN;
+use Common\Exception\ApplicationException;
 use Common\Service\SalesForceService;
 use Search\Service\QueryService;
 use Zend\View\Model\ViewModel;
@@ -62,13 +63,37 @@ class SavedSearchesService
         $html = $this->renderer->render($viewModel);
 
         $savedSearch = new \stdClass();
-        $savedSearch->Email__c = $user;
+        $savedSearch->Email__c = $this->getEmailAddress($user);
         $savedSearch->Content__c = $html;
-        $objects = new \SoapVar($savedSearch, SOAP_ENC_OBJECT, 'SavedSearches__c', $this->salesForce->getNamespace());
+        $object = new \SoapVar($savedSearch, SOAP_ENC_OBJECT, 'SavedSearches__c', $this->salesForce->getNamespace());
 
         $this->salesForce->action(
-            new \SoapParam([$objects], 'sObjects'),
+            new \SoapParam([$object], 'sObjects'),
             'create'
         );
+    }
+
+    /**
+     * @param array $user
+     *
+     * @return string
+     * @throws ApplicationException
+     */
+    private function getEmailAddress($user)
+    {
+        $query = new \stdClass();
+        $query->queryString = '
+SELECT c.Email1__c
+FROM Contact c, c.Account a
+WHERE Id = \'' . $user . '\'
+';
+
+        $result = $this->salesForce->query($query);
+
+        if ($result['size'] !== 1) {
+            throw new ApplicationException(['user' => 'User Id Invalid']);
+        }
+
+        return $result['records']['Email1__c'];
     }
 }
