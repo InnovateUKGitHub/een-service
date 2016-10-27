@@ -43,9 +43,9 @@ class EoiServiceTest extends \PHPUnit_Framework_TestCase
     private function getData()
     {
         return [
-            'interest'   => 'I\'m interested by this project',
-            'account_id' => '1',
-            'profile_id' => '2',
+            'interest' => 'I\'m interested by this project',
+            'account'  => '1',
+            'profile'  => '2',
         ];
     }
 
@@ -53,7 +53,7 @@ class EoiServiceTest extends \PHPUnit_Framework_TestCase
     {
         $eoi = new \stdClass();
         $eoi->Nature_of_interest__c = $data['interest'];
-        $eoi->External_EEN_Partner__c = $data['account_id'];
+        $eoi->Local_Client__c = $data['account'];
         $eoi->Profile__c = 1;
 
         $object = new \SoapVar($eoi, SOAP_ENC_OBJECT, 'Eoi__c', 'namespace');
@@ -77,7 +77,7 @@ class EoiServiceTest extends \PHPUnit_Framework_TestCase
         $query->queryString = '
 SELECT Id
 FROM Profile__c
-WHERE Profile_reference_number__c = \'' . $data['profile_id'] . '\'
+WHERE Profile_reference_number__c = \'' . $data['profile'] . '\'
 ';
 
         $result = [
@@ -102,7 +102,7 @@ WHERE Profile_reference_number__c = \'' . $data['profile_id'] . '\'
         $query->queryString = '
 SELECT Id
 FROM Profile__c
-WHERE Profile_reference_number__c = \'' . $data['profile_id'] . '\'
+WHERE Profile_reference_number__c = \'' . $data['profile'] . '\'
 ';
 
         $result = [
@@ -117,7 +117,7 @@ WHERE Profile_reference_number__c = \'' . $data['profile_id'] . '\'
 
         $this->queryServiceMock->expects(self::once())
             ->method('getDocument')
-            ->with($data['profile_id'], EEN::ES_INDEX_OPPORTUNITY, EEN::ES_TYPE_OPPORTUNITY)
+            ->with($data['profile'], EEN::ES_INDEX_OPPORTUNITY, EEN::ES_TYPE_OPPORTUNITY)
             ->willReturn([
                 '_source' => [
                     'title' => 'title',
@@ -126,7 +126,7 @@ WHERE Profile_reference_number__c = \'' . $data['profile_id'] . '\'
             ]);
 
         $profile = new \stdClass();
-        $profile->Profile_reference_number__c = $data['profile_id'];
+        $profile->Profile_reference_number__c = $data['profile'];
         $profile->Name = 'title';
         $profile->Profile_Type__c = 'Business Offer';
 
