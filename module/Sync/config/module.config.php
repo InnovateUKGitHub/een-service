@@ -10,11 +10,12 @@ use Sync\Validator as Validator;
 return [
     'service_manager' => [
         'factories' => [
-            Service\DeleteService::class   => ServiceFactory\DeleteServiceFactory::class,
-            Service\GenerateService::class => ServiceFactory\GenerateServiceFactory::class,
-            Service\IndexService::class    => ServiceFactory\IndexServiceFactory::class,
-            Service\ImportService::class   => ServiceFactory\ImportServiceFactory::class,
-            Service\PurgeService::class    => ServiceFactory\PurgeServiceFactory::class,
+            Service\DeleteService::class        => ServiceFactory\DeleteServiceFactory::class,
+            Service\GenerateService::class      => ServiceFactory\GenerateServiceFactory::class,
+            Service\IndexService::class         => ServiceFactory\IndexServiceFactory::class,
+            Service\ImportService::class        => ServiceFactory\ImportServiceFactory::class,
+            Service\PurgeService::class         => ServiceFactory\PurgeServiceFactory::class,
+            Service\SavedSearchesService::class => ServiceFactory\SavedSearchesServiceFactory::class,
 
             Service\Event\EventBrite::class       => ServiceFactory\Event\EventBriteFactory::class,
             Service\Event\EventService::class     => ServiceFactory\Event\EventServiceFactory::class,
@@ -30,9 +31,10 @@ return [
     ],
     'controllers'     => [
         'factories' => [
-            Controller\GenerateController::class => ControllerFactory\GenerateControllerFactory::class,
-            Controller\ImportController::class   => ControllerFactory\ImportControllerFactory::class,
-            Controller\IndexController::class    => ControllerFactory\IndexControllerFactory::class,
+            Controller\GenerateController::class      => ControllerFactory\GenerateControllerFactory::class,
+            Controller\ImportController::class        => ControllerFactory\ImportControllerFactory::class,
+            Controller\IndexController::class         => ControllerFactory\IndexControllerFactory::class,
+            Controller\SavedSearchesController::class => ControllerFactory\SavedSearchesControllerFactory::class,
         ],
     ],
     'console'         => [
@@ -60,6 +62,18 @@ return [
                         'defaults'    => [
                             'controller' => Controller\ImportController::class,
                             'action'     => 'delete',
+                        ],
+                    ],
+                ],
+                'email-alert'   => [
+                    'options' => [
+                        'route'       => 'email-alert [--user=<user>]',
+                        'constraints' => [
+                            'index' => '[\w+]',
+                        ],
+                        'defaults'    => [
+                            'controller' => Controller\SavedSearchesController::class,
+                            'action'     => 'index',
                         ],
                     ],
                 ],
@@ -102,5 +116,13 @@ return [
             'display_not_found_reason' => true,
             'display_exceptions'       => true,
         ],
+    ],
+    'view_manager'    => [
+        'display_not_found_reason' => true,
+        'display_exceptions'       => true,
+        'template_path_stack'      => [
+            __DIR__ . '/../view',
+        ],
+        'default_template_suffix'  => 'phtml',
     ],
 ];
