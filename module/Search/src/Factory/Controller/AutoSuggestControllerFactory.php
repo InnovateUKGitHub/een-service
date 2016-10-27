@@ -3,7 +3,7 @@
 namespace Search\Factory\Controller;
 
 use Search\Controller\AutoSuggestController;
-use Search\Service\ElasticSearchService;
+use Search\Service\QueryService;
 use Zend\ServiceManager\ServiceManager;
 
 final class AutoSuggestControllerFactory
@@ -15,7 +15,7 @@ final class AutoSuggestControllerFactory
      */
     public function __invoke(ServiceManager $serviceManager)
     {
-        $service = $serviceManager->get(ElasticSearchService::class);
+        $service = $serviceManager->get(QueryService::class);
 
         return new AutoSuggestController($service);
     }

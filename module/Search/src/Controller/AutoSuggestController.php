@@ -35,7 +35,6 @@ final class AutoSuggestController extends AbstractRestfulController
     {
         $params = $this->getInputFilter()->getValues();
 
-        return [];
-//        return $this->service->findTerm($params);
+        return $this->service->findTerm($params['search'], $params['size']);
     }
 }
