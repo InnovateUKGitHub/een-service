@@ -1,7 +1,6 @@
 <?php
 namespace Sync\Service;
 
-use Common\Constant\EEN;
 use Elasticsearch\Client;
 use Zend\Log\Logger;
 
@@ -52,7 +51,7 @@ class IndexService
             return;
         }
         $this->create($index);
-        $this->create($index . EEN::ES_INDEX_WORDS);
+//        $this->create($index . EEN::ES_INDEX_WORDS);
     }
 
     /**
