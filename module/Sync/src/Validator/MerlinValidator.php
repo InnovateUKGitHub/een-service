@@ -21,6 +21,8 @@ class MerlinValidator
 
     /**
      * @param \SimpleXMLElement $data
+     *
+     * @throws MissingPropertyException
      */
     public function checkProfilesExists(\SimpleXMLElement $data)
     {
@@ -32,6 +34,8 @@ class MerlinValidator
 
     /**
      * @param \SimpleXMLElement $data
+     *
+     * @throws MissingPropertyException
      */
     public function checkEventsExists(\SimpleXMLElement $data)
     {
@@ -45,6 +49,8 @@ class MerlinValidator
      * @param \SimpleXMLElement $data
      * @param array             $structure
      * @param string            $path
+     *
+     * @throws MissingPropertyException
      */
     public function checkDataExists(\SimpleXMLElement $data, $structure, $path = '')
     {

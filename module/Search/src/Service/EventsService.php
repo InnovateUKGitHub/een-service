@@ -8,6 +8,8 @@ use Zend\Http\Response;
 class EventsService extends AbstractSearchService
 {
     /**
+     * This function is not use at the moment
+     *
      * @inheritdoc
      * @codeCoverageIgnore
      */

@@ -44,6 +44,11 @@ class EoiService extends AbstractEntity
         return $this->createEntity($eoi, 'Eoi__c');
     }
 
+    /**
+     * @param string $profileId
+     *
+     * @return string
+     */
     private function getProfile($profileId)
     {
         $query = new \stdClass();
@@ -61,6 +66,11 @@ WHERE Profile_reference_number__c = \'' . $profileId . '\'
         return $result['records']['Id'];
     }
 
+    /**
+     * @param string $profileId
+     *
+     * @return array
+     */
     private function createProfile($profileId)
     {
         $data = $this->queryService->getDocument($profileId, EEN::ES_INDEX_OPPORTUNITY, EEN::ES_TYPE_OPPORTUNITY);

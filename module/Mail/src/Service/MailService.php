@@ -23,13 +23,18 @@ class MailService
     /**
      * @param array $data
      *
-     * @return string
+     * @return array
      */
     public function send($data)
     {
         return $this->client->execute(Request::METHOD_POST, '/messages/email', [], $data);
     }
 
+    /**
+     * @param string $id
+     *
+     * @return array
+     */
     public function get($id)
     {
         return $this->client->execute(Request::METHOD_GET, '/messages/email/' . $id);

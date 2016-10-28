@@ -26,6 +26,9 @@ class IndexService
         $this->config = $config;
     }
 
+    /**
+     * @param string $index
+     */
     public function createSettings($index)
     {
         $params = [

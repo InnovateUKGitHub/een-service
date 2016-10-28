@@ -206,7 +206,7 @@ class HttpService
      * @param array  $params
      * @param array  $body
      *
-     * @return string json
+     * @return string|array
      */
     public function execute($request, $path, $params = [], $body = [])
     {
