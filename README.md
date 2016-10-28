@@ -14,10 +14,83 @@ Documentation
 
 This project is based on [Zend Framework 3][2] and is a RESTfull Api.
 The structure of the project is separated by modules:
-- Contact: This module manage the contact by creating them, retrieving them, associate them with other object (EOI/Events)
-- Mail: This module is in charge to send mail using the gov-delivery api.
-- Search: This module interact directly with elastic search and allow to search events and opportunities
-- Common: This module is where the shared functionality between the module sit.
+#### Contact
+
+This module manage the contact by creating them, retrieving them, associate them with other object (EOI/Events)
+List of the existing routes:
+- Create a lead:
+    - Method: POST
+    - Route: /lead
+- Create a contact:
+    - Method: POST
+    - Route: /contact
+- Send contact email verification:
+    - Method: POST
+    - Route: /email-verification
+- Create EOI:
+    - Method: POST
+    - Route: /eoi
+- Register to event:
+    - Method: POST
+    - Route: /contact/event
+
+#### Mail
+
+This module is in charge of managing the mails through the govdelivery api.
+List of the existing routes:
+- Send/GET Mail:
+    - Method: POST/GET
+    - Route: /email/:id
+- Create/Update/Delete Template:
+    - Method: POST/PUT/DELETE
+    - Route: /templates/email/:id
+
+#### Search
+
+This module interact directly with elastic search and allow to search events and opportunities.
+List of the existing routes:
+- Get Country list:
+    - Method: GET
+    - Route: /countries
+- Search Events:
+    - Method: POST
+    - Route: /events
+- Get Event:
+    - Method: GET
+    - Route: /events/:id
+- Search Opportunities:
+    - Method: POST
+    - Route: /opportunities
+- Get Opportunities:
+    - Method: GET
+    - Route: /opportunities/:id
+
+#### Sync
+
+This module is used to nightly sync the opportunities and events to elastic search.
+It is a console only module and is used by cronjob at the moment.
+It is plan to modify it when the production server is available in aws and change it to endpoint http calls.
+This is possible by just changing the route configuration and the 2 controllers in charge of importing and deleting old data.
+This module is also in charge to nightly send the email alert to Salesforce.
+Here is the list of command available at this time:
+- php public/index.php import --index=opportunity --month=1|2|3|4|5|6|7|8|9|10|11|12
+This action import the selected last month of profile into elastic search from Merlin.
+
+- php public/index.php import --index=event
+This action import in elastic search the event from multiple source (Salesforce/Eventbrite/Merlin)
+
+- php public/index.php delete --index=opportunity
+This action delete the out of data in the opportunity index
+
+- php public/index.php delete --index=event
+This action delete the out of data in the event index
+
+- php public/index.php purge
+This action purge all the index in elastic search
+
+#### Common
+
+This module is where the shared functionality between the module such as Http and Salesforce Connection.
 
 The [config][11] folder is where all the configuration need by the project are:
 - Elastic search
