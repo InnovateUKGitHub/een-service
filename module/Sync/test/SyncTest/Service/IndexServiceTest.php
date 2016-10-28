@@ -75,7 +75,7 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
     {
         $indicesMock = $this->createMock(IndicesNamespace::class);
 
-        $this->clientMock->expects(self::exactly(3))
+        $this->clientMock->expects(self::exactly(2))
             ->method('indices')
             ->willReturn($indicesMock);
 
@@ -84,7 +84,7 @@ class IndexServiceTest extends \PHPUnit_Framework_TestCase
             ->with(['index' => EEN::ES_INDEX_OPPORTUNITY])
             ->willReturn(false);
 
-        $indicesMock->expects(self::exactly(2))
+        $indicesMock->expects(self::once())
             ->method('create')
             ->with([
                 'Some Index Information' => '',
