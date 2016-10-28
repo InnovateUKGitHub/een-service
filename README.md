@@ -137,6 +137,17 @@ If one of the step above fail for any reason, the deployment would stop.
 
 All the deployment script are present inside this project under the [build][10] folder
 
+Git Information
+---------------
+
+At the moment we using git flow to version the work we have done.
+Nothing as been release to master as develop is our main branch and that we do not have a live environment.
+
+Here is a quick help to use git flow:
+```
+git flow feature start FEATURE_NAME # This create a new feature branch
+git flow feature finish             # This release the feature branch to develop
+```
 
 Links
 -----
