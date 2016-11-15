@@ -40,6 +40,10 @@ class EoiService extends AbstractEntity
         $eoi->Nature_of_interest__c = $data['interest'];
         $eoi->Local_Client__c = $data['account'];
         $eoi->Profile__c = $this->getProfile($data['profile']);
+        
+        $eoi->Short_Description_Organisation__c = $data['description'];
+        $eoi->Opportunity_Interests__c = $data['interest'];
+        $eoi->Opportunity_any_other_info__c = $data['more'];
 
         return $this->createEntity($eoi, 'Eoi__c');
     }
