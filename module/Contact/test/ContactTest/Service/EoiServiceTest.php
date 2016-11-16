@@ -46,6 +46,9 @@ class EoiServiceTest extends \PHPUnit_Framework_TestCase
             'interest' => 'I\'m interested by this project',
             'account'  => '1',
             'profile'  => '2',
+            'description' => 'Main description',
+            'interest' => 'Interests',
+            'more' => 'More information'
         ];
     }
 
@@ -55,6 +58,9 @@ class EoiServiceTest extends \PHPUnit_Framework_TestCase
         $eoi->Nature_of_interest__c = $data['interest'];
         $eoi->Local_Client__c = $data['account'];
         $eoi->Profile__c = 1;
+        $eoi->Short_Description_Organisation__c = $data['description'];
+        $eoi->Opportunity_Interests__c = $data['interest'];
+        $eoi->Opportunity_any_other_info__c = $data['more'];
 
         $object = new \SoapVar($eoi, SOAP_ENC_OBJECT, 'Eoi__c', 'namespace');
         $object = new \SoapParam([$object], 'sObjects');
