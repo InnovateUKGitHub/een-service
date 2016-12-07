@@ -21,7 +21,7 @@ final class SalesForceServiceFactory
         $config = $serviceManager->get(self::CONFIG);
 
         $soap = new Client(
-            __DIR__ . '/../../../../config/SF_EEN_Enterprise.wsdl',
+            __DIR__ . '/../../../../config/EEN_ENTERPRISE_v2.wsdl',
             [
                 'soap_version' => SOAP_1_1,
             ]
