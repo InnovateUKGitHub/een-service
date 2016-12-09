@@ -83,7 +83,7 @@ class EoiServiceTest extends \PHPUnit_Framework_TestCase
         $query->queryString = '
 SELECT Id
 FROM Profile__c
-WHERE Profile_reference_number__c = \'' . $data['profile'] . '\'
+WHERE Name = \'' . $data['profile'] . '\'
 ';
 
         $result = [
@@ -108,7 +108,7 @@ WHERE Profile_reference_number__c = \'' . $data['profile'] . '\'
         $query->queryString = '
 SELECT Id
 FROM Profile__c
-WHERE Profile_reference_number__c = \'' . $data['profile'] . '\'
+WHERE Name = \'' . $data['profile'] . '\'
 ';
 
         $result = [
@@ -132,8 +132,7 @@ WHERE Profile_reference_number__c = \'' . $data['profile'] . '\'
             ]);
 
         $profile = new \stdClass();
-        $profile->Profile_reference_number__c = $data['profile'];
-        $profile->Name = 'title';
+        $profile->Name = $data['profile'];
         $profile->Profile_Type__c = 'Business Offer';
 
         $object = new \SoapVar($profile, SOAP_ENC_OBJECT, 'Profile__c', 'namespace');

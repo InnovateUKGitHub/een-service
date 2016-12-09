@@ -43,6 +43,8 @@ class EoiService extends AbstractEntity
         $eoi->Short_Description_Organisation__c = $data['description'];
         $eoi->Opportunity_Interests__c = $data['interest'];
         $eoi->Opportunity_any_other_info__c = $data['more'];
+        
+        
 
         return $this->createEntity($eoi, 'Eoi__c');
     }
@@ -58,10 +60,11 @@ class EoiService extends AbstractEntity
         $query->queryString = '
 SELECT Id
 FROM Profile__c
-WHERE Profile_reference_number__c = \'' . $profileId . '\'
+WHERE Name = \'' . $profileId . '\'
 ';
 
         $result = $this->salesForce->query($query);
+        
         if ($result['size'] == 0) {
             return $this->createProfile($profileId);
         }
@@ -78,9 +81,9 @@ WHERE Profile_reference_number__c = \'' . $profileId . '\'
     {
         $data = $this->queryService->getDocument($profileId, EEN::ES_INDEX_OPPORTUNITY, EEN::ES_TYPE_OPPORTUNITY);
 
+        
         $profile = new \stdClass();
-        $profile->Profile_reference_number__c = $profileId;
-        $profile->Name = substr($data['_source']['title'], 0, 80);
+        $profile->Name = $profileId;
         $profile->Profile_Type__c = self::profileType[$data['_source']['type']];
 
         return $this->createEntity($profile, 'Profile__c')['id'];
