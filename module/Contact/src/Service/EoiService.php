@@ -43,8 +43,7 @@ class EoiService extends AbstractEntity
         $eoi->Short_Description_Organisation__c = $data['description'];
         $eoi->Opportunity_Interests__c = $data['interest'];
         $eoi->Opportunity_any_other_info__c = $data['more'];
-        
-        
+        $eoi->Source_of_EOI__c = 'EEN ENIW website';
 
         return $this->createEntity($eoi, 'Eoi__c');
     }

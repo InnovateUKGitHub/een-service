@@ -61,6 +61,7 @@ class EoiServiceTest extends \PHPUnit_Framework_TestCase
         $eoi->Short_Description_Organisation__c = $data['description'];
         $eoi->Opportunity_Interests__c = $data['interest'];
         $eoi->Opportunity_any_other_info__c = $data['more'];
+        $eoi->Source_of_EOI__c = 'EEN ENIW website';
 
         $object = new \SoapVar($eoi, SOAP_ENC_OBJECT, 'Eoi__c', 'namespace');
         $object = new \SoapParam([$object], 'sObjects');
