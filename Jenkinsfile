@@ -10,6 +10,7 @@ node {
     
     stage 'Composer'
     sh "./build/steps/compile/composer.sh"
+    sh "./build/steps/compile/credentials.sh"
     
     stage 'Unit Tests'
     sh "./build/steps/test/phpunit.sh"

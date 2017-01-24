@@ -9,6 +9,17 @@
 #exit on error
 set -e 
 
+git checkout https://devops.innovateuk.org/code-repository/projects/EEN/repos/een-config /tmp/een-config
+
+cp -pr /tmp/een-config/een-service/build $htdocs/build
+
+rm -rf /tmp/een-config
+. /etc/environment
+
+. $htdocs/build/properties/base.properties
+. $htdocs/build/properties/$APPLICATION_ENV.properties
+
+
 cd $htdocs/config/autoload
 
 eventbriteglobal=$htdocs/config/autoload/event-brite.global.php
