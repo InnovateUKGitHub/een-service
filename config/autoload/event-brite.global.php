@@ -6,6 +6,6 @@ return [
         'scheme'     => 'https',
         'secret'     => '%%EVENT_BRITE_SECRET%%',
         'token'      => '%%EVENT_BRITE_TOKEN%%',
-        'path-event' => '/organizers/7829726093/events/',
+        'path-event' => %%EVENT_BRITE_PATH%%,
     ],
 ];
