@@ -59,9 +59,6 @@ class OpportunitiesService extends AbstractSearchService
             ]);
         }
 
-        if (empty($params['opportunity_type']) === false) {
-            $this->query->mustQueryString(['type'], $params['opportunity_type'], 'OR');
-        }
         if (empty($params['country']) === false) {
             $this->query->mustQueryString(['country_code'], $params['country'], 'OR');
         }

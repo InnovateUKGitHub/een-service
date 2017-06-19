@@ -20,6 +20,7 @@ class EmailControllerTest extends \PHPUnit_Framework_TestCase
         $data = [
             'email'    => 'email@email.com',
             'url'      => 'http://google.com',
+            'token'    => '123456',
             'template' => 'template',
         ];
         $params = [
@@ -29,6 +30,7 @@ class EmailControllerTest extends \PHPUnit_Framework_TestCase
                     'macros' => [
                         'email' => $data['email'],
                         'url'   => $data['url'],
+                        'token' => $data['token'],
                     ],
                 ],
             ],

@@ -23,7 +23,7 @@ else
    HOSTS=`build/steps/deploy/lookup-ec2-ips.sh $aws_cli_profile $aws_cf_stack`
 fi
 
-USER="jenkins"
+USER=$sshuser
 
 # trim off commit sha -072fcbc
 FOLDER=${PACKAGE:0:${#PACKAGE}-8}

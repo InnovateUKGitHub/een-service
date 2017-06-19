@@ -6,6 +6,6 @@ return [
         'scheme'     => 'https',
         'secret'     => '%%EVENT_BRITE_SECRET%%',
         'token'      => '%%EVENT_BRITE_TOKEN%%',
-        'path-event' => %%EVENT_BRITE_PATH%%,
+        'path-event' => '%%EVENT_BRITE_PATH%%',
     ],
 ];

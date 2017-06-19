@@ -17,6 +17,7 @@ class IndexServiceFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $config = [
             EEN::ELASTIC_SEARCH_INDEXES => '',
+            'elastic-search-host' => ['http://asdasda.com'],
         ];
 
         /* @var \PHPUnit_Framework_MockObject_MockObject|ServiceManager $serviceManager */

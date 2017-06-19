@@ -17,11 +17,14 @@ class EventsServiceTest extends \PHPUnit_Framework_TestCase
     public function testSearch()
     {
         $params = [
-            'from'             => 0,
-            'size'             => 10,
-            'search'           => 'Some Search',
-            'opportunity_type' => [],
-            'type'             => 1,
+            'from'      => 0,
+            'size'      => 10,
+            'search'    => 'Some Search',
+            'date_type' => [],
+            'country'   => [],
+            'date_from' => '',
+            'date_to'   => '',
+            'type'      => 1,
         ];
 
         $queryServiceMock = $this->createMock(QueryService::class);

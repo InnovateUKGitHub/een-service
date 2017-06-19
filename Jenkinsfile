@@ -7,10 +7,12 @@ node {
     def commitSha = sho('git rev-parse --short HEAD | tee .out')
     def projectName = sho('basename `git config --get remote.origin.url | grep -o "devops.innovateuk.org.*"` | tee .out')
     projectName = projectName.substring(0, projectName.lastIndexOf('.'))
+
+    // clone credentials repo and inject into codebase
+    sh "./build/steps/compile/credentials.sh"   
     
     stage 'Composer'
     sh "./build/steps/compile/composer.sh"
-    sh "./build/steps/compile/credentials.sh"
     
     stage 'Unit Tests'
     sh "./build/steps/test/phpunit.sh"
@@ -28,12 +30,12 @@ node {
         archive "${packageName}.tar.gz"
     } 
     
-    remoteDeploy('integration_v3', packageName, deployMethod, false)
-    // remoteDeploy('stage_brumear', packageName, deployMethod, true)
+    //remoteDeploy('integration_v3', packageName, deployMethod, false, false, false)
+    remoteDeploy('stage_een_aws', packageName, deployMethod, true)
     
-    // if (env.BRANCH_NAME == ("master")) {
-    //     remoteDeploy('production_degore', packageName, deployMethod, true)
-    // }
+    if (env.BRANCH_NAME == ("master")) {
+        remoteDeploy('production_een_aws', packageName, deployMethod, true)
+    }
 }
      
 def remoteDeploy(String targetEnvironment, String packageName, String deployMethod, Boolean requireInput) {

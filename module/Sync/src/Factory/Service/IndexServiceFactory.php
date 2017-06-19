@@ -17,12 +17,16 @@ final class IndexServiceFactory
      */
     public function __invoke(ServiceManager $serviceManager)
     {
-        $elasticSearch = ClientBuilder::create()->build();
 
         $logger = $serviceManager->get(Logger::class);
         $config = $serviceManager->get(EEN::CONFIG);
 
         $this->checkRequiredConfig($config);
+
+        $elasticSearch = ClientBuilder::create()
+            ->setHosts($config[EEN::ELASTIC_SEARCH_HOST])
+            ->build();
+
 
         return new IndexService($elasticSearch, $logger, $config[EEN::ELASTIC_SEARCH_INDEXES]);
     }

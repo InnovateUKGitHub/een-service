@@ -53,12 +53,14 @@ if [ "$APPLICATION_ENV" = "" ] || [ "$htdocs" = "" ] || [ "$appid" = "" ]; then
   echo "Required vars not set APPLICATION_ENV:$APPLICATION_ENV htdocs:$htdocs appid:$appid" && exit 1;
 fi
 
+$workspace/build/steps/deploy/credentials.sh
 $workspace/build/steps/deploy/folders.sh
 
 # only run these steps on a single node (0)
 if [ "$AWS_EC2_NODE_NO" = "" ] || [ "$AWS_EC2_NODE_NO" = "0" ] ; then
   echo "AWS vars AWS_EC2_NODE_NO:$AWS_EC2_NODE_NO AWS_EC2_NODE_NO:$AWS_EC2_NODE_NO"
   $workspace/build/steps/deploy/s3-maintenance.sh
+  $workspace/build/steps/deploy/cronjobs.sh
 fi
 
 $workspace/build/steps/deploy/apache.sh

@@ -170,6 +170,30 @@ return [
                 'required'   => false,
                 'validators' => [],
                 'filters'    => [],
+                'name'       => 'date_type',
+            ],
+            [
+                'required'   => false,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'date_from',
+            ],
+            [
+                'required'   => false,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'date_to',
+            ],
+            [
+                'required'   => false,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'country',
+            ],
+            [
+                'required'   => false,
+                'validators' => [],
+                'filters'    => [],
                 'name'       => 'sort',
             ],
             [
@@ -233,6 +257,12 @@ return [
                 'validators' => [],
                 'filters'    => [],
                 'name'       => 'count',
+            ],
+            [
+                'required'   => false,
+                'validators' => [],
+                'filters'    => [],
+                'name'       => 'aggregations',
             ],
         ],
     ],

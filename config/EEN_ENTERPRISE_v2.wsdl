@@ -11434,7 +11434,7 @@ All Rights Reserved
                 </restriction>
             </simpleType>
 
-            
+
 
             <!-- Compound datatype: Address -->
             <complexType name="address">
@@ -11462,7 +11462,7 @@ All Rights Reserved
                 </sequence>
             </complexType>
 
-            
+
             <simpleType name="QueryLocator">
                 <restriction base="xsd:string"/>
             </simpleType>
@@ -11482,14 +11482,14 @@ All Rights Reserved
             <!-- Search Result -->
             <complexType name="SearchResult">
                 <sequence>
-                    
+
                         <element name="queryId" type="xsd:string" nillable="false" minOccurs="1" maxOccurs="1"/>
-                    
+
                     <element name="searchRecords" minOccurs="0" maxOccurs="unbounded" type="tns:SearchRecord"/>
-                    
+
                         <element name="searchResultsMetadata" type="tns:SearchResultsMetadata" nillable="true" minOccurs="0" maxOccurs="1"/>
-                    
-                    
+
+
                 </sequence>
             </complexType>
 
@@ -11594,7 +11594,7 @@ All Rights Reserved
                 <sequence>
                     <element name="ids" minOccurs="0" maxOccurs="unbounded" type="tns:ID"/>
                     <element name="latestDateCovered" type="xsd:dateTime"/>
-                    
+
                 </sequence>
             </complexType>
 
@@ -11604,7 +11604,7 @@ All Rights Reserved
                     <element name="deletedRecords" minOccurs="0" maxOccurs="unbounded" type="tns:DeletedRecord"/>
                     <element name="earliestDateAvailable" type="xsd:dateTime"/>
                     <element name="latestDateCovered" type="xsd:dateTime"/>
-                    
+
                 </sequence>
             </complexType>
 
@@ -12135,7 +12135,7 @@ All Rights Reserved
 
             <complexType name="DescribeAvailableQuickActionResult">
                 <sequence>
-                    <element name="actionEnumOrId" type="xsd:string"/> 
+                    <element name="actionEnumOrId" type="xsd:string"/>
                     <element name="label"          type="xsd:string"/>
                     <element name="name"           type="xsd:string"/>
                     <element name="type"           type="xsd:string"/>
@@ -12145,12 +12145,12 @@ All Rights Reserved
 
             <complexType name="DescribeQuickActionResult">
                 <sequence>
-                    <element name="accessLevelRequired" type="tns:ShareAccessLevel" nillable="true"/> 
-                    <element name="actionEnumOrId" type="xsd:string"/> 
+                    <element name="accessLevelRequired" type="tns:ShareAccessLevel" nillable="true"/>
+                    <element name="actionEnumOrId" type="xsd:string"/>
                     <element name="canvasApplicationId"    type="tns:ID" nillable="true"/>
                     <element name="canvasApplicationName"    type="xsd:string" nillable="true"/>
-                    <element name="colors" type="tns:DescribeColor" minOccurs="0" maxOccurs="unbounded"/> 
-                    <element name="contextSobjectType"    type="xsd:string" nillable="true"/> 
+                    <element name="colors" type="tns:DescribeColor" minOccurs="0" maxOccurs="unbounded"/>
+                    <element name="contextSobjectType"    type="xsd:string" nillable="true"/>
                     <element name="defaultValues" type="tns:DescribeQuickActionDefaultValue" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
                     <element name="height"        type="xsd:int" nillable="true"/>
                     <element name="iconName"      type="xsd:string" nillable="true"/>
@@ -12163,14 +12163,14 @@ All Rights Reserved
                     <element name="lightningComponentQualifiedName" type="xsd:string" nillable="true"/>
                     <element name="miniIconUrl"      type="xsd:string" nillable="true"/>
                     <element name="name"         type="xsd:string"/>
-                    <element name="showQuickActionLcHeader" type="xsd:boolean"/> 
-                    <element name="showQuickActionVfHeader" type="xsd:boolean"/> 
+                    <element name="showQuickActionLcHeader" type="xsd:boolean"/>
+                    <element name="showQuickActionVfHeader" type="xsd:boolean"/>
                                         <element name="targetParentField"    type="xsd:string" nillable="true"/>
                     <element name="targetRecordTypeId"   type="tns:ID" nillable="true"/>
                     <element name="targetSobjectType"    type="xsd:string" nillable="true"/>
                     <element name="type"         type="xsd:string"/>
                     <element name="visualforcePageName"    type="xsd:string" nillable="true"/>
-                    <element name="visualforcePageUrl" type="xsd:string" nillable="true"/> 
+                    <element name="visualforcePageUrl" type="xsd:string" nillable="true"/>
                     <element name="width"         type="xsd:int" nillable="true"/>
                 </sequence>
             </complexType>
@@ -12266,7 +12266,7 @@ All Rights Reserved
                     <element name="success"       type="xsd:boolean"/>
                 </sequence>
             </complexType>
-            
+
 
 
             <complexType name="DescribeSObjectResult">
@@ -12805,14 +12805,14 @@ All Rights Reserved
                     <element name="value"   		type="xsd:string" nillable="true" />
                 </sequence>
             </complexType>
-            
+
             <simpleType name="ComponentInstancePropertyTypeEnum">
                 <restriction base="xsd:string">
                     <enumeration value="decorator"/>
                 </restriction>
             </simpleType>
-            
-     
+
+
             <complexType name="FlexipageContext">
                 <sequence>
                     <element name="type"            type="tns:FlexipageContextTypeEnum"/>
@@ -12826,7 +12826,7 @@ All Rights Reserved
                 </restriction>
             </simpleType>
 
-     
+
 
 
 
@@ -12926,7 +12926,7 @@ All Rights Reserved
                     <element name="imageItems" type="tns:DescribeLayoutItem" minOccurs="0" maxOccurs="unbounded"/>
                     <element name="label" type="xsd:string"/>
                     <element name="name" type="xsd:string"/>
-                    <element name="objectType" type="xsd:string"/> 
+                    <element name="objectType" type="xsd:string"/>
                 </sequence>
             </complexType>
 
@@ -13039,8 +13039,8 @@ All Rights Reserved
 
             <complexType name="DescribeQuickActionListItemResult">
                 <sequence>
-                    <element name="accessLevelRequired"    type="tns:ShareAccessLevel" nillable="true"/> 
-                    <element name="colors" type="tns:DescribeColor" minOccurs="0" maxOccurs="unbounded"/> 
+                    <element name="accessLevelRequired"    type="tns:ShareAccessLevel" nillable="true"/>
+                    <element name="colors" type="tns:DescribeColor" minOccurs="0" maxOccurs="unbounded"/>
                     <element name="iconUrl"       type="xsd:string" nillable="true"/>
                     <element name="icons" type="tns:DescribeIcon" minOccurs="0" maxOccurs="unbounded"/>
                     <element name="label"        type="xsd:string"/>
@@ -13150,31 +13150,31 @@ All Rights Reserved
 
             <complexType name="DescribeLayoutButton">
                 <sequence>
-                 
+
                     <element name="behavior"       type="tns:WebLinkWindowType" nillable="true" minOccurs="0"/>
-                    
-                    
+
+
                     <element name="colors"            type="tns:DescribeColor" minOccurs="0" maxOccurs="unbounded"/>
-                    
-                 
+
+
                     <element name="content"        type="xsd:string" nillable="true" minOccurs="0"/>
                     <element name="contentSource"        type="tns:WebLinkType" nillable="true" minOccurs="0"/>
-                  
+
                     <element name="custom"           type="xsd:boolean"/>
-                   
+
                     <element name="encoding"        type="xsd:string" nillable="true" minOccurs="0"/>
                     <element name="height"        type="xsd:int" nillable="true" minOccurs="0"/>
-                   
-                    
+
+
                     <element name="icons"            type="tns:DescribeIcon" minOccurs="0" maxOccurs="unbounded"/>
-                    
+
                     <element name="label"            type="xsd:string" nillable="true"/>
-                    
+
                     <element name="menubar"        type="xsd:boolean" nillable="true"/>
-                   
+
                     <element name="name"             type="xsd:string" nillable="true"/>
 
-                    
+
                     <element name="overridden"        type="xsd:boolean"/>
                     <element name="resizeable"        type="xsd:boolean" nillable="true"/>
                     <element name="scrollbars"        type="xsd:boolean" nillable="true"/>
@@ -13184,7 +13184,7 @@ All Rights Reserved
                     <element name="url"        type="xsd:string" nillable="true" minOccurs="0"/>
                     <element name="width"        type="xsd:int" nillable="true" minOccurs="0"/>
                     <element name="windowPosition"        type="tns:WebLinkPosition" nillable="true" minOccurs="0"/>
-                    
+
                 </sequence>
             </complexType>
 
@@ -13256,9 +13256,9 @@ All Rights Reserved
                 <complexContent>
                     <extension base="tns:DescribeLayoutComponent">
                         <sequence>
-                            
+
                                 <element name="showLabel"              type="xsd:boolean"/>
-                            
+
                             <element name="showScrollbars"              type="xsd:boolean"/>
                             <element name="suggestedHeight"              type="xsd:string"/>
                             <element name="suggestedWidth"              type="xsd:string"/>
@@ -13394,8 +13394,8 @@ All Rights Reserved
 
             <complexType name="RelatedList">
                 <sequence>
-                    <element name="accessLevelRequiredForCreate"    type="tns:ShareAccessLevel" nillable="true"/> 
- <element name="buttons"    type="tns:DescribeLayoutButton"  maxOccurs="unbounded" minOccurs="0" nillable="true"/> 
+                    <element name="accessLevelRequiredForCreate"    type="tns:ShareAccessLevel" nillable="true"/>
+ <element name="buttons"    type="tns:DescribeLayoutButton"  maxOccurs="unbounded" minOccurs="0" nillable="true"/>
                     <element name="columns"         type="tns:RelatedListColumn" maxOccurs="unbounded"/>
                     <element name="custom"          type="xsd:boolean"/>
                     <element name="field"           type="xsd:string" nillable="true"/>
@@ -13692,10 +13692,10 @@ All Rights Reserved
             </complexType>
 
 
-        
+
             <complexType name="DescribeSearchLayoutResult">
                 <sequence>
-                    
+
                     <element name="errorMsg" type="xsd:string" nillable="true"/>
                     <element name="label" type="xsd:string" nillable="true"/>
                     <element name="limitRows" type="xsd:int" nillable="true"/>
@@ -13703,7 +13703,7 @@ All Rights Reserved
                     <element name="searchColumns" type="tns:DescribeColumn" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
                 </sequence>
             </complexType>
-        
+
 
                 <complexType name="DescribeColumn">
                     <sequence>
@@ -14549,7 +14549,7 @@ All Rights Reserved
                 </complexType>
             </element>
 
-      
+
 
             <!-- Convert Lead Message Types -->
             <element name="convertLead">

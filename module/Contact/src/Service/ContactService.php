@@ -101,6 +101,8 @@ class ContactService extends AbstractEntity
         $contact->MailingStreet = $data['addressone'] . ' ' . $data['addresstwo'];
         $contact->MailingPostalCode = $data['postcode'];
         $contact->MailingCity = $data['city'];
+        $contact->Region__c = $data['region'];
+
 
         if (!empty($data['newsletter'])) {
             $contact->Email_Newsletter__c = true;

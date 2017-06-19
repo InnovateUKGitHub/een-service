@@ -29,6 +29,7 @@ class EEN
     const EVENT_BRITE = 'event-brite';
 
     // ELASTIC SEARCH
+    const ELASTIC_SEARCH_HOST = 'elastic-search-host';
     const ELASTIC_SEARCH_INDEXES = 'elastic-search-indexes';
     const ES_INDEX_OPPORTUNITY = 'opportunity';
     const ES_TYPE_OPPORTUNITY = 'opportunity';

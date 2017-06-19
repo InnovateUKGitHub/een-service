@@ -2,6 +2,7 @@
 
 namespace Search\Factory\Service;
 
+use Common\Constant\EEN;
 use Elasticsearch\ClientBuilder;
 use Search\Service\QueryService;
 use Zend\ServiceManager\ServiceManager;
@@ -15,7 +16,11 @@ final class QueryServiceFactory
      */
     public function __invoke(ServiceManager $serviceManager)
     {
-        $elasticSearch = ClientBuilder::create()->build();
+        $config = $serviceManager->get(EEN::CONFIG);
+
+        $elasticSearch = ClientBuilder::create()
+            ->setHosts($config[EEN::ELASTIC_SEARCH_HOST])
+            ->build();
 
         return new QueryService($elasticSearch);
     }

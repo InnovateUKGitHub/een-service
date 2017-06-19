@@ -24,7 +24,7 @@ else
    HOSTS=`build/steps/deploy/lookup-ec2-ips.sh $aws_cli_profile $aws_cf_stack`
 fi
 
-USER="jenkins"
+USER=$sshuser
 
 if [ "$DEPLOY_METHOD" = "tarball" ] ; then
 
@@ -35,7 +35,7 @@ read -d '' SCRIPT << EOF
     test -e ${htdocs} || sudo mkdir ${htdocs};
     sudo tar -zxf ${PACKAGE}.tar.gz -C ${htdocs};
     cd ${htdocs};
-    APPLICATION_ENV=${APPLICATION_ENV};
+    export APPLICATION_ENV=${APPLICATION_ENV};
     sudo -E ./build/2-deploy.sh;
 EOF
 
@@ -51,7 +51,7 @@ read -d '' SCRIPT << EOF
     # full sync also deleting files that don't exist on source, excluding resources
     sudo rsync -av --delete --exclude='logs/*' --exclude='cache/*' -O -p --no-g . ${htdocs}/
 
-    APPLICATION_ENV=${APPLICATION_ENV};
+    export APPLICATION_ENV=${APPLICATION_ENV};
     # execute remaining deploy steps
     sudo -E ./build/2-deploy.sh;
 EOF

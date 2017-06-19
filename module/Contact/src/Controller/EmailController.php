@@ -40,6 +40,7 @@ final class EmailController extends AbstractRestfulController
                     'macros' => [
                         'email' => $data['email'],
                         'url'   => $data['url'],
+                        'token' => $data['token'],
                     ],
                 ],
             ],

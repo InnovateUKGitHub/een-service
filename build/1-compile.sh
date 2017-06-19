@@ -57,4 +57,5 @@ fi
 # force compile on first build
 test -e $htdocs || forceCompile=true
 
+$workspace/build/steps/compile/credentials.sh || { echo "Executing $workspace/build/steps/compile/credentials.sh failed" ; exit 1; }
 $workspace/build/steps/compile/composer.sh || { echo "Executing $workspace/build/steps/compile/composer.sh failed" ; exit 1; }

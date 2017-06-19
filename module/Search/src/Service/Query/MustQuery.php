@@ -27,13 +27,18 @@ class MustQuery extends ShouldQuery
      * @param string $value
      * @param string $operator
      */
-    public function mustRange($field, $value, $operator)
+    public function mustRange($field, $value, $operator, $format = null)
     {
+        $info = [
+            $operator => $value
+        ];
+        if ($format !== null) {
+            $info['format'] = $format;
+
+        }
         $this->must[] = [
             'range' => [
-                $field => [
-                    $operator => $value,
-                ],
+                $field => $info,
             ],
         ];
     }

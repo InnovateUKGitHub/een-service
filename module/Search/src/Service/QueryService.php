@@ -66,10 +66,11 @@ class QueryService extends MustQuery
     /**
      * @param string $index
      * @param string $type
+     * @param array  $params
      *
      * @return array
      */
-    private function buildQuery($index, $type)
+    private function buildQuery($index, $type, $params = null)
     {
         $query = [
             'index' => $index,
@@ -84,6 +85,37 @@ class QueryService extends MustQuery
             $query['body']['query']['bool']['should'] = $this->should;
         }
 
+        if ($params !== null) {
+            $query['from'] = $params['from'];
+            $query['size'] = $params['size'];
+            $query['_source'] = $params['source'];
+            if (!empty($this->highlight)) {
+                $query['body']['highlight'] = $this->highlight;
+            }
+            if (!empty($params['sort'])) {
+                $query['body']['sort'] = $params['sort'];
+            }
+
+            $query['body']['aggs'] = [
+                'types' => [
+                    'terms' => [
+                        'field' => 'type',
+                    ]
+                ],
+                'autocomplete' => [
+                    "terms" => [
+                        'field' => 'autocomplete',
+                        'order' => [
+                            '_count' => 'desc',
+                        ],
+                        'include' => [
+                            'pattern' => $params['search'].".*"
+                        ]
+                    ]
+                ]
+            ];
+        }
+
         return $query;
     }
 
@@ -96,31 +128,31 @@ class QueryService extends MustQuery
      */
     public function search($params, $index, $type)
     {
-        $query = $this->buildQuery($index, $type);
+        $query = $this->buildQuery($index, $type, $params);
 
-        $query['from'] = $params['from'];
-        $query['size'] = $params['size'];
-        $query['_source'] = $params['source'];
-        if (!empty($this->highlight)) {
-            $query['body']['highlight'] = $this->highlight;
-        }
-        if (!empty($params['sort'])) {
-            $query['body']['sort'] = $params['sort'];
+        $aggResult = null;
+        if (empty($params['opportunity_type']) === false) {
+            $aggResult = $this->elastic->search($query)['aggregations'];
+            $this->mustQueryString(['type'], $params['opportunity_type'], 'OR');
+            $query = $this->buildQuery($index, $type, $params);
         }
 
-        return $this->convertResult($this->elastic->search($query));
+        return $this->convertResult($this->elastic->search($query), $aggResult);
     }
 
     /**
      * @param array $results
+     * @param array $aggResult
      *
      * @return array
      */
-    private function convertResult($results)
+    private function convertResult($results, $aggResult)
     {
         return [
-            'total'   => $results['hits']['total'],
-            'results' => $results['hits']['hits'],
+            'total'        => $results['hits']['total'],
+            'results'      => $results['hits']['hits'],
+            'aggregations' => $aggResult !== null ? $aggResult : $results['aggregations'],
+            'raw_results'  => $results,
         ];
     }
 

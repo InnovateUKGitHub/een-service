@@ -36,6 +36,7 @@ class ContactServiceTest extends \PHPUnit_Framework_TestCase
             'contact_phone'  => '01254896325',
             'contact_email'  => 'email@test.com',
             'newsletter'     => true,
+            'region'         => 'South West'
         ];
     }
 
@@ -130,6 +131,7 @@ class ContactServiceTest extends \PHPUnit_Framework_TestCase
         $contact->MailingStreet = $data['addressone'] . ' ' . $data['addresstwo'];
         $contact->MailingPostalCode = $data['postcode'];
         $contact->MailingCity = $data['city'];
+        $contact->Region__c = $data['region'];
 
         if (!empty($data['newsletter'])) {
             $contact->Email_Newsletter__c = true;
